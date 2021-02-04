@@ -27,8 +27,8 @@ CREATE TABLE address (
 DROP TABLE IF EXISTS holiday;
 CREATE TABLE holiday (
 	holidayId INTEGER AUTO_INCREMENT,
-	startDate DATE NOT NULL DEFAULT,
-	endDate DATE NOT NULL DEFAULT,
+	startDate DATE NOT NULL,
+	endDate DATE NOT NULL,
 	PRIMARY KEY (holidayId)
 );
  
@@ -36,7 +36,7 @@ CREATE TABLE holiday (
 DROP TABLE IF EXISTS delivery;
 CREATE TABLE delivery (
 	deliveryId INTEGER AUTO_INCREMENT,
-	date DATE NOT NULL DEFAULT,
+	date DATE NOT NULL,
 	PRIMARY KEY (deliveryId)
 );
     /*Employee Table*/
@@ -62,7 +62,7 @@ CREATE TABLE publication (
 DROP TABLE IF EXISTS invoice;
 CREATE TABLE invoice (
 	invoiceId INTEGER AUTO_INCREMENT,
-	issueDate DATE NOT NULL DEFAULT,
+	issueDate DATE NOT NULL,
 	PRIMARY KEY (invoiceId)
 );
  
@@ -70,14 +70,14 @@ CREATE TABLE invoice (
 DROP TABLE IF EXISTS stock;
 CREATE TABLE stock (
 	stockId INTEGER AUTO_INCREMENT,
-	deliveryDate DATE NOT NULL DEFAULT,
+	deliveryDate DATE NOT NULL,
 	PRIMARY KEY (stockId)
 );
     /*Frequency Table*/
 DROP TABLE IF EXISTS frequency;
 CREATE TABLE frequency (
 	frequencyId INTEGER AUTO_INCREMENT,
-	baseDate DATE NOT NULL DEFAULT,
+	baseDate DATE NOT NULL,
 	interval VARCHAR(10) NOT NULL DEFAULT '',
 	PRIMARY KEY (frequencyId)
 );
