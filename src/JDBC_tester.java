@@ -15,6 +15,7 @@ public class JDBC_tester {
         password = sc.next();
         init_db(user, password);  // open the connection to the database
         try{
+            stmt.execute("DROP SCHEMA IF EXISTS newsagent;");
             rs = stmt.executeQuery("SELECT count(*) as total FROM employees");
             rs.next();//move to first, the query above only produces 1 tuple
             int myTotal = rs.getInt("total");

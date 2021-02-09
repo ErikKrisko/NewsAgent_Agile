@@ -1,9 +1,9 @@
-DROP SCHEMA IF EXISTS NewsAgent;
-CREATE SCHEMA NewsAgent;
-USE NewsAgent;
+DROP SCHEMA IF EXISTS newsagent;
+CREATE SCHEMA newsagent;
+USE newsagent;
 SET AUTOCOMMIT = 0;
 
- /*Customer Table*/
+/*Customer Table*/
 DROP TABLE IF EXISTS customer;
 CREATE TABLE customer (
 	customer_id INTEGER AUTO_INCREMENT,
@@ -13,7 +13,7 @@ CREATE TABLE customer (
 	PRIMARY KEY (customer_id)
 );
  
- /*Address Table*/
+/*Address Table*/
 DROP TABLE IF EXISTS address;
 CREATE TABLE address (
 	address_id INTEGER AUTO_INCREMENT,
@@ -23,7 +23,7 @@ CREATE TABLE address (
 	PRIMARY KEY (address_id)
 );
  
- /*Holiday Table*/
+/*Holiday Table*/
 DROP TABLE IF EXISTS holiday;
 CREATE TABLE holiday (
 	holiday_id INTEGER AUTO_INCREMENT,
@@ -32,7 +32,7 @@ CREATE TABLE holiday (
 	PRIMARY KEY (holiday_id)
 );
  
- /*Delivery Table*/
+/*Delivery Table*/
 DROP TABLE IF EXISTS delivery;
 CREATE TABLE delivery (
 	delivery_id INTEGER AUTO_INCREMENT,
@@ -40,7 +40,7 @@ CREATE TABLE delivery (
 	PRIMARY KEY (delivery_id)
 );
 
- /*Employee Table*/
+/*Employee Table*/
 DROP TABLE IF EXISTS employee;
 CREATE TABLE employee (
 	employee_id INTEGER AUTO_INCREMENT,
@@ -49,7 +49,7 @@ CREATE TABLE employee (
 	PRIMARY KEY (employee_id)
 );
 
- /*Publication Table*/
+/*Publication Table*/
 DROP TABLE IF EXISTS publication;
 CREATE TABLE publication (
 	prod_id INTEGER AUTO_INCREMENT,
@@ -59,7 +59,7 @@ CREATE TABLE publication (
 	PRIMARY KEY (prod_id)
 );
  
- /*Invoice Table*/
+/*Invoice Table*/
 DROP TABLE IF EXISTS invoice;
 CREATE TABLE invoice (
 	invoice_id INTEGER AUTO_INCREMENT,
@@ -67,7 +67,7 @@ CREATE TABLE invoice (
 	PRIMARY KEY (invoice_id)
 );
  
- /*Stock Table*/
+/*Stock Table*/
 DROP TABLE IF EXISTS stock;
 CREATE TABLE stock (
 	stock_id INTEGER AUTO_INCREMENT,
@@ -75,7 +75,7 @@ CREATE TABLE stock (
 	PRIMARY KEY (stock_id)
 );
 
- /*Frequency Table*/
+/*Frequency Table*/
 DROP TABLE IF EXISTS frequency;
 CREATE TABLE frequency (
 	freq_id INTEGER AUTO_INCREMENT,
@@ -84,7 +84,7 @@ CREATE TABLE frequency (
 	PRIMARY KEY (freq_id)
 );
  
- /*Address relation Table*/
+/*Address relation Table*/
 DROP TABLE IF EXISTS customer_lives;
 CREATE TABLE customer_lives (
 	customer_id INTEGER NOT NULL,
@@ -94,7 +94,7 @@ CREATE TABLE customer_lives (
 	PRIMARY KEY (customer_id,address_id)
 );
 	
- /*Holidays relation Table*/
+/*Holidays relation Table*/
 DROP TABLE IF EXISTS customer_holiday;
 CREATE TABLE customer_holiday (
     customer_id INTEGER NOT NULL,
@@ -104,7 +104,7 @@ CREATE TABLE customer_holiday (
 	PRIMARY KEY (customer_id,holiday_id)
 );
 	
- /*Frequency relation Table*/
+/*Frequency relation Table*/
 DROP TABLE IF EXISTS prod_freq;
 CREATE TABLE prod_freq (
 	prod_id INTEGER NOT NULL,
@@ -114,7 +114,7 @@ CREATE TABLE prod_freq (
 	PRIMARY KEY (prod_id, freq_id)
 );
 	
- /*Delivery - Publication relation Table*/
+/*Delivery - Publication relation Table*/
 DROP TABLE IF EXISTS prod_for_delivery;
 CREATE TABLE prod_for_delivery (
 	delivery_id INTEGER NOT NULL,
@@ -124,7 +124,7 @@ CREATE TABLE prod_for_delivery (
 	PRIMARY KEY (delivery_id, prod_id)
 );
 
- /*Employee - Delivery relation Table*/
+/*Employee - Delivery relation Table*/
 DROP TABLE IF EXISTS delivers;
 CREATE TABLE delivers (
 	employee_id INTEGER NOT NULL,
@@ -134,7 +134,7 @@ CREATE TABLE delivers (
 	PRIMARY KEY (employee_id, delivery_id)
 );
 	
- /*Delivery - Invoice relation Table*/
+/*Delivery - Invoice relation Table*/
 DROP TABLE IF EXISTS delivery_status;
 CREATE TABLE delivery_status (
     delivery_status BIT,
@@ -145,7 +145,7 @@ CREATE TABLE delivery_status (
 	PRIMARY KEY (delivery_id, invoice_id)
 );
 	
- /*Invoice - Customer relation Table*/
+/*Invoice - Customer relation Table*/
 DROP TABLE IF EXISTS invoice_for;
 CREATE TABLE invoice_for (
 	customer_id INTEGER NOT NULL,
@@ -155,7 +155,7 @@ CREATE TABLE invoice_for (
 	PRIMARY KEY (customer_id, invoice_id)
 );
 	
- /*Customer - publication relation Table*/
+/*Customer - publication relation Table*/
 DROP TABLE IF EXISTS subscription;
 CREATE TABLE subscription (
 	customer_id INTEGER NOT NULL,
@@ -167,7 +167,7 @@ CREATE TABLE subscription (
     PRIMARY KEY (customer_id, prod_id)
 );
 
- /*Publication - Stock relation Table*/
+/*Publication - Stock relation Table*/
 DROP TABLE IF EXISTS stock_received;
 CREATE TABLE stock_received (
     prod_id INTEGER NOT NULL,
