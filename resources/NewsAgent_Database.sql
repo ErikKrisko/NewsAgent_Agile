@@ -108,10 +108,10 @@ CREATE TABLE frequency (
 DROP TABLE IF EXISTS prod_for_delivery;
 CREATE TABLE prod_for_delivery (
 	prod_id INTEGER NOT NULL,
-	employee_id INTEGER NOT NULL,
+	delivery_id INTEGER NOT NULL,
 	FOREIGN KEY (prod_id) REFERENCES publication(prod_id),
-	FOREIGN KEY (employee_id) REFERENCES employee(employee_id),
-	PRIMARY KEY (prod_id,employee_id)
+	FOREIGN KEY (delivery_id) REFERENCES delivery(delivery_id),
+	PRIMARY KEY (prod_id,delivery_id)
 );
 	
 /*Delivers relation Table*/
