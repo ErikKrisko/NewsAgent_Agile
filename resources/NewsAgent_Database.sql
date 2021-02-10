@@ -124,9 +124,9 @@ CREATE TABLE delivers (
 	PRIMARY KEY (delivery_id,employee_id)
 );
 
-/*Holidays relation Table*/
-DROP TABLE IF EXISTS delivers;
-CREATE TABLE delivers (
+/*Subscription relation Table*/
+DROP TABLE IF EXISTS subscription;
+CREATE TABLE subscription (
       customer_id INTEGER NOT NULL,
       prod_id INTEGER NOT NULL,
       count INTEGER NOT NULL,
