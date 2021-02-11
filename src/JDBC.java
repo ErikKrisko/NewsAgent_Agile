@@ -8,7 +8,6 @@ public class JDBC {
     private Statement stmt = null;
     private ResultSet rs = null;
 
-    public JDBC(String url, String user, String pass) throws JDBCExceptionHandler { Connect(url, user, pass); }
     public JDBC() {}
 
     public void Connect(String url, String user, String pass) throws JDBCExceptionHandler {
@@ -22,9 +21,8 @@ public class JDBC {
         }
     }
 
-    /**
-     *
-     * @param file_name
+    /** Executes specified .sql script file located in the resources folder.
+     * @param file_name of the file to execute
      */
     public void ExecuteScript(String file_name) throws JDBCExceptionHandler {
         //  Portions of this code were found and used from here : https://stackoverflow.com/questions/1497569/how-to-execute-sql-script-file-using-jdbc
@@ -48,6 +46,12 @@ public class JDBC {
         }
     }
 
+    /**
+     *
+     * @param f
+     * @return
+     * @throws JDBCExceptionHandler
+     */
     private static Scanner ScanFile(File f) throws JDBCExceptionHandler {
         try {
             return new Scanner(f);
@@ -57,6 +61,10 @@ public class JDBC {
         }
     }
 
+    /**
+     *
+     * @throws JDBCExceptionHandler
+     */
     public void close() throws JDBCExceptionHandler {
         try {
             con.close();
@@ -65,7 +73,6 @@ public class JDBC {
             throw new JDBCExceptionHandler(e.getMessage());
         }
     }
-
 }
 
 class JDBCExceptionHandler extends Exception {
