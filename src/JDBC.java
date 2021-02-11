@@ -53,9 +53,34 @@ public class JDBC {
         }
     }
 
-    public void nothing() {
-
+    public void selectDB(String dbName) throws JDBCExceptionHandler {
+        try {
+            stmt.execute("USE " + dbName);
+        }
+        catch (SQLException e) {
+            throw new JDBCExceptionHandler(e.getMessage());
+        }
     }
+
+
+
+
+
+
+
+    public ResultSet getSet(String query) throws JDBCExceptionHandler {
+        try {
+            return stmt.executeQuery(query);
+        }
+        catch (SQLException e) {
+            throw new JDBCExceptionHandler(e.getMessage());
+        }
+    }
+
+
+
+
+
 
     /** Closes the current connection.
      * @throws JDBCExceptionHandler
