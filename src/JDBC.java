@@ -10,11 +10,19 @@ public class JDBC {
 
     public JDBC() {}
 
-    public void Connect(String url, String user, String pass) throws JDBCExceptionHandler {
+    /**
+     *
+     * @param url
+     * @param user
+     * @param pass
+     * @throws JDBCExceptionHandler
+     */
+    public boolean Connect(String url, String user, String pass) throws JDBCExceptionHandler {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             con = DriverManager.getConnection(url, user, pass);
             stmt = con.createStatement();
+            return true;
         }
         catch(SQLException | ClassNotFoundException e) {
             throw new JDBCExceptionHandler(e.getMessage());
@@ -46,23 +54,7 @@ public class JDBC {
         }
     }
 
-    /**
-     *
-     * @param f
-     * @return
-     * @throws JDBCExceptionHandler
-     */
-    private static Scanner ScanFile(File f) throws JDBCExceptionHandler {
-        try {
-            return new Scanner(f);
-        }
-        catch (FileNotFoundException e) {
-            throw new JDBCExceptionHandler(e.getMessage());
-        }
-    }
-
-    /**
-     *
+    /** Closes the current connection.
      * @throws JDBCExceptionHandler
      */
     public void close() throws JDBCExceptionHandler {
@@ -70,6 +62,17 @@ public class JDBC {
             con.close();
         }
         catch (Exception e) {
+            throw new JDBCExceptionHandler(e.getMessage());
+        }
+    }
+
+    //  PRIVATE METHODS
+    //
+    private static Scanner ScanFile(File f) throws JDBCExceptionHandler {
+        try {
+            return new Scanner(f);
+        }
+        catch (FileNotFoundException e) {
             throw new JDBCExceptionHandler(e.getMessage());
         }
     }

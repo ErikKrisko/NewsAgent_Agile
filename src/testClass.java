@@ -6,5 +6,6 @@ public class testClass {
 //        connection.test();
 //        connection.ReadScript("NewsAgent_Database.sql");
 //        connection.close();
+        DB_Customer cus1 = new DB_Customer();
     }
 }
