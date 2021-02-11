@@ -49,6 +49,7 @@ public class JDBC {
             }
         }
         catch (SQLException e) {
+            System.out.println(e.getMessage());
             throw new JDBCExceptionHandler("SQL error.");
         }
     }
