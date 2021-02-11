@@ -1,11 +1,9 @@
-import java.sql.SQLException;
-
 public class testClass {
-    public static void main(String[] args) throws SQLException {
-        JDBC connection = new JDBC("root","admin");
-       // System.out.println(connection.getConnection().getSchema());
+    public static void main(String[] args) throws JDBCExceptionHandler {
+        JDBC con = new JDBC("jdbc:mysql://localhost:3306/", "root", "admin");
+        con.ExecuteScript("NewsAgent_Database.sql");
 //        connection.test();
-        connection.ReadScript("NewsAgent_Database.sql");
-        connection.close();
+//        connection.ReadScript("NewsAgent_Database.sql");
+//        connection.close();
     }
 }

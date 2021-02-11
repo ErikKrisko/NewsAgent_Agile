@@ -1,0 +1,10 @@
+DROP SCHEMA IF EXISTS yielderror;
+CREATE SCHEMA yielderror;
+USE yielderror;
+SET AUTOCOMMIT = 0;
+
+DROP TABLE IF EXISTS error;
+CREATE TABLE error (
+    error_id INTEGE AUTO_INCREMENT,
+);
+DROP DATABASE IF EXISTS yielderror;

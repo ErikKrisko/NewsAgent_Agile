@@ -3,6 +3,16 @@ CREATE SCHEMA newsagent;
 USE newsagent;
 SET AUTOCOMMIT = 0;
 
+/*Address Table*/
+DROP TABLE IF EXISTS address;
+CREATE TABLE address (
+     address_id INTEGER AUTO_INCREMENT,
+     full_address VARCHAR(50) NOT NULL DEFAULT '',
+     area_code VARCHAR(10) NOT NULL DEFAULT '',
+     eir_code VARCHAR(8) NOT NULL DEFAULT '',
+     PRIMARY KEY (address_id)
+);
+
 /*Customer Table*/
 DROP TABLE IF EXISTS customer;
 CREATE TABLE customer (
@@ -14,17 +24,19 @@ CREATE TABLE customer (
     FOREIGN KEY (address_id) REFERENCES address(address_id),
 	PRIMARY KEY (customer_id)
 );
- 
-/*Address Table*/
-DROP TABLE IF EXISTS address;
-CREATE TABLE address (
-	address_id INTEGER AUTO_INCREMENT,
-	full_address VARCHAR(50) NOT NULL DEFAULT '',
-	area_code VARCHAR(10) NOT NULL DEFAULT '',
-	eir_code VARCHAR(8) NOT NULL DEFAULT '',
-	PRIMARY KEY (address_id)
+
+/*Invoice Table*/
+DROP TABLE IF EXISTS invoice;
+CREATE TABLE invoice (
+     invoice_id INTEGER AUTO_INCREMENT,
+     issue_date DATE NOT NULL,
+     invoice_status BIT NOT NULL,
+     invoice_total DECIMAL(5,2) NOT NULL,
+     customer_id INTEGER NOT NULL,
+     FOREIGN KEY (customer_id) REFERENCES customer(customer_id),
+     PRIMARY KEY (invoice_id)
 );
- 
+
 /*Holiday Table*/
 DROP TABLE IF EXISTS holiday;
 CREATE TABLE holiday (
@@ -58,28 +70,25 @@ CREATE TABLE employee (
 	PRIMARY KEY (employee_id)
 );
 
+/*Frequency Table*/
+DROP TABLE IF EXISTS frequency;
+CREATE TABLE frequency (
+   freq_id INTEGER AUTO_INCREMENT,
+   freq_date DATE NOT NULL,
+   freq_interval VARCHAR(10) NOT NULL DEFAULT '',
+   PRIMARY KEY (freq_id)
+);
+
 /*Publication Table*/
 DROP TABLE IF EXISTS publication;
 CREATE TABLE publication (
 	prod_id INTEGER AUTO_INCREMENT,
 	prod_name VARCHAR(25) NOT NULL DEFAULT '',
 	prod_type VARCHAR(25) NOT NULL DEFAULT '',
-	prod_price DOUBLE 4,2 NOT NULL,
+	prod_price DECIMAL(4,2) NOT NULL,
 	freq_id INTEGER NOT NULL,
     FOREIGN KEY (freq_id) REFERENCES frequency(freq_id),
 	PRIMARY KEY (prod_id)
-);
- 
-/*Invoice Table*/
-DROP TABLE IF EXISTS invoice;
-CREATE TABLE invoice (
-	invoice_id INTEGER AUTO_INCREMENT,
-	issue_date DATE NOT NULL,
-    invoice_status BIT NOT NULL,
-    invoice_total DOUBLE 5,2 NOT NULL,
-    customer_id INTEGER NOT NULL,
-    FOREIGN KEY (customer_id) REFERENCES customer(customer_id),
-	PRIMARY KEY (invoice_id)
 );
  
 /*Stock Table*/
@@ -93,15 +102,6 @@ CREATE TABLE stock (
     stock_quantity_received INTEGER NOT NULL,
     FOREIGN KEY (prod_id) REFERENCES publication(prod_id),
 	PRIMARY KEY (stock_id)
-);
-
-/*Frequency Table*/
-DROP TABLE IF EXISTS frequency;
-CREATE TABLE frequency (
-	freq_id INTEGER AUTO_INCREMENT,
-	freq_date DATE NOT NULL,
-	freq_interval VARCHAR(10) NOT NULL DEFAULT '',
-	PRIMARY KEY (freq_id)
 );
  
 /*Prod_for_delivery relation Table*/
@@ -134,8 +134,3 @@ CREATE TABLE subscription (
       FOREIGN KEY (prod_id) REFERENCES publication(prod_id),
       PRIMARY KEY (customer_id,prod_id)
 );
-
-
-	
-
-	

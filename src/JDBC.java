@@ -8,18 +8,17 @@ public class JDBC {
     private Statement stmt = null;
     private ResultSet rs = null;
 
-    public JDBC(String user, String pass) { establishConnection(user, pass); }
-    public JDBC() { establishConnection("root", "user"); }
+    public JDBC(String url, String user, String pass) throws JDBCExceptionHandler { Connect(url, user, pass); }
+    public JDBC() {}
 
-    private void establishConnection(String user, String pass) {
+    public void Connect(String url, String user, String pass) throws JDBCExceptionHandler {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            String url="jdbc:mysql://localhost:3306/";
             con = DriverManager.getConnection(url, user, pass);
             stmt = con.createStatement();
         }
-        catch(Exception e) {
-            System.out.println("Error: Failed to connect to database\n" + e.getMessage());
+        catch(SQLException | ClassNotFoundException e) {
+            throw new JDBCExceptionHandler(e.getMessage());
         }
     }
 
@@ -27,12 +26,12 @@ public class JDBC {
      *
      * @param file_name
      */
-    public void ReadScript(String file_name) {
+    public void ExecuteScript(String file_name) throws JDBCExceptionHandler {
         //  Portions of this code were found and used from here : https://stackoverflow.com/questions/1497569/how-to-execute-sql-script-file-using-jdbc
-        File file = new File(".\\resources\\" + file_name);
-        Scanner sc = ScanFile(file);
-        sc.useDelimiter("(;(\r)?\n)|(--\n)");
         try {
+            File file = new File(".\\resources\\" + file_name);
+            Scanner sc = ScanFile(file);
+            sc.useDelimiter("(;(\r)?\n)|(--\n)");
             while (sc.hasNext()) {
                 String line = sc.next();
                 if (line.startsWith("/*!") && line.endsWith("*/")) {
@@ -40,34 +39,43 @@ public class JDBC {
                     line = line.substring(i + 1, line.length() - " */".length());
                 }
                 if (line.trim().length() > 0) {
-                    System.out.println("Executing : '" + line + "'");
                     stmt.execute(line);
-                    System.out.println(stmt.getWarnings());
                 }
             }
         }
-        catch (SQLException throwables) {
-            throwables.printStackTrace();
+        catch (SQLException e) {
+            throw new JDBCExceptionHandler("SQL error.");
         }
     }
 
-    private static Scanner ScanFile(File f) {
+    private static Scanner ScanFile(File f) throws JDBCExceptionHandler {
         try {
             return new Scanner(f);
         }
         catch (FileNotFoundException e) {
-            e.printStackTrace();
-            return null;
+            throw new JDBCExceptionHandler(e.getMessage());
         }
     }
 
-    public void close() {
+    public void close() throws JDBCExceptionHandler {
         try {
             con.close();
         }
         catch (Exception e) {
-            e.printStackTrace();
+            throw new JDBCExceptionHandler(e.getMessage());
         }
     }
 
+}
+
+class JDBCExceptionHandler extends Exception {
+    String message;
+
+    public JDBCExceptionHandler(String errMessage){
+        message = errMessage;
+    }
+
+    public String getMessage() {
+        return message;
+    }
 }
