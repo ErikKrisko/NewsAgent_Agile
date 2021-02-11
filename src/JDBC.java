@@ -11,7 +11,6 @@ public class JDBC {
     public JDBC() {}
 
     /**
-     *
      * @param url
      * @param user
      * @param pass
@@ -54,6 +53,10 @@ public class JDBC {
         }
     }
 
+    public void nothing() {
+
+    }
+
     /** Closes the current connection.
      * @throws JDBCExceptionHandler
      */
@@ -67,7 +70,7 @@ public class JDBC {
     }
 
     //  PRIVATE METHODS
-    //
+    //  file scanner
     private static Scanner ScanFile(File f) throws JDBCExceptionHandler {
         try {
             return new Scanner(f);

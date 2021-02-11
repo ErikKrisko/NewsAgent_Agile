@@ -59,7 +59,7 @@ public class JDBCTest extends TestCase {
      */
     public void testJDBC003() {
         try {
-            jdbc.Connect("jdbc:mysql://localhost:3306/", "root", "admin");
+            assertTrue(jdbc.Connect("jdbc:mysql://localhost:3306/", "root", "admin"));
         }
         catch (JDBCExceptionHandler e) {
             fail("Exception not expected");
