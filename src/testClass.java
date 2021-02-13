@@ -19,5 +19,9 @@ public class testClass {
 //        DB_Order order = new DB_Order();
 //        order.getByID(con, 1);
 //        System.out.println(order.toString());
+
+//        DB_Invoice inv = new DB_Invoice();
+//        inv.getByID(con, 1);
+//        System.out.println(inv.toString());
     }
 }
