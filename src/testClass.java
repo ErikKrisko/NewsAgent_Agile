@@ -1,5 +1,5 @@
 public class testClass {
-    public static void main(String[] args) throws JDBCExceptionHandler, DB_CustomerExceptionHandler, DB_DeliveryExceptionHandler {
+    public static void main(String[] args) throws JDBCExceptionHandler, DB_CustomerExceptionHandler, DB_DeliveryExceptionHandler, DB_InvoiceExceptionHandler {
         JDBC con = new JDBC();
         con.Connect("jdbc:mysql://localhost:3306/", "root", "admin");
        con.ExecuteScript("NewsAgent_Database.sql");
@@ -20,8 +20,8 @@ public class testClass {
 //        order.getByID(con, 1);
 //        System.out.println(order.toString());
 
-//        DB_Invoice inv = new DB_Invoice();
-//        inv.getByID(con, 1);
-//        System.out.println(inv.toString());
+          DB_Invoice inv = new DB_Invoice();
+          inv.getByID(con, 1);
+          System.out.println(inv.toString());
     }
 }

@@ -1,4 +1,7 @@
 import java.sql.Date;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 public class DB_Invoice
 {
     private int invoice_id;
@@ -8,6 +11,23 @@ public class DB_Invoice
     private DB_Customer customer;
 
     public DB_Invoice(){
+    }
+
+    public void getByID(JDBC con, int id) throws DB_InvoiceExceptionHandler {
+        try {
+            ResultSet rs = con.getSet("Select * from invoice where invoice_id = " + id);
+            if (rs.next()) {
+                invoice_id = rs.getInt(1);
+                issue_date = rs.getDate(2);
+                invoice_status = rs.getBoolean(3);
+                invoice_total = rs.getDouble(4);
+                customer = new DB_Customer();
+                customer.getByID(con, rs.getInt(5));
+            }
+        }
+        catch (SQLException | JDBCExceptionHandler | DB_CustomerExceptionHandler e) {
+            throw new DB_InvoiceExceptionHandler(e.getMessage());
+        }
     }
 
     public int getInvoice_id() { return invoice_id; }
@@ -20,4 +40,14 @@ public class DB_Invoice
     public DB_Customer getCustomer() { return customer; }
     public void setCustomer(DB_Customer customer) { this.customer = customer; }
 }
+class DB_InvoiceExceptionHandler extends Exception {
+    String message;
 
+    public DB_InvoiceExceptionHandler(String errMessage){
+        message = errMessage;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+}
