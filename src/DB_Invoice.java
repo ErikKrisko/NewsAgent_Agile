@@ -30,6 +30,17 @@ public class DB_Invoice
         }
     }
 
+    @Override
+    public String toString() {
+        return "DB_Invoice{" +
+                "invoice_id=" + invoice_id +
+                ", issue_date=" + issue_date +
+                ", invoice_status=" + invoice_status +
+                ", invoice_total=" + invoice_total +
+                ", customer=" + customer +
+                '}';
+    }
+
     public int getInvoice_id() { return invoice_id; }
     public Date getIssue_date() { return issue_date; }
     public void setIssue_date(Date issue_date) { this.issue_date = issue_date; }
