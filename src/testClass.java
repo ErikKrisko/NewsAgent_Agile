@@ -12,9 +12,12 @@ public class testClass {
         cus.getByID(con, 1);
         System.out.println(cus.toString());
 
-
         DB_Delivery dev = new DB_Delivery();
         dev.getByID(con, 1);
         System.out.println(dev.toString());
+
+//        DB_Order order = new DB_Order();
+//        order.getByID(con, 1);
+//        System.out.println(order.toString());
     }
 }
