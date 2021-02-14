@@ -40,11 +40,12 @@ public class DB_Customer {
                 first_name = rs.getString(attributes.first_name.index);
                 last_name = rs.getString(attributes.last_name.index);
                 phone_no = rs.getString(attributes.phone_no.index);
-                address = new DB_Address();
-                address.getByID(connection, rs.getInt(attributes.address.index));
+                //  Get address through handler
+                address = handler.getAddress(rs.getInt(attributes.address.index));
+                //  Add self to handler
+                handler.addACustomer(this);
             }
-        }
-        catch (SQLException | JDBCExceptionHandler | DB_AddressExceptionHandler e) {
+        } catch (SQLException | JDBCExceptionHandler | DB_HandlerExceptionHandler e) {
             throw new DB_CustomerExceptionHandler(e.getMessage());
         }
     }

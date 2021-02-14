@@ -13,19 +13,20 @@ public class DB_Address {
     /** Blank constructor */
     public DB_Address() { }
 
-    public void getByID(JDBC con, int id) throws DB_AddressExceptionHandler{
+    public void getByID(int id) throws DB_AddressExceptionHandler {
         try {
-            ResultSet rs = con.getSet("Select * from address where address_id = " + id);
-            rs.next();
-            address_id = rs.getInt(1);
-            full_address = rs.getString(2);
-            area_code = rs.getString(3);
-            eir_code = rs.getString(4);
-        }
-        catch (JDBCExceptionHandler | SQLException e) {
+            ResultSet rs = connection.getSet("Select * from address where address_id = " + id);
+            if (rs.next()) {
+                address_id = rs.getInt(1);
+                full_address = rs.getString(2);
+                area_code = rs.getString(3);
+                eir_code = rs.getString(4);
+                //  Add self to handler
+                handler.addAddress(this);
+            }
+        } catch (JDBCExceptionHandler | SQLException | DB_HandlerExceptionHandler e) {
             throw new DB_AddressExceptionHandler(e.getMessage());
         }
-
     }
 
 

@@ -16,6 +16,10 @@ public class testClass {
 
             JDBC connection = new JDBC().init();
             DB_Handler handler = new DB_Handler().init();
+
+            DB_Address ad1 = new DB_Address();
+            ad1.getByID(1);
+
             DB_Customer cus = new DB_Customer();
             cus.getByID(1);
             System.out.println(cus.toString());
