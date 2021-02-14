@@ -2,7 +2,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Date;
 
-public class DB_Order
+public class DB_Subscription
 {
     private int order_id;
     private Date order_date;
@@ -11,9 +11,9 @@ public class DB_Order
     private DB_Customer customer;
 
 
-    public DB_Order()
+    public DB_Subscription()
     {
-
+        
     }
 
     public void getbyID(JDBC con, int id) throws DB_OrderExceptionHandler
@@ -27,11 +27,11 @@ public class DB_Order
                 order_date = rs.getDate(2);
                 order_status = rs.getBoolean(3);
                 customer = new DB_Customer();
-                customer.getByID(con, rs.getInt(4));
+//                customer.getByID(con, rs.getInt(4));
                 //Would this go with publication?
             }
         }
-        catch (JDBCExceptionHandler | SQLException | DB_CustomerExceptionHandler e)
+        catch (JDBCExceptionHandler | SQLException /*| DB_CustomerExceptionHandler*/ e)
         {
             throw new DB_OrderExceptionHandler(e.getMessage());
         }

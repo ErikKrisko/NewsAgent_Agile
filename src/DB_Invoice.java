@@ -21,11 +21,11 @@ public class DB_Invoice
                 issue_date = rs.getDate(2);
                 invoice_status = rs.getBoolean(3);
                 invoice_total = rs.getDouble(4);
-                customer = new DB_Customer();
-                customer.getByID(con, rs.getInt(5));
+//                customer = new DB_Customer();
+//                customer.getByID(con, rs.getInt(5));
             }
         }
-        catch (SQLException | JDBCExceptionHandler | DB_CustomerExceptionHandler e) {
+        catch (SQLException | JDBCExceptionHandler /*| DB_CustomerExceptionHandler*/ e) {
             throw new DB_InvoiceExceptionHandler(e.getMessage());
         }
     }

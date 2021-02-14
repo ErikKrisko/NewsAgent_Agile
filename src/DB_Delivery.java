@@ -24,13 +24,13 @@ public class DB_Delivery
                 delivery_id = rs.getInt(1);
                 delivery_date = rs.getDate(2);
                 delivery_status = rs.getBoolean(3);
-                customer = new DB_Customer();
-                customer.getByID(con, rs.getInt(4));
+//                customer = new DB_Customer();
+//                customer.getByID(con, rs.getInt(4));
 //                invoice = new DB_Invoice();
 //                invoice.getByID(con, rs.getInt(5));
             }
         }
-        catch (JDBCExceptionHandler | SQLException | DB_CustomerExceptionHandler e)
+        catch (JDBCExceptionHandler | SQLException /*| DB_CustomerExceptionHandler*/ e)
         {
             throw new DB_DeliveryExceptionHandler(e.getMessage());
         }

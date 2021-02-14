@@ -6,17 +6,16 @@ import java.util.Scanner;
 public class JDBC {
     private Connection con = null;
     private Statement stmt = null;
-    private ResultSet rs = null;
 
     public JDBC() {}
 
-    /**
-     * @param url
-     * @param user
-     * @param pass
+    /** Connects to the specified URL of database using specified username and password
+     * @param url of the database to connect to. Default: "jdbc:mysql://localhost:3306/"
+     * @param user name for database access
+     * @param pass word for database access
      * @throws JDBCExceptionHandler
      */
-    public boolean Connect(String url, String user, String pass) throws JDBCExceptionHandler {
+    public boolean connect(String url, String user, String pass) throws JDBCExceptionHandler {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             con = DriverManager.getConnection(url, user, pass);
@@ -31,7 +30,7 @@ public class JDBC {
     /** Executes specified .sql script file located in the resources folder.
      * @param file_name of the file to execute
      */
-    public void ExecuteScript(String file_name) throws JDBCExceptionHandler {
+    public void executeScript(String file_name) throws JDBCExceptionHandler {
         //  Portions of this code were found and used from here : https://stackoverflow.com/questions/1497569/how-to-execute-sql-script-file-using-jdbc
         try {
             File file = new File(".\\resources\\" + file_name);
@@ -54,6 +53,10 @@ public class JDBC {
         }
     }
 
+    /** Selects a database to use if it was not specified when connecting
+     * @param dbName name of the database to connect to
+     * @throws JDBCExceptionHandler
+     */
     public void selectDB(String dbName) throws JDBCExceptionHandler {
         try {
             stmt.execute("USE " + dbName);
@@ -63,7 +66,19 @@ public class JDBC {
         }
     }
 
-
+    /** Method for initializing connection
+     * @return Returns itself
+     * @throws JDBCExceptionHandler
+     */
+    public JDBC init() throws JDBCExceptionHandler {
+        //  Connect to database
+        connect("jdbc:mysql://localhost:3306/", "root", "admin");
+        selectDB("newsagent");
+        //  Establish object connections
+        DB_Customer.setConnection(this);
+        DB_Address.setConnection(this);
+        return this;
+    }
 
 
 
@@ -107,6 +122,9 @@ public class JDBC {
     }
 }
 
+/**
+ * Exception handler for JDBC connector
+ */
 class JDBCExceptionHandler extends Exception {
     String message;
 

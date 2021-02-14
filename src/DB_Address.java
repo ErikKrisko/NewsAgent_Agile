@@ -2,12 +2,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class DB_Address {
+    //  Connection for creating external attributes as required
+    private static JDBC connection;
+    //  Handler for storing initialized elements
+    private static DB_Handler handler;
+    //  Base address attributes
     private int address_id;
     private String full_address, area_code, eir_code;
 
-    public DB_Address() {
-
-    }
+    /** Blank constructor */
+    public DB_Address() { }
 
     public void getByID(JDBC con, int id) throws DB_AddressExceptionHandler{
         try {
@@ -43,6 +47,12 @@ public class DB_Address {
     public void setArea_code(String area_code) {    this.area_code = area_code; }
     public String getEir_code() {   return eir_code; }
     public void setEir_code(String eir_code) {  this.eir_code = eir_code; }
+    //  JDBC connection
+    public static JDBC getConnection() {    return connection; }
+    public static void setConnection(JDBC connection) { DB_Address.connection = connection; }
+    //  Handler
+    public static DB_Handler getHandler() { return handler; }
+    public static void setHandler(DB_Handler handler) { DB_Address.handler = handler; }
 }
 
 class DB_AddressExceptionHandler extends Exception {

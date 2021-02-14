@@ -19,7 +19,7 @@ public class JDBCTest extends TestCase {
      */
     public void testJDBC001() {
         try {
-            jdbc.Connect("invalid","","");
+            jdbc.connect("invalid","","");
             fail("Exception expected");
         }
         catch (JDBCExceptionHandler e) {
@@ -40,7 +40,7 @@ public class JDBCTest extends TestCase {
      */
     public void testJDBC002() {
         try {
-            jdbc.Connect("jdbc:mysql://localhost:3306/", "username", "password");
+            jdbc.connect("jdbc:mysql://localhost:3306/", "username", "password");
             fail("Exception expected");
         }
         catch (JDBCExceptionHandler e) {
@@ -59,7 +59,7 @@ public class JDBCTest extends TestCase {
      */
     public void testJDBC003() {
         try {
-            assertTrue(jdbc.Connect("jdbc:mysql://localhost:3306/", "root", "admin"));
+            assertTrue(jdbc.connect("jdbc:mysql://localhost:3306/", "root", "admin"));
         }
         catch (JDBCExceptionHandler e) {
             fail("Exception not expected");
@@ -76,7 +76,7 @@ public class JDBCTest extends TestCase {
      */
     public void testJDBC004() {
         try {
-            jdbc.Connect("jdbc:mysql://localhost:3306/", "root", "admin");
+            jdbc.connect("jdbc:mysql://localhost:3306/", "root", "admin");
             jdbc.close();
         }
         catch (JDBCExceptionHandler e) {
@@ -95,8 +95,8 @@ public class JDBCTest extends TestCase {
      */
     public void testJDBC005() {
         try {
-            jdbc.Connect("jdbc:mysql://localhost:3306/", "root", "admin");
-            jdbc.ExecuteScript("NotHere.sql");
+            jdbc.connect("jdbc:mysql://localhost:3306/", "root", "admin");
+            jdbc.executeScript("NotHere.sql");
             fail("Exception expected");
         }
         catch (JDBCExceptionHandler e) {
@@ -113,8 +113,8 @@ public class JDBCTest extends TestCase {
      */
     public void testJDBC006() {
         try {
-            jdbc.Connect("jdbc:mysql://localhost:3306/", "root", "admin");
-            jdbc.ExecuteScript("Test_Script_Invalid.sql");
+            jdbc.connect("jdbc:mysql://localhost:3306/", "root", "admin");
+            jdbc.executeScript("Test_Script_Invalid.sql");
             fail("Exception expected");
         }
         catch (JDBCExceptionHandler e) {
@@ -131,8 +131,8 @@ public class JDBCTest extends TestCase {
      */
     public void testJDBC007(){
         try {
-            jdbc.Connect("jdbc:mysql://localhost:3306/", "root", "admin");
-            jdbc.ExecuteScript("Test_Script_Valid.sql");
+            jdbc.connect("jdbc:mysql://localhost:3306/", "root", "admin");
+            jdbc.executeScript("Test_Script_Valid.sql");
         }
         catch (JDBCExceptionHandler e) {
             fail("Exception not expected");
