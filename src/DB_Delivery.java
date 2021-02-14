@@ -43,10 +43,16 @@ public class DB_Delivery
                 handler.addDelivery(this);
             }
         }
-        catch (JDBCExceptionHandler | SQLException | DB_HandlerExceptionHandler /*| DB_CustomerExceptionHandler*/ e)
+        catch (JDBCExceptionHandler | SQLException | DB_HandlerExceptionHandler e)
         {
             throw new DB_DeliveryExceptionHandler(e.getMessage());
         }
+    }
+
+    public void createDelivery()
+    {
+        //INSERT INTO delivery VALUES(null,?,?,?,?);
+
     }
 
     @Override
