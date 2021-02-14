@@ -77,6 +77,7 @@ public class JDBC {
         //  Establish object connections
         DB_Customer.setConnection(this);
         DB_Address.setConnection(this);
+        DB_Delivery.setConnection(this);
         return this;
     }
 

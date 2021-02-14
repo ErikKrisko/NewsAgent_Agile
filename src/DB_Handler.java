@@ -3,6 +3,7 @@ import java.util.LinkedList;
 public class DB_Handler {
     private LinkedList<DB_Customer> customers = new LinkedList<>();
     private LinkedList<DB_Address> addresses = new LinkedList<>();
+    private LinkedList<DB_Delivery> deliveries = new LinkedList<>();
 
     /** Blank constructor */
     public DB_Handler () { }
@@ -10,6 +11,7 @@ public class DB_Handler {
     public DB_Handler init() {
         DB_Customer.setHandler(this);
         DB_Address.setHandler(this);
+        DB_Delivery.setHandler(this);
         return this;
     }
 
@@ -83,17 +85,17 @@ public class DB_Handler {
     }
     public DB_Address getAddress(int id) throws DB_HandlerExceptionHandler {
         try {
-            if (!checkAddress(id)) {
-                DB_Address temp = new DB_Address();
-                temp.getByID(id);
-                this.addresses.add(temp);
-                return temp;
-            } else {
+            if (checkAddress(id)) {
                 for (DB_Address add : addresses) {
                     if (add.getAddress_id() == id) {
                         return add;
                     }
                 }
+            } else {
+                DB_Address temp = new DB_Address();
+                temp.getByID(id);
+                this.addresses.add(temp);
+                return temp;
             }
             throw new DB_HandlerExceptionHandler("Logical error with address handling.");
         }
@@ -109,6 +111,45 @@ public class DB_Handler {
         }
         return false;
     }
+
+    // DELIVERY
+    public void addDelivery(DB_Delivery delivery) throws DB_HandlerExceptionHandler {
+        if (checkDelivery(delivery.getDelivery_id())) {
+            throw new DB_HandlerExceptionHandler("A delivery of ID: " + delivery.getDelivery_id() + " already exists.");
+        }
+        else {
+            deliveries.add(delivery);
+        }
+    }
+    public DB_Delivery getDelivery(int id) throws DB_HandlerExceptionHandler {
+        try {
+            if (checkDelivery(id)) {
+                for (DB_Delivery deli : deliveries) {
+                    if (deli.getDelivery_id() == id) {
+                        return deli;
+                    }
+                }
+            } else {
+                DB_Delivery temp = new DB_Delivery();
+                temp.getByID(id);
+                this.deliveries.add(temp);
+                return temp;
+            }
+            throw new DB_HandlerExceptionHandler("Logical error with delivery handling.");
+        }
+        catch (DB_DeliveryExceptionHandler e) {
+            throw new DB_HandlerExceptionHandler(e.getMessage());
+        }
+    }
+    private boolean checkDelivery(int id) {
+        for (DB_Delivery deli : deliveries) {
+            if (deli.getDelivery_id() == id ) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }
 
 class DB_HandlerExceptionHandler extends Exception {
