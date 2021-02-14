@@ -14,6 +14,11 @@ public class DB_Handler {
     }
 
     //  CUSTOMER
+
+    /** Adds a customer object to the list or throws and error if there is ID mishandling.
+     * @param customer customer object to be added to the list
+     * @throws DB_HandlerExceptionHandler
+     */
     public void addACustomer(DB_Customer customer) throws DB_HandlerExceptionHandler {
         if (checkCustomer(customer.getCustomer_id())) {
             throw new DB_HandlerExceptionHandler("A customer of ID: " + customer.getCustomer_id() + " already exists.");
@@ -22,26 +27,40 @@ public class DB_Handler {
             customers.add(customer);
         }
     }
+
+    /** Gets a customer of specified ID. Either from existing list or creates a new object.
+     * @param id id of a customer.
+     * @return
+     * @throws DB_HandlerExceptionHandler
+     */
     public DB_Customer getCustomer(int id) throws DB_HandlerExceptionHandler {
         try {
-            if (!checkCustomer(id)) {
-                DB_Customer temp = new DB_Customer();
-                temp.getByID(id);
-                this.customers.add(temp);
-                return temp;
-            } else {
+            //  Check if given ID is in the list and return it
+            if (checkCustomer(id)) {
                 for (DB_Customer cus : customers) {
                     if (cus.getCustomer_id() == id) {
                         return cus;
                     }
                 }
+            } //    Else create a new customer and return it
+            else {
+                DB_Customer temp = new DB_Customer();
+                temp.getByID(id);
+                this.customers.add(temp);
+                return temp;
             }
+            //  If somehow this is reached throw an error
             throw new DB_HandlerExceptionHandler("Logical error with customer handling.");
         }
         catch (DB_CustomerExceptionHandler e) {
             throw new DB_HandlerExceptionHandler(e.getMessage());
         }
     }
+
+    /** Private method for checking if given ID is in the list.
+     * @param id to look for
+     * @return true if found, false if not found
+     */
     private boolean checkCustomer(int id) {
         for (DB_Customer cus : customers) {
             if (cus.getCustomer_id() == id ) {
@@ -53,6 +72,7 @@ public class DB_Handler {
 
 
     //  ADDRESS
+    /** Same layout as CUSTOMER */
     public void addAddress(DB_Address address) throws DB_HandlerExceptionHandler {
         if (checkAddress(address.getAddress_id())) {
             throw new DB_HandlerExceptionHandler("An address of ID: " + address.getAddress_id() + " already exists.");
