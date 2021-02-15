@@ -4,27 +4,24 @@ import java.sql.*;
 import java.util.Scanner;
 
 public class JDBC {
+    //  Connection properties
+    private String url, user, pass, dbName;
+    //  Connection objects
     private Connection con = null;
     private Statement stmt = null;
+    private ResultSet rs = null;
 
-    public JDBC() {}
-
-    /** Connects to the specified URL of database using specified username and password
-     * @param url of the database to connect to. Default: "jdbc:mysql://localhost:3306/"
-     * @param user name for database access
-     * @param pass word for database access
-     * @throws JDBCExceptionHandler
-     */
-    public boolean connect(String url, String user, String pass) throws JDBCExceptionHandler {
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            con = DriverManager.getConnection(url, user, pass);
-            stmt = con.createStatement();
-            return true;
-        }
-        catch(SQLException | ClassNotFoundException e) {
-            throw new JDBCExceptionHandler(e.getMessage());
-        }
+    public JDBC() throws JDBCExceptionHandler {
+        url = "jdbc:mysql://localhost:3306/";
+        user = "root";
+        pass = "admin";
+        dbName = "newsagent";
+        open();
+    }
+    public JDBC( String url, String user, String pass) {
+        this.url = url;
+        this.user = user;
+        this.pass = pass;
     }
 
     /** Executes specified .sql script file located in the resources folder.
@@ -33,6 +30,7 @@ public class JDBC {
     public void executeScript(String file_name) throws JDBCExceptionHandler {
         //  Portions of this code were found and used from here : https://stackoverflow.com/questions/1497569/how-to-execute-sql-script-file-using-jdbc
         try {
+            open();
             File file = new File(".\\resources\\" + file_name);
             Scanner sc = ScanFile(file);
             sc.useDelimiter("(;(\r)?\n)|(--\n)");
@@ -46,6 +44,7 @@ public class JDBC {
                     stmt.execute(line);
                 }
             }
+            close();
         }
         catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -53,51 +52,31 @@ public class JDBC {
         }
     }
 
-    /** Selects a database to use if it was not specified when connecting
-     * @param dbName name of the database to connect to
-     * @throws JDBCExceptionHandler
-     */
-    public void selectDB(String dbName) throws JDBCExceptionHandler {
+    public void executeQuery(String query) throws DB_HandlerExceptionHandler {
         try {
-            stmt.execute("USE " + dbName);
+            rs = stmt.executeQuery(query);
         }
         catch (SQLException e) {
+            throw new DB_HandlerExceptionHandler(e.getMessage());
+        }
+    }
+
+
+    //  PRIVATE METHODS
+
+    /** Scans specified file content or throws JDBCExceptionHandler error.
+     * @param f file name
+     * @return Scanner object
+     * @throws JDBCExceptionHandler
+     */
+    private static Scanner ScanFile(File f) throws JDBCExceptionHandler {
+        try {
+            return new Scanner(f);
+        }
+        catch (FileNotFoundException e) {
             throw new JDBCExceptionHandler(e.getMessage());
         }
     }
-
-    /** Method for initializing connection
-     * @return Returns itself
-     * @throws JDBCExceptionHandler
-     */
-    public JDBC init() throws JDBCExceptionHandler {
-        //  Connect to database
-        connect("jdbc:mysql://localhost:3306/", "root", "admin");
-        selectDB("newsagent");
-        //  Establish object connections
-        DB_Customer.setConnection(this);
-        DB_Address.setConnection(this);
-        DB_Delivery.setConnection(this);
-        return this;
-    }
-
-
-
-
-
-    public ResultSet getSet(String query) throws JDBCExceptionHandler {
-        try {
-            return stmt.executeQuery(query);
-        }
-        catch (SQLException e) {
-            throw new JDBCExceptionHandler(e.getMessage());
-        }
-    }
-
-
-
-
-
 
     /** Closes the current connection.
      * @throws JDBCExceptionHandler
@@ -111,16 +90,34 @@ public class JDBC {
         }
     }
 
-    //  PRIVATE METHODS
-    //  file scanner
-    private static Scanner ScanFile(File f) throws JDBCExceptionHandler {
+    /** Establishes database connection
+     * @throws JDBCExceptionHandler
+     */
+    public void open() throws JDBCExceptionHandler {
         try {
-            return new Scanner(f);
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            if (dbName == null)
+                con = DriverManager.getConnection( url, user, pass);
+            else
+                con = DriverManager.getConnection( url + dbName, user, pass);
+            stmt = con.createStatement();
         }
-        catch (FileNotFoundException e) {
+        catch(SQLException | ClassNotFoundException e) {
             throw new JDBCExceptionHandler(e.getMessage());
         }
     }
+
+    //  AUTO GENERATED getters and setters
+    public String getUrl() {    return url; }
+    public void setUrl(String url) {    this.url = url; }
+    public String getUser() {   return user; }
+    public void setUser(String user) {  this.user = user; }
+    public String getPass() {   return pass; }
+    public void setPass(String pass) {  this.pass = pass; }
+    public String getDbName() { return dbName; }
+    public void setDbName(String dbName) {  this.dbName = dbName; }
+
+    public ResultSet getRs() { return rs; }
 }
 
 /**
@@ -129,11 +126,7 @@ public class JDBC {
 class JDBCExceptionHandler extends Exception {
     String message;
 
-    public JDBCExceptionHandler(String errMessage){
-        message = errMessage;
-    }
+    public JDBCExceptionHandler(String errMessage){ message = errMessage; }
 
-    public String getMessage() {
-        return message;
-    }
+    public String getMessage() {    return message; }
 }

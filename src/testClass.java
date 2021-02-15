@@ -4,31 +4,20 @@ public class testClass {
     public static void main(String[] args){
         try {
             //  Section for creating new database
-            {
-                //  Separate connections needed for each scripts (for some god forsaken reason)
-                JDBC con = new JDBC();
-                con.connect("jdbc:mysql://localhost:3306/", "root", "admin");
-                con.executeScript("NewsAgent_Database.sql");
-                con.close();
-                con = new JDBC();
-                con.connect("jdbc:mysql://localhost:3306/newsagent", "root", "admin");
-                con.executeScript("NewsAgent_Data.sql");
-                con.close();
-            }
 
-            JDBC connection = new JDBC().init();
-            DB_Handler handler = new DB_Handler().init();
+            JDBC connection = new JDBC("jdbc:mysql://localhost:3306/", "root", "admin");
+            connection.executeScript("NewsAgent_Database.sql");
+            connection.setDbName("newsagent");
+            connection.executeScript("NewsAgent_Data.sql");
+            connection.close();
 
-            DB_Address ad1 = new DB_Address();
-            ad1.getByID(1);
+            DB_Handler handler = new DB_Handler();
 
-            DB_Customer cus = new DB_Customer();
-            cus.getByID(1);
-            System.out.println(cus.toString());
+            handler.getCustomers(null);
+            handler.printAddress();
+            handler.printCustomers();
 
-            DB_Delivery dev = new DB_Delivery();
-            dev.getByID(1);
-            System.out.println(dev.toString());
+
         }
         catch (Exception e) {
             System.out.println(e.getMessage());

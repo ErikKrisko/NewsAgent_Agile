@@ -15,41 +15,52 @@ public class DB_Customer {
     //  List of customer holidays
     //  NEED TO DO
 
-    /** A list of columnIndexes for resultSet */
-    public enum attributes {
-        customer_id(1),
-        first_name(2),
-        last_name(3),
-        phone_no(4),
-        address(5);
-
-        public final int index;
-
-        attributes(int i) { this.index = i; }
-    }
-
     /** Blank constructor */
     public DB_Customer() { }
 
+    public DB_Customer(String first_name, String last_name, String phone_no, DB_Address address) {
+        this.first_name = first_name;
+        this.last_name = last_name;
+        this.phone_no = phone_no;
+        this.address = address;
+    }
 
-    public void getByID(int id) throws DB_CustomerExceptionHandler {
+    public DB_Customer(ResultSet rs) throws JDBCExceptionHandler {
         try {
-            ResultSet rs = connection.getSet("Select * from customer where customer_id = " + id);
-            if (rs.next()) {
-                customer_id = rs.getInt(attributes.customer_id.index);
-                first_name = rs.getString(attributes.first_name.index);
-                last_name = rs.getString(attributes.last_name.index);
-                phone_no = rs.getString(attributes.phone_no.index);
-                //  Get address through handler
-                address = handler.getAddress(rs.getInt(attributes.address.index));
-                //  Add self to handler
-                handler.addACustomer(this);
-            }
-        } catch (SQLException | JDBCExceptionHandler | DB_HandlerExceptionHandler e) {
-            throw new DB_CustomerExceptionHandler(e.getMessage());
+            customer_id = rs.getInt( Att_Customer.customer_id.column);
+            first_name = rs.getString( Att_Customer.first_name.column);
+            last_name = rs.getString( Att_Customer.last_name.column);
+            phone_no = rs.getString( Att_Customer.phone_no.column);
+        } catch (SQLException e) {
+            throw new JDBCExceptionHandler(e.getMessage());
         }
     }
 
+    //  Validate attributes
+    private String vEntry(Att_Customer type, String entry) throws DB_CustomerExceptionHandler {
+        switch (type) {
+            case first_name -> {
+                if (entry.length() > 0 && entry.length() <= 20)
+                    return entry;
+                else
+                    throw new DB_CustomerExceptionHandler("Invalid first_name.");
+            }
+            case last_name -> {
+                if (entry.length() > 0 && entry.length() <= 20)
+                    return entry;
+                else
+                    throw new DB_CustomerExceptionHandler("Invalid last_name.");
+            }
+            case phone_no -> {
+                if (entry.length() == 8)
+                    return entry;
+                else
+                    throw new DB_CustomerExceptionHandler("Invalid phone_no.");
+            }
+            default -> throw new DB_CustomerExceptionHandler("Internal error. Attribute unspecified.");
+        }
+    }
+    //  AUTO GENERATED toString
     @Override
     public String toString() {
         return "DB_Customer{" +
@@ -60,7 +71,6 @@ public class DB_Customer {
                 ", address=" + address.toString() +
                 '}';
     }
-
     //  AUTO GENERATED getters and setters
     public int getCustomer_id() {   return customer_id; }
     public String getFirst_name() { return first_name; }
@@ -79,14 +89,39 @@ public class DB_Customer {
     public static void setHandler(DB_Handler handler) { DB_Customer.handler = handler; }
 }
 
+/** List of customer attributes */
+enum Att_Customer {
+    customer_id(1),
+    first_name(2),
+    last_name(3),
+    phone_no(4),
+    address(5);
+
+    public final int column;
+
+    Att_Customer(int i) { this.column = i; }
+}
+
+/** Search object for customer */
+class Search_Customer {
+    //  !TEMP code will need to be changed
+
+    //  Attribute reference
+    private Att_Customer[] attributes;
+    //  Search term
+    private String[] term;
+
+    public Search_Customer (Att_Customer[] attributes, String[] term) {
+        this.attributes = attributes;
+        this.term = term;
+    }
+}
+
+
 class DB_CustomerExceptionHandler extends Exception {
     String message;
 
-    public DB_CustomerExceptionHandler(String errMessage){
-        message = errMessage;
-    }
+    public DB_CustomerExceptionHandler(String errMessage){  message = errMessage; }
 
-    public String getMessage() {
-        return message;
-    }
+    public String getMessage() {    return message; }
 }

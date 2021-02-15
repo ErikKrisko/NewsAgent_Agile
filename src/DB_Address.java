@@ -13,22 +13,17 @@ public class DB_Address {
     /** Blank constructor */
     public DB_Address() { }
 
-    public void getByID(int id) throws DB_AddressExceptionHandler {
+    public DB_Address(ResultSet rs) {
         try {
-            ResultSet rs = connection.getSet("Select * from address where address_id = " + id);
-            if (rs.next()) {
-                address_id = rs.getInt(1);
-                full_address = rs.getString(2);
-                area_code = rs.getString(3);
-                eir_code = rs.getString(4);
-                //  Add self to handler
-                handler.addAddress(this);
-            }
-        } catch (JDBCExceptionHandler | SQLException | DB_HandlerExceptionHandler e) {
-            throw new DB_AddressExceptionHandler(e.getMessage());
+            address_id = rs.getInt( Att_Address.address_id.column);
+            full_address = rs.getString( Att_Address.full_address.column);
+            area_code = rs.getString( Att_Address.area_code.column);
+            eir_code = rs.getString( Att_Address.eir_code.column);
+        }
+        catch (SQLException e){
+
         }
     }
-
 
     @Override
     public String toString() {
@@ -54,6 +49,29 @@ public class DB_Address {
     //  Handler
     public static DB_Handler getHandler() { return handler; }
     public static void setHandler(DB_Handler handler) { DB_Address.handler = handler; }
+}
+
+enum Att_Address {
+    address_id(1),
+    full_address(2),
+    area_code(3),
+    eir_code(4);
+
+    public final int column;
+
+    Att_Address(int i) { this.column = i; }
+}
+
+class Search_Address {
+    //  Attribute reference
+    private Att_Customer[] attributes;
+    //  Search term
+    private String[] term;
+
+    public Search_Address (Att_Customer[] attributes, String[] term) {
+        this.attributes = attributes;
+        this.term = term;
+    }
 }
 
 class DB_AddressExceptionHandler extends Exception {
