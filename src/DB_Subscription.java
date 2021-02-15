@@ -1,105 +1,98 @@
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Date;
-
-public class DB_Subscription
-{
-    private int order_id;
-    private Date order_date;
-    private boolean order_status;
-
-    private DB_Customer customer;
 
 
-    public DB_Subscription()
-    {
-        
+public class DB_Subscription {
+    private static JDBC connection;
+    //  Handler for storing initialized elements
+    private static DB_Handler handler;
+    //Private count thats an integer
+    private int[] count = new int[0];
+    private int size;
+    private DB_Customer customer = null;
+
+    //private DB_Product product[];
+
+
+    /** A list of columnIndexes for resultSet */
+    public enum attributes {
+        customer(1),
+        product(2),
+        count(3);
+
+        public final int index;
+
+        attributes(int i) { this.index = i; }
     }
 
-    public void getbyID(JDBC con, int id) throws DB_OrderExceptionHandler
-    {
-        try
-        {
-            ResultSet rs = con.getSet("Select * from order where order_id = " + order_id);
-            if (rs.next())
-            {
-                order_id = rs.getInt(1);
-                order_date = rs.getDate(2);
-                order_status = rs.getBoolean(3);
-                customer = new DB_Customer();
-//                customer.getByID(con, rs.getInt(4));
-                //Would this go with publication?
+    public DB_Subscription() {
+
+    }
+
+    public void getByID(int cus_id) throws DB_SubscriptionExceptionHandler {
+        try {
+            ResultSet rs = connection.getSet(" SELECT * FROM subscription WHERE customer_id = " + cus_id);
+
+            while (rs.next()) {
+                int[] temp = new int[count.length + 1];
+                System.arraycopy(count, 0, temp, 0, count.length);
+                temp[rs.getRow() - 1] = rs.getInt(attributes.count.index);
+                count = temp.clone();
+
+//                System.arraycopy(count, 0, temp, 0, count.length);
+//                temp[rs.getRow()-1] = rs.getInt(3);
+//                count = temp.clone();
+                //Product needs to go in here
+                if (customer == null) {
+                    customer = handler.getCustomer(rs.getInt(attributes.customer.index));
+                }
+
             }
-        }
-        catch (JDBCExceptionHandler | SQLException /*| DB_CustomerExceptionHandler*/ e)
-        {
-            throw new DB_OrderExceptionHandler(e.getMessage());
+        } catch (JDBCExceptionHandler | SQLException | DB_HandlerExceptionHandler e) {
+            throw new DB_SubscriptionExceptionHandler(e.getMessage());
         }
     }
 
-    @Override
-    public String toString()
+    public static JDBC getConnection()
     {
-        return "DB_Order" +
-                "{" +
-                "order_id = " + order_id +
-                "order_date = " + order_date +
-                "order_status = " + order_status +
-                "customer = " +customer +
-                "}";
+        return connection;
     }
 
-    public int getOrder_id()
+    public static void setConnection(JDBC connection)
     {
-        return order_id;
+        DB_Subscription.connection = connection;
     }
 
-    public Date getOrder_date()
-    {
-        return order_date;
+    public static DB_Handler getHandler() {
+        return handler;
     }
 
-    public void setOrder_date()
-    {
-        this.order_date = order_date;
+    public static void setHandler(DB_Handler handler) {
+        DB_Subscription.handler = handler;
     }
 
-    public boolean isOrder_status()
-    {
-        return order_status;
-    }
-
-    public void setOrder_date(boolean order_status)
-    {
-        this.order_status = order_status;
-    }
-
-    public DB_Customer getCustomer()
-    {
+    public DB_Customer getCustomer() {
         return customer;
     }
 
-    public void setCustomer(DB_Customer customer)
-    {
+    public void setCustomer(DB_Customer customer) {
         this.customer = customer;
     }
+}
 
 
 
+class DB_SubscriptionExceptionHandler extends Exception
+{
+    String message;
 
-    class DB_OrderExceptionHandler extends Exception
+    public DB_SubscriptionExceptionHandler(String errormessage)
     {
-        String message;
-
-        public DB_OrderExceptionHandler(String errormessage)
-        {
-            message = errormessage;
-        }
-
-        @Override
-        public String getMessage() {
-            return message;
-        }
+        message = errormessage;
     }
 
+    @Override
+    public String getMessage() {
+        return message;
     }
+}
