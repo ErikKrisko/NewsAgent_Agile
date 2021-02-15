@@ -28,6 +28,59 @@ public class DB_Invoice
         catch (SQLException | JDBCExceptionHandler /*| DB_CustomerExceptionHandler*/ e) {
             throw new DB_InvoiceExceptionHandler(e.getMessage());
         }
+        //Delete invoice
+        /*
+        public static void deleteInvoice() throws SQLException {
+         displayinvoice_id();
+         System.out.println("Please enter what invoice you want to remove");
+            int id = in.nextInt();
+         Statement sta = con.createStatement();
+            sta.executeUpdate("DELETE From invoice Where invoice_id = '" + id +
+             "';");// updates the dadatabse with the new student
+             displayAllInvoice();
+}
+          */
+
+        /*
+        //Add new invoice
+        public static void addNewInvoice() throws SQLException {
+        Statement addNewInvoice = con.createStatement();
+        addNewinvoice_id.executeUpdate("insert into Invoice( invoice_id, issue_date,
+        invoice_status,invoice_total) values ('7','2021-03-02','1','13,49')");
+        }
+         */
+        /*
+        // update invoice
+        displayAllStudents();
+         System.out.println("Please enter what student you want to edit");//it
+        asks the user what students it wants to edit
+        int edit = in.nextInt();// takes in the input that the user enters
+        System.out.println("Please enter the new first name you want to
+        change");// asks what name the user wants to change
+        String newfname = in.next();// takes in entry
+        Statement sta5 = con.createStatement();//Creates statment and takes the
+        sql below and updates what is below
+         sta5.executeUpdate("update student set firstname ='"+ newfname + "'
+        where studentId = '"+edit+"'" );
+        System.out.println("Please enter the new last name you want to
+        change");//this changes last name of student
+        String newlname = in.next();
+        Statement sta6 = con.createStatement();
+        // this updates the student with the choices they have put i
+        sta5.executeUpdate("update student set lastname ='"+ newlname + "'
+        where studentId = '"+edit+"'" );
+         System.out.println("Please enter the new day");
+         String day = in.next();
+        System.out.println("Please enter the new month");
+        String month = in.next();
+        System.out.println("Please enter the new year");
+        String year = in.next();
+        String lastdob = year+"-"+month+"-"+day;
+        Statement sta7 = con.createStatement();
+         sta7.executeUpdate("update student set dob ='"+ lastdob + "' where
+s       studentId = '"+edit+"'" );
+        }
+         */
     }
 
     @Override
