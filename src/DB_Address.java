@@ -13,6 +13,12 @@ public class DB_Address {
     /** Blank constructor */
     public DB_Address() { }
 
+    public DB_Address(String full_address, String area_code, String eir_code) {
+        this.full_address = full_address;
+        this.area_code = area_code;
+        this.eir_code = eir_code;
+    }
+
     public DB_Address(ResultSet rs) {
         try {
             address_id = rs.getInt( Att_Address.address_id.column);
