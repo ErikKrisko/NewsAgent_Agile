@@ -12,7 +12,7 @@ public class DB_Invoice
 
     public DB_Invoice(){
     }
-
+/*
     public void getByID(JDBC con, int id) throws DB_InvoiceExceptionHandler {
         try {
             ResultSet rs = con.getSet("Select * from invoice where invoice_id = " + id);
@@ -25,9 +25,9 @@ public class DB_Invoice
 //                customer.getByID(con, rs.getInt(5));
             }
         }
-        catch (SQLException | JDBCExceptionHandler /*| DB_CustomerExceptionHandler*/ e) {
+        catch (SQLException | JDBCExceptionHandler | DB_CustomerExceptionHandler e) {
             throw new DB_InvoiceExceptionHandler(e.getMessage());
-        }
+        }*/
         //Delete invoice
         /*
         public static void deleteInvoice() throws SQLException {
@@ -80,8 +80,8 @@ public class DB_Invoice
          sta7.executeUpdate("update student set dob ='"+ lastdob + "' where
 s       studentId = '"+edit+"'" );
         }
-         */
-    }
+
+    }*/
 
     @Override
     public String toString() {

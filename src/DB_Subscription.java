@@ -28,7 +28,7 @@ public class DB_Subscription {
     public DB_Subscription() {
 
     }
-
+/*
     public void getByID(int cus_id) throws DB_SubscriptionExceptionHandler {
         try {
             ResultSet rs = connection.getSet(" SELECT * FROM subscription WHERE customer_id = " + cus_id);
@@ -51,7 +51,7 @@ public class DB_Subscription {
         } catch (JDBCExceptionHandler | SQLException | DB_HandlerExceptionHandler e) {
             throw new DB_SubscriptionExceptionHandler(e.getMessage());
         }
-    }
+    }*/
 
     public static JDBC getConnection()
     {

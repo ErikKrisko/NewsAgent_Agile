@@ -7,7 +7,7 @@ public class DB_Address {
     //  Handler for storing initialized elements
     private static DB_Handler handler;
     //  Base address attributes
-    private int address_id;
+    private int address_id = 0;
     private String full_address, area_code, eir_code;
 
     /** Blank constructor */

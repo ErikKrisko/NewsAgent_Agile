@@ -8,7 +8,7 @@ public class DB_Customer {
     //  Handler for storing initialized elements
     private static DB_Handler handler;
     //  Base customer attributes
-    private int customer_id;
+    private int customer_id = 0;
     private String first_name, last_name, phone_no;
     //  External customer attributes
     private DB_Address address;
@@ -60,6 +60,18 @@ public class DB_Customer {
             default -> throw new DB_CustomerExceptionHandler("Internal error. Attribute unspecified.");
         }
     }
+
+    public String get(Att_Customer attribute) throws DB_CustomerExceptionHandler {
+        switch (attribute) {
+            case customer_id -> { return "" + customer_id; }
+            case first_name -> { return first_name; }
+            case last_name -> { return last_name; }
+            case phone_no -> { return phone_no; }
+            case address -> { return "" + address.getAddress_id(); }
+            default -> { throw new DB_CustomerExceptionHandler("Attribute error"); }
+        }
+    }
+
     //  AUTO GENERATED toString
     @Override
     public String toString() {
@@ -81,25 +93,25 @@ public class DB_Customer {
     public void setPhone_no(String phone_no) {  this.phone_no = phone_no; }
     public DB_Address getAddress() {    return address; }
     public void setAddress(DB_Address address) {    this.address = address; }
-    //  JDBC connection
-    public static JDBC getConnection() {    return connection; }
-    public static void setConnection(JDBC connection) { DB_Customer.connection = connection; }
-    //  Handler
-    public static DB_Handler getHandler() { return handler; }
-    public static void setHandler(DB_Handler handler) { DB_Customer.handler = handler; }
 }
 
 /** List of customer attributes */
 enum Att_Customer {
-    customer_id(1),
-    first_name(2),
-    last_name(3),
-    phone_no(4),
-    address(5);
+    customer_id(1, "customer_id"),
+    first_name(2, "first_name"),
+    last_name(3, "last_name"),
+    phone_no(4, "phone_no"),
+    address(5, "address_id");
 
+    //  Column in which the given attribute appears by default
     public final int column;
+    //  Name of column in which te attribute appears by default
+    public final String name;
 
-    Att_Customer(int i) { this.column = i; }
+    Att_Customer(int column, String columnName) {
+        this.column = column;
+        this.name = columnName;
+    }
 }
 
 /** Search object for customer */

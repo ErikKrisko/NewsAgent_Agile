@@ -29,7 +29,7 @@ public class DB_Delivery
     }
 
     public DB_Delivery() { }
-
+/*
     public void getByID(int id) throws DB_DeliveryExceptionHandler {
         try {
             ResultSet rs = connection.getSet("Select * from delivery where delivery_id = " + id);
@@ -48,7 +48,7 @@ public class DB_Delivery
             throw new DB_DeliveryExceptionHandler(e.getMessage());
         }
     }
-
+*/
     public void createDelivery()
     {
         //INSERT INTO delivery VALUES(null,?,?,?,?);

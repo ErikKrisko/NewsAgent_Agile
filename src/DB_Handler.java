@@ -7,13 +7,7 @@ public class DB_Handler {
     //  Connection objects
     private Connection con = null;
     private Statement stmt = null;
-    private ResultSet rs = null;
-
-
-    //  JDBC Connection object
-    private JDBC connection;
     //  List of loaded elements
-    private LinkedList<DB_Customer> customers = new LinkedList<>();
     private LinkedList<DB_Address> addresses = new LinkedList<>();
     private LinkedList<DB_Delivery> deliveries = new LinkedList<>();
 
@@ -50,77 +44,141 @@ public class DB_Handler {
             System.out.println(add.toString());
         }
     }
-    public void printCustomers(){
-        for (DB_Customer cus : customers) {
-            System.out.println(cus.toString());
-        }
-    }
 
     /** Customer queries */
 
-    public void getCustomers(Search_Customer search) throws DB_HandlerExceptionHandler {
-        //  Clear two linked tables
-        customers.clear();
-        addresses.clear();
+    /** May likely be the core method for searching anything within the database.
+     * @param search
+     * @throws DB_HandlerExceptionHandler
+     */
+    public LinkedList<DB_Customer> getCustomers(Search_Customer search) throws DB_HandlerExceptionHandler {
+        //  Create bew Linked list of customers
+        LinkedList<DB_Customer> list = new LinkedList<>();
+        //  Open connection
+        open();
         try {
+            //  If no search parameters are specified
             if (search == null) {
-                connection = new JDBC();
-                connection.executeQuery("SELECT * FROM customer");
-                ResultSet rs = connection.getRs();
+                //  Create new result set
+                ResultSet rs = stmt.executeQuery("SELECT * FROM customer");
+                //  While there are results in the list create customer objects
                 while (rs.next()) {
-                    DB_Customer temp = new DB_Customer(rs);
-                    temp.setAddress( getAddress( rs.getInt( Att_Customer.address.column)));
-                    customers.add(temp);
+                    list.add( populateCustomer( rs));
                 }
-                connection.close();
+                close();
+                return list;
+            } else {
+                throw new DB_HandlerExceptionHandler("Search terms not implemented !");
             }
         }
-        catch (SQLException | JDBCExceptionHandler e) {
+        catch (SQLException e) {
             throw new DB_HandlerExceptionHandler(e.getMessage());
         }
-
     }
 
     public DB_Customer getCustomer(int ID) throws DB_HandlerExceptionHandler {
         try {
-            //  Check if given ID is in the list and return it
-            if ( checkCustomer(ID)) {
-                for (DB_Customer cus : customers) {
-                    if (cus.getCustomer_id() == ID)
-                        return cus;
-                }
-            //  Else create a new Customer and return it
+            //  Open connection and get new result set
+            open();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM customer WHERE customer_id = " + ID);
+            if ( rs.next()) {
+                DB_Customer temp = populateCustomer(rs);
+                close();
+                return temp;
             } else {
-                connection = new JDBC();
-                connection.executeQuery("SELECT * FROM customer WHERE customer_id = " + ID);
-                ResultSet rs = connection.getRs();
-                if ( rs.next()) {
-                    DB_Customer temp = new DB_Customer(rs);
-                    temp.setAddress( getAddress( rs.getInt( Att_Customer.address.column)));
-                    customers.add(temp);
-                    return temp;
-                }
-                connection.close();
+                //  If somehow this is reached throw an error
+                throw new DB_HandlerExceptionHandler("No customer with 'customer_id = " + ID + "' found.");
             }
-            //  If somehow this is reached throw an error
-            throw new DB_HandlerExceptionHandler("Logical error with customer handling.");
         }
-        catch (JDBCExceptionHandler | SQLException e) {
+        catch (SQLException e) {
             throw new DB_HandlerExceptionHandler(e.getMessage());
         }
     }
 
-    /** Private method for checking if given ID is in the list.
-     * @param ID to look for
-     * @return true if found, false if not found
-     */
-    private boolean checkCustomer(int ID) {
-        for (DB_Customer cus : customers) {
-            if (cus.getCustomer_id() == ID ) {
-                return true;
+    public int updateCustomer(DB_Customer customer) throws DB_HandlerExceptionHandler {
+        try {
+            //  If customer ID == null , create new otherwise update
+            if (customer.getCustomer_id() == 0) {
+                open();
+                //  Construct INSERT statement
+                PreparedStatement ps = con.prepareStatement("INSERT INTO customer VALUES(null, ?, ?, ?, ?)");
+                //  Populate values for the preparedStatement
+                ps.setString( Att_Customer.first_name.column - 1, customer.getFirst_name());
+                ps.setString( Att_Customer.last_name.column - 1, customer.getLast_name());
+                ps.setString( Att_Customer.phone_no.column - 1, customer.getPhone_no());
+                //! Need to handle new addresses (Check if address_id = 0)
+                ps.setInt( Att_Customer.address.column - 1, customer.getAddress().getAddress_id());
+                //  Execute update and return lines changed
+                int lines = ps.executeUpdate();
+                close();
+                return lines;
+            } else {
+                //  Open connection
+                open();
+                //  Get original customer data
+                ResultSet rs = stmt.executeQuery("SELECT * FROM customer WHERE customer_id = " + customer.getCustomer_id());
+                //  Check if customer data exists
+                if ( rs.next()) {
+                    //  Create comparable object
+                    DB_Customer original = populateCustomer(rs);
+                    //  Set changed state to false
+                    boolean changed = false;
+                    //  Check each attribute
+                    for (Att_Customer attribute : Att_Customer.values()) {
+                        //  If attributes do not match change=true
+                        if (! original.get( attribute).equals( customer.get( attribute))) {
+                            System.out.println(attribute.name);
+                            changed = true;
+                        }
+                    }
+                    //  If changes detected
+                    if (changed) {
+                        //  Base of the update
+                        String update = "UPDATE customer SET ";
+                        //  Update each value
+                        update += Att_Customer.first_name.name + " = '" + customer.getFirst_name() + "', ";
+                        update += Att_Customer.last_name.name + " = '" + customer.getLast_name() + "', ";
+                        update += Att_Customer.phone_no.name + " = '" + customer.getPhone_no() + "', ";
+                        update += Att_Customer.address.name + " = " + customer.getAddress().getAddress_id() + " ";
+                        //  Specify update target
+                        update += "WHERE " + Att_Customer.customer_id.name + " = " + customer.getCustomer_id();
+                        //  Create statement and executeUpdate.
+                        PreparedStatement ps = con.prepareStatement(update);
+                        int lines = ps.executeUpdate();
+                        close();
+                        return lines;
+                    } else {
+                        System.out.println("No changes detected");
+                        close();
+                        return 0;
+                    }
+                } else {
+                    close();
+                    throw new DB_HandlerExceptionHandler("There was customer_id mishandling.");
+                }
             }
         }
-        return false;
+        catch (SQLException | DB_CustomerExceptionHandler e) {
+            throw new DB_HandlerExceptionHandler( e.getMessage());
+        }
+    }
+
+    /** Populates DB_Customer object with data from a result set ads it to customers list and returns it.
+     * @param rs result set containing customer information
+     * @return new DB_Customer object
+     * @throws DB_HandlerExceptionHandler
+     */
+    private DB_Customer populateCustomer(ResultSet rs) throws DB_HandlerExceptionHandler {
+        try {
+            //  Create customer with given result set
+            DB_Customer temp = new DB_Customer(rs);
+            //  Set customer address with through given ID
+            temp.setAddress( getAddress( rs.getInt(Att_Customer.address.column)));
+            return temp;
+        }
+        catch (JDBCExceptionHandler | SQLException e) {
+            throw new DB_HandlerExceptionHandler(e.getMessage());
+        }
     }
 
 
@@ -137,20 +195,19 @@ public class DB_Handler {
                 }
                 //  Else create a new Customer and return it
             } else {
-                connection = new JDBC();
-                connection.executeQuery("SELECT * FROM address WHERE address_id = " + ID);
-                ResultSet rs = connection.getRs();
+                open();
+                ResultSet rs = stmt.executeQuery("SELECT * FROM address WHERE address_id = " + ID);
                 if ( rs.next()) {
                     DB_Address temp = new DB_Address(rs);
                     addresses.add(temp);
                     return temp;
                 }
-                connection.close();
+                close();
             }
             //  If somehow this is reached throw an error
             throw new DB_HandlerExceptionHandler("Logical error with customer handling.");
         }
-        catch (JDBCExceptionHandler | SQLException e) {
+        catch (SQLException e) {
             throw new DB_HandlerExceptionHandler(e.getMessage());
         }
     }
@@ -172,7 +229,7 @@ public class DB_Handler {
         else {
             deliveries.add(delivery);
         }
-    }
+    }/*
     public DB_Delivery getDelivery(int id) throws DB_HandlerExceptionHandler {
         try {
             if (checkDelivery(id)) {
@@ -192,7 +249,7 @@ public class DB_Handler {
         catch (DB_DeliveryExceptionHandler e) {
             throw new DB_HandlerExceptionHandler(e.getMessage());
         }
-    }
+    }*/
     private boolean checkDelivery(int id) {
         for (DB_Delivery deli : deliveries) {
             if (deli.getDelivery_id() == id ) {
