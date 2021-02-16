@@ -232,6 +232,15 @@ public class DB_Handler {
         }
     }
 
+    //  AUTO GENERATED getters and setters
+    public String getUrl() { return url; }
+    public void setUrl(String url) { this.url = url; }
+    public String getUser() { return user; }
+    public void setUser(String user) { this.user = user; }
+    public String getPass() { return pass; }
+    public void setPass(String pass) { this.pass = pass; }
+    public String getDbName() { return dbName; }
+    public void setDbName(String dbName) { this.dbName = dbName; }
 }
 
 class DB_HandlerExceptionHandler extends Exception {
