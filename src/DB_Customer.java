@@ -21,14 +21,14 @@ public class DB_Customer {
         this.address = address;
     }
 
-    public DB_Customer(ResultSet rs) throws JDBCExceptionHandler {
+    public DB_Customer(ResultSet rs) throws DB_CustomerExceptionHandler {
         try {
             customer_id = rs.getInt( Att_Customer.customer_id.column);
             first_name = rs.getString( Att_Customer.first_name.column);
             last_name = rs.getString( Att_Customer.last_name.column);
             phone_no = rs.getString( Att_Customer.phone_no.column);
         } catch (SQLException e) {
-            throw new JDBCExceptionHandler(e.getMessage());
+            throw new DB_CustomerExceptionHandler(e.getMessage());
         }
     }
 
@@ -118,17 +118,23 @@ enum Att_Customer {
 
 /** Search object for customer WIP! */
 class Search_Customer {
-    //  !TEMP code will need to be changed
+    private Att_Customer attribute;
+    private String term;
+    private boolean strong;
 
-    //  Attribute reference
-    private Att_Customer[] attributes;
-    //  Search term
-    private String[] term;
-
-    public Search_Customer (Att_Customer[] attributes, String[] term) {
-        this.attributes = attributes;
+    public Search_Customer(Att_Customer attribute, String term, boolean strong) {
+        this.attribute = attribute;
         this.term = term;
+        this.strong = strong;
     }
+
+    //  AUTO GENERATED getters and setters
+    public Att_Customer getAttribute() { return attribute; }
+    public void setAttribute(Att_Customer attribute) { this.attribute = attribute; }
+    public String getTerm() { return term; }
+    public void setTerm(String term) { this.term = term; }
+    public boolean isStrong() { return strong; }
+    public void setStrong(boolean strong) { this.strong = strong; }
 }
 
 

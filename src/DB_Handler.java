@@ -8,6 +8,7 @@ public class DB_Handler {
     private Connection con = null;
     private Statement stmt = null;
     //  List of loaded elements
+    //  TO BE removed ASAP
     private LinkedList<DB_Address> addresses = new LinkedList<>();
     private LinkedList<DB_Delivery> deliveries = new LinkedList<>();
 
@@ -48,17 +49,17 @@ public class DB_Handler {
     /** Customer queries */
 
     /** May likely be the core method for searching anything within the database.
-     * @param search
+     * @param search_list
      * @throws DB_HandlerExceptionHandler
      */
-    public LinkedList<DB_Customer> getCustomers(Search_Customer search) throws DB_HandlerExceptionHandler {
+    public LinkedList<DB_Customer> getCustomers(Search_Customer[] search_list) throws DB_HandlerExceptionHandler {
         //  Create bew Linked list of customers
         LinkedList<DB_Customer> list = new LinkedList<>();
         //  Open connection
         open();
         try {
             //  If no search parameters are specified
-            if (search == null) {
+            if (search_list == null) {
                 //  Create new result set
                 ResultSet rs = stmt.executeQuery("SELECT * FROM customer");
                 //  While there are results in the list create customer objects
@@ -68,7 +69,24 @@ public class DB_Handler {
                 close();
                 return list;
             } else {
-                throw new DB_HandlerExceptionHandler("Search terms not implemented !");
+                //  Construct a query
+                String query = "SELECT * FROM customer WHERE ";
+                for (Search_Customer search : search_list) {
+                    if (search.isStrong())
+                        query += search.getAttribute().name + " = '" + search.getTerm() + "', ";
+                    else
+                        query += search.getAttribute().name + " LIKE '" + search.getTerm() + "', ";
+                }
+                //  Cut the last two characters off ( ", " ) from the end
+                query = query.substring(0, query.length() - 2 );
+                System.out.println(query);
+                ResultSet rs = stmt.executeQuery(query);
+                LinkedList<DB_Customer> tempList = new LinkedList<>();
+                while (rs.next()) {
+                    DB_Customer temp = populateCustomer(rs);
+                    tempList.add(temp);
+                }
+                return tempList;
             }
         }
         catch (SQLException e) {
@@ -176,7 +194,7 @@ public class DB_Handler {
             temp.setAddress( getAddress( rs.getInt(Att_Customer.address.column)));
             return temp;
         }
-        catch (JDBCExceptionHandler | SQLException e) {
+        catch (SQLException | DB_CustomerExceptionHandler e) {
             throw new DB_HandlerExceptionHandler(e.getMessage());
         }
     }

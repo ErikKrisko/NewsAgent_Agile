@@ -1,4 +1,5 @@
 import java.sql.SQLOutput;
+import java.util.LinkedList;
 
 public class testClass {
     public static void main(String[] args){
@@ -13,16 +14,19 @@ public class testClass {
 
             DB_Handler handler = new DB_Handler("jdbc:mysql://localhost:3306/newsagent?useTimezone=true&serverTimezone=UTC", "root", "admin");
 
-            DB_Customer test = new DB_Customer("jon","Smit","1234567890", handler.getAddress(2));
+            DB_Customer customer1 = new DB_Customer("Buz","Smit","1234567890", handler.getAddress(2));
+            DB_Customer customer2 = new DB_Customer("Bob", "Lid", "0987654321", handler.getAddress(2));
+            handler.updateCustomer(customer1);
+            handler.updateCustomer(customer2);
 
-            DB_Customer cus1 = handler.getCustomer(1);
-            cus1.setFirst_name("Bull");
-            cus1.setLast_name("Burr");
-            cus1.setPhone_no("0123456789");
-            handler.updateCustomer(cus1);
-            handler.updateCustomer(cus1);
-            handler.updateCustomer(test);
-            System.out.println(cus1.toString());
+
+
+
+
+            LinkedList<DB_Customer> cusList = handler.getCustomers(new Search_Customer[] {new Search_Customer(Att_Customer.first_name, "%i%", false)});
+            for (DB_Customer cust : cusList) {
+                System.out.println(cust.toString());
+            }
 
 
         }
