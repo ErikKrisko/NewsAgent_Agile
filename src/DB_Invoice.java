@@ -36,7 +36,7 @@ public class DB_Invoice
             int id = in.nextInt();
          Statement sta = con.createStatement();
             sta.executeUpdate("DELETE From invoice Where invoice_id = '" + id +
-             "';");// updates the dadatabse with the new student
+             "';");// updates the database with the new student
              displayAllInvoice();
 }
           */
@@ -53,32 +53,30 @@ public class DB_Invoice
         // update invoice
         displayAllStudents();
          System.out.println("Please enter what student you want to edit");//it
-        asks the user what students it wants to edit
+        asks the user what invoice it wants to edit
         int edit = in.nextInt();// takes in the input that the user enters
-        System.out.println("Please enter the new first name you want to
-        change");// asks what name the user wants to change
-        String newfname = in.next();// takes in entry
+        System.out.println("Please enter the new invoice you want to edit");// asks what name the user wants to change
+        String invoice_id = in.next();// takes in entry
         Statement sta5 = con.createStatement();//Creates statment and takes the
         sql below and updates what is below
-         sta5.executeUpdate("update student set firstname ='"+ newfname + "'
-        where studentId = '"+edit+"'" );
-        System.out.println("Please enter the new last name you want to
-        change");//this changes last name of student
-        String newlname = in.next();
+         sta5.executeUpdate("update student set invoice_id ='"+ newinvoice_id + "'
+        where invoice = '"+edit+"'" );
+        System.out.println("Please enter what you want the new invoice status");//this changes last name of student
+        String invoice_status = in.next();
         Statement sta6 = con.createStatement();
-        // this updates the student with the choices they have put i
-        sta5.executeUpdate("update student set lastname ='"+ newlname + "'
+        // this updates the student with the choices they have put in
+        sta5.executeUpdate("update invoice set invoice_id ='"+ invoice_status + "'
         where studentId = '"+edit+"'" );
-         System.out.println("Please enter the new day");
-         String day = in.next();
-        System.out.println("Please enter the new month");
-        String month = in.next();
         System.out.println("Please enter the new year");
         String year = in.next();
-        String lastdob = year+"-"+month+"-"+day;
+        System.out.println("Please enter the new month");
+        String month = in.next();
+        System.out.println("Please enter the new day");
+         String day = in.next();
+        String issue_date = year+"-"+month+"-"+day;
         Statement sta7 = con.createStatement();
-         sta7.executeUpdate("update student set dob ='"+ lastdob + "' where
-s       studentId = '"+edit+"'" );
+         sta7.executeUpdate("update invoice set date ='"+ issue_date + "' where
+s       invoice_id = '"+edit+"'" );
         }
 
     }*/
