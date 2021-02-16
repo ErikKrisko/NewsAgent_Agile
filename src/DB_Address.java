@@ -104,11 +104,7 @@ class Search_Address {
 class DB_AddressExceptionHandler extends Exception {
     String message;
 
-    public DB_AddressExceptionHandler(String errMessage){
-        message = errMessage;
-    }
+    public DB_AddressExceptionHandler(String errMessage){ message = errMessage; }
 
-    public String getMessage() {
-        return message;
-    }
+    public String getMessage() { return message; }
 }
