@@ -13,7 +13,7 @@ public class testClass {
 
             DB_Handler handler = new DB_Handler("jdbc:mysql://localhost:3306/newsagent?useTimezone=true&serverTimezone=UTC", "root", "admin");
 
-            DB_Customer test = new DB_Customer("jon","Smit","216478", handler.getAddress(2));
+            DB_Customer test = new DB_Customer("jon","Smit","1234567890", handler.getAddress(2));
 
             DB_Customer cus1 = handler.getCustomer(1);
             cus1.setFirst_name("Bull");
