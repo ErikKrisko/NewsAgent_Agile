@@ -59,7 +59,7 @@ public class DB_Handler {
         open();
         try {
             //  If no search parameters are specified
-            if (search_list == null) {
+            if (search_list == null || search_list.length <= 0) {
                 //  Create new result set
                 ResultSet rs = stmt.executeQuery("SELECT * FROM customer");
                 //  While there are results in the list create customer objects
