@@ -53,7 +53,7 @@ public class DB_Customer {
                 else
                     throw new DB_CustomerExceptionHandler("Invalid phone_no.");
             }
-            default -> throw new DB_CustomerExceptionHandler("Internal error. Attribute unspecified.");
+            default -> throw new DB_CustomerExceptionHandler("Internal error. Unhandled attribute.");
         }
     }
 
