@@ -1,8 +1,15 @@
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.LinkedList;
 
 public class DB_Handler {
+    //  Connection properties
+    private String url, user, pass, dbName;
+    //  Connection objects
+    private Connection con = null;
+    private Statement stmt = null;
+    private ResultSet rs = null;
+
+
     //  JDBC Connection object
     private JDBC connection;
     //  List of loaded elements
@@ -11,7 +18,31 @@ public class DB_Handler {
     private LinkedList<DB_Delivery> deliveries = new LinkedList<>();
 
     /** Blank constructor */
-    public DB_Handler () { }
+    public DB_Handler() { }
+
+    /** Creates DB_Handler with given connection
+     * @param url should default to "jdbc:mysql://localhost:3306/newsagent?useTimezone=true&serverTimezone=UTC"
+     * @param user should default to "root"
+     * @param pass should default to "admin"
+     */
+    public DB_Handler (String url, String user, String pass) {
+        this.url = url;
+        this.user = user;
+        this.pass = pass;
+    }
+
+    /** Creates DB_Handler with given connection
+     * @param url should default to "jdbc:mysql://localhost:3306/"
+     * @param user should default to "root"
+     * @param pass should default to "admin"
+     * @param dbName should default to "newsagent"
+     */
+    public DB_Handler (String url, String user, String pass, String dbName) {
+        this.url = url;
+        this.user = user;
+        this.pass = pass;
+        this.dbName = dbName;
+    }
 
     //  Temp print methods
     public void printAddress() {
@@ -169,6 +200,36 @@ public class DB_Handler {
             }
         }
         return false;
+    }
+
+
+    /** Connection controls */
+    /** Closes the current connection.
+     */
+    private void close() throws DB_HandlerExceptionHandler {
+        try {
+            con.close();
+        }
+        catch (Exception e) {
+            throw new DB_HandlerExceptionHandler(e.getMessage());
+        }
+    }
+
+    /** Establishes database connection
+     * @throws JDBCExceptionHandler
+     */
+    private void open() throws DB_HandlerExceptionHandler {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            if (dbName == null)
+                con = DriverManager.getConnection( url, user, pass);
+            else
+                con = DriverManager.getConnection( url + dbName, user, pass);
+            stmt = con.createStatement();
+        }
+        catch(SQLException | ClassNotFoundException e) {
+            throw new DB_HandlerExceptionHandler(e.getMessage());
+        }
     }
 
 }
