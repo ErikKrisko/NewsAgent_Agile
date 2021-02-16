@@ -3,25 +3,21 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class DB_Customer {
-    //  Connection for creating external attributes as required
-    private static JDBC connection;
-    //  Handler for storing initialized elements
-    private static DB_Handler handler;
     //  Base customer attributes
     private int customer_id = 0;
     private String first_name, last_name, phone_no;
     //  External customer attributes
     private DB_Address address;
     //  List of customer holidays
-    //  NEED TO DO
+    //! Holidays WIP
 
     /** Blank constructor */
     public DB_Customer() { }
 
-    public DB_Customer(String first_name, String last_name, String phone_no, DB_Address address) {
-        this.first_name = first_name;
-        this.last_name = last_name;
-        this.phone_no = phone_no;
+    public DB_Customer(String first_name, String last_name, String phone_no, DB_Address address) throws DB_CustomerExceptionHandler {
+        this.first_name = vEntry( Att_Customer.first_name, first_name);
+        this.last_name = vEntry( Att_Customer.last_name, last_name);
+        this.phone_no = vEntry( Att_Customer.phone_no, phone_no);
         this.address = address;
     }
 
@@ -52,7 +48,7 @@ public class DB_Customer {
                     throw new DB_CustomerExceptionHandler("Invalid last_name.");
             }
             case phone_no -> {
-                if (entry.length() == 8)
+                if (entry.length() == 10)
                     return entry;
                 else
                     throw new DB_CustomerExceptionHandler("Invalid phone_no.");
@@ -61,6 +57,11 @@ public class DB_Customer {
         }
     }
 
+    /** Returns specified Att_Customer attribute as a String
+     * @param attribute attribute type to be returned
+     * @return an attribute value
+     * @throws DB_CustomerExceptionHandler
+     */
     public String get(Att_Customer attribute) throws DB_CustomerExceptionHandler {
         switch (attribute) {
             case customer_id -> { return "" + customer_id; }
@@ -86,17 +87,18 @@ public class DB_Customer {
     //  AUTO GENERATED getters and setters
     public int getCustomer_id() {   return customer_id; }
     public String getFirst_name() { return first_name; }
-    public void setFirst_name(String first_name) {  this.first_name = first_name; }
     public String getLast_name() {  return last_name; }
-    public void setLast_name(String last_name) {    this.last_name = last_name; }
     public String getPhone_no() {   return phone_no; }
-    public void setPhone_no(String phone_no) {  this.phone_no = phone_no; }
     public DB_Address getAddress() {    return address; }
+    public void setFirst_name(String first_name) throws DB_CustomerExceptionHandler {  this.first_name = vEntry( Att_Customer.first_name, first_name); }
+    public void setLast_name(String last_name) throws DB_CustomerExceptionHandler {    this.last_name = vEntry( Att_Customer.last_name, last_name); }
+    public void setPhone_no(String phone_no) throws DB_CustomerExceptionHandler {  this.phone_no = vEntry( Att_Customer.phone_no, phone_no); }
     public void setAddress(DB_Address address) {    this.address = address; }
 }
 
 /** List of customer attributes */
 enum Att_Customer {
+    //  Customer table attributes
     customer_id(1, "customer_id"),
     first_name(2, "first_name"),
     last_name(3, "last_name"),
@@ -114,7 +116,7 @@ enum Att_Customer {
     }
 }
 
-/** Search object for customer */
+/** Search object for customer WIP! */
 class Search_Customer {
     //  !TEMP code will need to be changed
 
