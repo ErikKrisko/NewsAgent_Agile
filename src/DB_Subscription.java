@@ -1,11 +1,7 @@
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
-
 public class DB_Subscription {
     private static JDBC connection;
     //  Handler for storing initialized elements
-    private static DB_Handler handler;
+    private static DAO handler;
     //Private count thats an integer
     private int[] count = new int[0];
     private int size;
@@ -63,11 +59,11 @@ public class DB_Subscription {
         DB_Subscription.connection = connection;
     }
 
-    public static DB_Handler getHandler() {
+    public static DAO getHandler() {
         return handler;
     }
 
-    public static void setHandler(DB_Handler handler) {
+    public static void setHandler(DAO handler) {
         DB_Subscription.handler = handler;
     }
 

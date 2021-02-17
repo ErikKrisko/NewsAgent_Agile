@@ -52,12 +52,12 @@ public class JDBC {
         }
     }
 
-    public void executeQuery(String query) throws DB_HandlerExceptionHandler {
+    public void executeQuery(String query) throws DAOExceptionHandler {
         try {
             rs = stmt.executeQuery(query);
         }
         catch (SQLException e) {
-            throw new DB_HandlerExceptionHandler(e.getMessage());
+            throw new DAOExceptionHandler(e.getMessage());
         }
     }
 

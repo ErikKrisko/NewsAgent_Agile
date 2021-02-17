@@ -1,13 +1,11 @@
 import java.sql.Date;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 public class DB_Delivery
 {
     //  Connection for creating external attributes as required
     private static JDBC connection;
     //  Handler for storing initialized elements
-    private static DB_Handler handler;
+    private static DAO handler;
     //  Base customer attributes
     private int delivery_id;
     private Date delivery_date;
@@ -81,8 +79,8 @@ public class DB_Delivery
 
     public static JDBC getConnection() { return connection; }
     public static void setConnection(JDBC connection) { DB_Delivery.connection = connection; }
-    public static DB_Handler getHandler() { return handler; }
-    public static void setHandler(DB_Handler handler) { DB_Delivery.handler = handler; }
+    public static DAO getHandler() { return handler; }
+    public static void setHandler(DAO handler) { DB_Delivery.handler = handler; }
 }
 
 

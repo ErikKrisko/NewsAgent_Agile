@@ -1,7 +1,7 @@
 import java.sql.*;
 import java.util.LinkedList;
 
-public class DB_Handler {
+public class DAO {
     //  Connection properties
     private String url, user, pass, dbName;
     //  Connection objects
@@ -12,14 +12,14 @@ public class DB_Handler {
     private LinkedList<DB_Delivery> deliveries = new LinkedList<>();
 
     /** Blank constructor */
-    public DB_Handler() { }
+    public DAO() { }
 
     /** Creates DB_Handler with given connection
      * @param url should default to "jdbc:mysql://localhost:3306/newsagent?useTimezone=true&serverTimezone=UTC"
      * @param user should default to "root"
      * @param pass should default to "admin"
      */
-    public DB_Handler (String url, String user, String pass) {
+    public DAO(String url, String user, String pass) {
         this.url = url;
         this.user = user;
         this.pass = pass;
@@ -31,7 +31,7 @@ public class DB_Handler {
      * @param pass should default to "admin"
      * @param dbName should default to "newsagent"
      */
-    public DB_Handler (String url, String user, String pass, String dbName) {
+    public DAO(String url, String user, String pass, String dbName) {
         this.url = url;
         this.user = user;
         this.pass = pass;
@@ -43,9 +43,9 @@ public class DB_Handler {
 
     /** Returns customer by specified search criteria or all of no search terms provided.
      * @param search_list Keywords to search for or null to return all customers.
-     * @throws DB_HandlerExceptionHandler if an SQL error occured
+     * @throws DAOExceptionHandler if an SQL error occured
      */
-    public LinkedList<DB_Customer> getCustomers(Search_Customer[] search_list) throws DB_HandlerExceptionHandler {
+    public LinkedList<DB_Customer> getCustomers(Search_Customer[] search_list) throws DAOExceptionHandler {
         //  Create bew Linked list of customers
         LinkedList<DB_Customer> list = new LinkedList<>();
         //  Open connection
@@ -84,16 +84,16 @@ public class DB_Handler {
             }
         }
         catch (SQLException e) {
-            throw new DB_HandlerExceptionHandler(e.getMessage());
+            throw new DAOExceptionHandler(e.getMessage());
         }
     }
 
     /** Get customer by specified ID.
      * @param ID of a customer on the database.
      * @return DB_Customer object that matches given ID
-     * @throws DB_HandlerExceptionHandler If there was no customer with given ID or an SQL error occured.
+     * @throws DAOExceptionHandler If there was no customer with given ID or an SQL error occured.
      */
-    public DB_Customer getCustomer(int ID) throws DB_HandlerExceptionHandler {
+    public DB_Customer getCustomer(int ID) throws DAOExceptionHandler {
         try {
             //  Open connection and get new result set
             open();
@@ -105,20 +105,20 @@ public class DB_Handler {
             } else {
                 close();
                 //  If somehow this is reached throw an error
-                throw new DB_HandlerExceptionHandler("No customer with 'customer_id = " + ID + " found.");
+                throw new DAOExceptionHandler("No customer with 'customer_id = " + ID + " found.");
             }
         }
         catch (SQLException e) {
-            throw new DB_HandlerExceptionHandler(e.getMessage());
+            throw new DAOExceptionHandler(e.getMessage());
         }
     }
 
     /** Issues update for customer. Creates if ID is = 0 or updates an existing entry.
      * @param customer object which to update / create.
      * @return int number of lines changed
-     * @throws DB_HandlerExceptionHandler if an SQL error occurred or there was customer_id misshandling.
+     * @throws DAOExceptionHandler if an SQL error occurred or there was customer_id misshandling.
      */
-    public int updateCustomer(DB_Customer customer) throws DB_HandlerExceptionHandler {
+    public int updateCustomer(DB_Customer customer) throws DAOExceptionHandler {
         try {
             //  If customer ID == null , create new otherwise update
             if (customer.getCustomer_id() == 0) {
@@ -176,21 +176,21 @@ public class DB_Handler {
                     }
                 } else {
                     close();
-                    throw new DB_HandlerExceptionHandler("There was customer_id mishandling.");
+                    throw new DAOExceptionHandler("There was customer_id mishandling.");
                 }
             }
         }
         catch (SQLException | DB_CustomerExceptionHandler e) {
-            throw new DB_HandlerExceptionHandler( e.getMessage());
+            throw new DAOExceptionHandler( e.getMessage());
         }
     }
 
     /** Populates DB_Customer object with data from a result set and returns it.
      * @param rs result set containing customer information
      * @return new DB_Customer object
-     * @throws DB_HandlerExceptionHandler if there was DB_Customer error or SQL error.
+     * @throws DAOExceptionHandler if there was DB_Customer error or SQL error.
      */
-    private DB_Customer populateCustomer(ResultSet rs) throws DB_HandlerExceptionHandler {
+    private DB_Customer populateCustomer(ResultSet rs) throws DAOExceptionHandler {
         try {
             //  Create customer with given result set
             DB_Customer temp = new DB_Customer(rs);
@@ -199,7 +199,7 @@ public class DB_Handler {
             return temp;
         }
         catch (SQLException | DB_CustomerExceptionHandler e) {
-            throw new DB_HandlerExceptionHandler(e.getMessage());
+            throw new DAOExceptionHandler(e.getMessage());
         }
     }
 
@@ -210,9 +210,9 @@ public class DB_Handler {
     /** Returns address with given address_id.
      * @param ID for address_id.
      * @return populated DB_Address object.
-     * @throws DB_HandlerExceptionHandler
+     * @throws DAOExceptionHandler
      */
-    public DB_Address getAddress(int ID) throws DB_HandlerExceptionHandler {
+    public DB_Address getAddress(int ID) throws DAOExceptionHandler {
 
         try {
             open();
@@ -225,20 +225,20 @@ public class DB_Handler {
             else {
                 close();
                 //  If somehow this is reached throw an error
-                throw new DB_HandlerExceptionHandler("No address with 'address_id = " + ID + " found.");
+                throw new DAOExceptionHandler("No address with 'address_id = " + ID + " found.");
             }
         }
         catch (SQLException e) {
-            throw new DB_HandlerExceptionHandler(e.getMessage());
+            throw new DAOExceptionHandler(e.getMessage());
         }
     }
 
     //  ====================================================================================================
     // DELIVERY
 
-    public void addDelivery(DB_Delivery delivery) throws DB_HandlerExceptionHandler {
+    public void addDelivery(DB_Delivery delivery) throws DAOExceptionHandler {
         if (checkDelivery(delivery.getDelivery_id())) {
-            throw new DB_HandlerExceptionHandler("A delivery of ID: " + delivery.getDelivery_id() + " already exists.");
+            throw new DAOExceptionHandler("A delivery of ID: " + delivery.getDelivery_id() + " already exists.");
         }
         else {
             deliveries.add(delivery);
@@ -277,19 +277,19 @@ public class DB_Handler {
     /** Connection controls */
     /** Closes the current connection.
      */
-    private void close() throws DB_HandlerExceptionHandler {
+    private void close() throws DAOExceptionHandler {
         try {
             con.close();
         }
         catch (Exception e) {
-            throw new DB_HandlerExceptionHandler(e.getMessage());
+            throw new DAOExceptionHandler(e.getMessage());
         }
     }
 
     /** Establishes database connection
      * @throws JDBCExceptionHandler
      */
-    private void open() throws DB_HandlerExceptionHandler {
+    private void open() throws DAOExceptionHandler {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             if (dbName == null)
@@ -299,7 +299,7 @@ public class DB_Handler {
             stmt = con.createStatement();
         }
         catch(SQLException | ClassNotFoundException e) {
-            throw new DB_HandlerExceptionHandler(e.getMessage());
+            throw new DAOExceptionHandler(e.getMessage());
         }
     }
 
@@ -314,10 +314,10 @@ public class DB_Handler {
     public void setDbName(String dbName) { this.dbName = dbName; }
 }
 
-class DB_HandlerExceptionHandler extends Exception {
+class DAOExceptionHandler extends Exception {
     String message;
 
-    public DB_HandlerExceptionHandler(String errMessage) {
+    public DAOExceptionHandler(String errMessage) {
         message = errMessage;
     }
 
