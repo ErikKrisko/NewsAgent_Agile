@@ -9,7 +9,6 @@ public class DB_Handler {
     private Statement stmt = null;
     //  List of loaded elements
     //  TO BE removed ASAP
-    private LinkedList<DB_Address> addresses = new LinkedList<>();
     private LinkedList<DB_Delivery> deliveries = new LinkedList<>();
 
     /** Blank constructor */
@@ -39,18 +38,12 @@ public class DB_Handler {
         this.dbName = dbName;
     }
 
-    //  Temp print methods
-    public void printAddress() {
-        for (DB_Address add : addresses) {
-            System.out.println(add.toString());
-        }
-    }
+    //  ====================================================================================================
+    //  CUSTOMER
 
-    /** Customer queries */
-
-    /** May likely be the core method for searching anything within the database.
-     * @param search_list
-     * @throws DB_HandlerExceptionHandler
+    /** Returns customer by specified search criteria or all of no search terms provided.
+     * @param search_list Keywords to search for or null to return all customers.
+     * @throws DB_HandlerExceptionHandler if an SQL error occured
      */
     public LinkedList<DB_Customer> getCustomers(Search_Customer[] search_list) throws DB_HandlerExceptionHandler {
         //  Create bew Linked list of customers
@@ -86,6 +79,7 @@ public class DB_Handler {
                     DB_Customer temp = populateCustomer(rs);
                     tempList.add(temp);
                 }
+                close();
                 return tempList;
             }
         }
@@ -94,6 +88,11 @@ public class DB_Handler {
         }
     }
 
+    /** Get customer by specified ID.
+     * @param ID of a customer on the database.
+     * @return DB_Customer object that matches given ID
+     * @throws DB_HandlerExceptionHandler If there was no customer with given ID or an SQL error occured.
+     */
     public DB_Customer getCustomer(int ID) throws DB_HandlerExceptionHandler {
         try {
             //  Open connection and get new result set
@@ -104,8 +103,9 @@ public class DB_Handler {
                 close();
                 return temp;
             } else {
+                close();
                 //  If somehow this is reached throw an error
-                throw new DB_HandlerExceptionHandler("No customer with 'customer_id = " + ID + "' found.");
+                throw new DB_HandlerExceptionHandler("No customer with 'customer_id = " + ID + " found.");
             }
         }
         catch (SQLException e) {
@@ -113,6 +113,11 @@ public class DB_Handler {
         }
     }
 
+    /** Issues update for customer. Creates if ID is = 0 or updates an existing entry.
+     * @param customer object which to update / create.
+     * @return int number of lines changed
+     * @throws DB_HandlerExceptionHandler if an SQL error occurred or there was customer_id misshandling.
+     */
     public int updateCustomer(DB_Customer customer) throws DB_HandlerExceptionHandler {
         try {
             //  If customer ID == null , create new otherwise update
@@ -166,7 +171,6 @@ public class DB_Handler {
                         close();
                         return lines;
                     } else {
-                        System.out.println("No changes detected");
                         close();
                         return 0;
                     }
@@ -181,16 +185,16 @@ public class DB_Handler {
         }
     }
 
-    /** Populates DB_Customer object with data from a result set ads it to customers list and returns it.
+    /** Populates DB_Customer object with data from a result set and returns it.
      * @param rs result set containing customer information
      * @return new DB_Customer object
-     * @throws DB_HandlerExceptionHandler
+     * @throws DB_HandlerExceptionHandler if there was DB_Customer error or SQL error.
      */
     private DB_Customer populateCustomer(ResultSet rs) throws DB_HandlerExceptionHandler {
         try {
             //  Create customer with given result set
             DB_Customer temp = new DB_Customer(rs);
-            //  Set customer address with through given ID
+            //  Set customer address with given ID
             temp.setAddress( getAddress( rs.getInt(Att_Customer.address.column)));
             return temp;
         }
@@ -200,44 +204,36 @@ public class DB_Handler {
     }
 
 
-
+    //  ====================================================================================================
     //  ADDRESS
-    /** Same layout as CUSTOMER */
+
+    /** Returns address with given address_id.
+     * @param ID for address_id.
+     * @return populated DB_Address object.
+     * @throws DB_HandlerExceptionHandler
+     */
     public DB_Address getAddress(int ID) throws DB_HandlerExceptionHandler {
+
         try {
-            //  Check if given ID is in the list and return it
-            if ( checkAddress(ID)) {
-                for (DB_Address add : addresses) {
-                    if (add.getAddress_id() == ID)
-                        return add;
-                }
-                //  Else create a new Customer and return it
-            } else {
-                open();
-                ResultSet rs = stmt.executeQuery("SELECT * FROM address WHERE address_id = " + ID);
-                if ( rs.next()) {
-                    DB_Address temp = new DB_Address(rs);
-                    addresses.add(temp);
-                    return temp;
-                }
+            open();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM address WHERE address_id = " + ID);
+            if ( rs.next()) {
+                DB_Address temp = new DB_Address(rs);
                 close();
+                return temp;
             }
-            //  If somehow this is reached throw an error
-            throw new DB_HandlerExceptionHandler("Logical error with customer handling.");
+            else {
+                close();
+                //  If somehow this is reached throw an error
+                throw new DB_HandlerExceptionHandler("No address with 'address_id = " + ID + " found.");
+            }
         }
         catch (SQLException e) {
             throw new DB_HandlerExceptionHandler(e.getMessage());
         }
     }
-    private boolean checkAddress(int id) {
-        for (DB_Address add : addresses) {
-            if (add.getAddress_id() == id ) {
-                return true;
-            }
-        }
-        return false;
-    }
 
+    //  ====================================================================================================
     // DELIVERY
 
     public void addDelivery(DB_Delivery delivery) throws DB_HandlerExceptionHandler {
