@@ -5,88 +5,21 @@ import java.sql.SQLException;
 public class DB_Invoice
 {
     private int invoice_id;
-    private Date issue_date;
-    private boolean invoice_status;
-    private double invoice_total;
+    private String issue_date;
+    private String invoice_status;
+    private String invoice_total;
     private DB_Customer customer;
 
-    public DB_Invoice() throws DB_CustomerExceptionHandler, DB_InvoiceExceptionHandler {
-/*
-    public void getByID(JDBC con, int id) throws DB_InvoiceExceptionHandler {
-        try {
-            ResultSet rs = con.getSet("Select * from invoice where invoice_id = " + id);
-            if (rs.next()) {
-                invoice_id = rs.getInt(1);
-                issue_date = rs.getDate(2);
-                invoice_status = rs.getBoolean(3);
-                invoice_total = rs.getDouble(4);
-//                customer = new DB_Customer();
-//                customer.getByID(con, rs.getInt(5));
-            }
-        }
-        catch (SQLException | JDBCExceptionHandler | DB_CustomerExceptionHandler e) {
-            throw new DB_InvoiceExceptionHandler(e.getMessage());
-        }*/
-        //Delete invoice
-        /*
-        public static void deleteInvoice() throws SQLException {
-         displayinvoice_id();
-         System.out.println("Please enter what invoice you want to remove");
-            int id = in.nextInt();
-         Statement sta = con.createStatement();
-            sta.executeUpdate("DELETE From invoice Where invoice_id = '" + id +
-             "';");// updates the database with the new student
-             displayAllInvoice();
-}
-          */
+    public DB_Invoice() { }
 
-        /*
-        //Add new invoice
-        public static void addNewInvoice() throws SQLException {
-        Statement addNewInvoice = con.createStatement();
-        addNewinvoice_id.executeUpdate("insert into Invoice( invoice_id, issue_date,
-        invoice_status,invoice_total) values ('7','2021-03-02','1','13,49')");
-        }
-         */
-        /*
-        // update invoice
-        displayAllStudents();
-         System.out.println("Please enter what student you want to edit");//it
-        asks the user what invoice it wants to edit
-        int edit = in.nextInt();// takes in the input that the user enters
-        System.out.println("Please enter the new invoice you want to edit");// asks what name the user wants to change
-        String invoice_id = in.next();// takes in entry
-        Statement sta5 = con.createStatement();//Creates statment and takes the
-        sql below and updates what is below
-         sta5.executeUpdate("update student set invoice_id ='"+ newinvoice_id + "'
-        where invoice = '"+edit+"'" );
-        System.out.println("Please enter what you want the new invoice status");//this changes last name of student
-        String invoice_status = in.next();
-        Statement sta6 = con.createStatement();
-        // this updates the student with the choices they have put in
-        sta5.executeUpdate("update invoice set invoice_id ='"+ invoice_status + "'
-        where studentId = '"+edit+"'" );
-        System.out.println("Please enter the new year");
-        String year = in.next();
-        System.out.println("Please enter the new month");
-        String month = in.next();
-        System.out.println("Please enter the new day");
-         String day = in.next();
-        String issue_date = year+"-"+month+"-"+day;
-        Statement sta7 = con.createStatement();
-         sta7.executeUpdate("update invoice set date ='"+ issue_date + "' where
-s       invoice_id = '"+edit+"'" );
-        }
-
-    }*/
-    public DB_Invoice(String issue_date, Boolean invoice_status, String invoice_total, DB_Customer customer) throws DB_InvoiceExceptionHandler {
+    public DB_Invoice(String issue_date, Boolean invoice_status, String invoice_total, DB_Customer customer) throws DB_InvoiceExceptionHandler, DB_CustomerExceptionHandler {
             this.issue_date = vEntry( Att_Invoice.issue_date, issue_date);
             this.invoice_status = vEntry( Att_Invoice.invoice_status, invoice_status);
             this.invoice_total = vEntry( Att_Invoice.invoice_total, invoice_total);
             this.customer = customer;
         }
 
-    public DB_Invoice(ResultSet rs) throws DB_InvoiceExceptionHandler {
+    public DB_Invoice(ResultSet rs) throws DB_InvoiceExceptionHandler, DB_CustomerExceptionHandler {
             try {
                 invoice_id = rs.getInt( Att_Invoice.invoice_id.column);
                 issue_date = rs.getString( Att_Invoice.issue_date.column);
@@ -98,7 +31,7 @@ s       invoice_id = '"+edit+"'" );
         }
 
         //  Validate attributes
-        private String vEntry(Att_Invoice type, String entry) throws DB_InvoiceExceptionHandler {
+        private String vEntry(Att_Invoice type, String entry) throws DB_InvoiceExceptionHandler, DB_CustomerExceptionHandler {
             switch (type) {
                 case issue_date -> {
                     if (entry.length() > 0 && entry.length() <= 20)
