@@ -4,12 +4,8 @@ import java.sql.SQLException;
 
 public class DB_Delivery
 {
-    //  Connection for creating external attributes as required
-    private static JDBC connection;
-    //  Handler for storing initialized elements
-    private static DAO handler;
     //  Base customer attributes
-    private int delivery_id;
+    private long delivery_id;
     private Date delivery_date;
     private boolean delivery_status;
     // External Attributes
@@ -31,7 +27,7 @@ public class DB_Delivery
     {
         try
         {
-            delivery_id = rs.getInt(att_delivery.delivery_id.column);
+            delivery_id = rs.getLong(att_delivery.delivery_id.column);
             delivery_date = rs.getDate(att_delivery.delivery_date.column);
             delivery_status = rs.getBoolean(att_delivery.delivery_status.column);
         }
@@ -42,38 +38,17 @@ public class DB_Delivery
     }
 
     /**Validate Attributes*/
-    private String vEntry(att_delivery type, String entry) throws DB_DeliveryExceptionHandler {
-        switch (type) {
-            case delivery_date -> {
-                if (true)
-                    return entry;
-                else
-                    throw new DB_DeliveryExceptionHandler("Invalid delivery_date.");
-            }
-            case delivery_status -> {
-                //  Fix yer shet
-//                if (entry == 0 || entry == 1)
-                if (true)
-                    return entry;
-                else
-                    throw new DB_DeliveryExceptionHandler("Invalid delivery_status.");
-            }
-
-            default -> throw new DB_DeliveryExceptionHandler("Internal error. Unhandled attribute.");
+    private Date vDevDate(Date entry) throws DB_DeliveryExceptionHandler
+    {
+        if (entry.after(new Date(System.currentTimeMillis() - 86400000))) //86400000 one day in milli seconds
+        {
+            return entry;
+        }
+        else
+        {
+            throw new DB_DeliveryExceptionHandler("Invalid delivery_date.");
         }
     }
-
-    public String get(att_delivery attribute) throws DB_DeliveryExceptionHandler {
-        switch (attribute) {
-            case delivery_id -> { return "" + delivery_id; }
-            case delivery_date -> { return "" + delivery_date; }
-            case delivery_status -> { return "" + delivery_status; }
-            case customer -> { return "" + customer.getCustomer_id(); }
-            case invoice -> { return "" + invoice.getInvoice_id(); }
-            default -> { throw new DB_DeliveryExceptionHandler("Attribute error"); }
-        }
-    }
-
 
     @Override
     public String toString() {
@@ -88,15 +63,16 @@ public class DB_Delivery
 
     //AUTO GENERATED GETTERS AND SETTERS
 
-    public int getDelivery_id() { return delivery_id; }
+    public Long getDelivery_id() { return delivery_id; }
     public Date getDelivery_date() { return delivery_date; }
     public boolean isDelivery_status() { return delivery_status; }
     public DB_Customer getCustomer() { return customer; }
     public DB_Invoice getInvoice() { return invoice; }
     //  Date it or string it
 //    public void setDelivery_date(Date delivery_date) throws DB_DeliveryExceptionHandler { this.delivery_date = vEntry(att_delivery.delivery_date, delivery_date); }
-    //  Likewise, do some data conversion
-//    public void setDelivery_status(boolean delivery_status) throws DB_DeliveryExceptionHandler { this.delivery_status = vEntry(att_delivery.delivery_status, delivery_status); }
+
+    public void setDelivery_id(long delivery_id) { this.delivery_id = delivery_id; }
+    public void setDelivery_status(boolean delivery_status) { this.delivery_status = delivery_status; }
     public void setCustomer(DB_Customer customer) { this.customer = customer; }
     public void setInvoice(DB_Invoice invoice) { this.invoice = invoice; }
 }

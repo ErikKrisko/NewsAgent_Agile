@@ -9,7 +9,6 @@ public class DAO {
     private Statement stmt = null;
     //  List of loaded elements
     //  TO BE removed ASAP
-    private LinkedList<DB_Delivery> deliveries = new LinkedList<>();
 
     /** Blank constructor */
     public DAO() { }
@@ -240,14 +239,7 @@ public class DAO {
     //  ====================================================================================================
     // DELIVERY
 
-    public void addDelivery(DB_Delivery delivery) throws DAOExceptionHandler {
-        if (checkDelivery(delivery.getDelivery_id())) {
-            throw new DAOExceptionHandler("A delivery of ID: " + delivery.getDelivery_id() + " already exists.");
-        }
-        else {
-            deliveries.add(delivery);
-        }
-    }/*
+    /*
     public DB_Delivery getDelivery(int id) throws DB_HandlerExceptionHandler {
         try {
             if (checkDelivery(id)) {
@@ -268,14 +260,6 @@ public class DAO {
             throw new DB_HandlerExceptionHandler(e.getMessage());
         }
     }*/
-    private boolean checkDelivery(int id) {
-        for (DB_Delivery deli : deliveries) {
-            if (deli.getDelivery_id() == id ) {
-                return true;
-            }
-        }
-        return false;
-    }
 
 
     /** Connection controls */
