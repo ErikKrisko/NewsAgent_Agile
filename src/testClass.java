@@ -11,11 +11,14 @@ public class testClass {
             connection.executeScript("NewsAgent_Data.sql");
             connection.close();
 
+
             DAO handler = new DAO("jdbc:mysql://localhost:3306/newsagent?useTimezone=true&serverTimezone=UTC", "root", "admin");
+
+            DB_Customer custo1 = handler.getCustomer(9);
 
             DB_Customer customer1 = new DB_Customer("Buz","Smit","1234567890", handler.getAddress(2));
             DB_Customer customer2 = new DB_Customer("Bob", "Lid", "0987654321", handler.getAddress(2));
-            handler.updateCustomer(customer1);
+            handler.updateCustomer( customer1);
             System.out.println( customer1.toString());
             handler.updateCustomer(customer2);
             System.out.println( customer2.toString());

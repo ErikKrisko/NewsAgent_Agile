@@ -104,7 +104,7 @@ public class DAO {
             } else {
                 close();
                 //  If somehow this is reached throw an error
-                throw new DAOExceptionHandler("No customer with 'customer_id = " + ID + " found.");
+                throw new DAOExceptionHandler("No customer with 'customer_id = " + ID + " not found.");
             }
         }
         catch (SQLException e) {
@@ -129,7 +129,7 @@ public class DAO {
                 ps.setString( Att_Customer.last_name.column - 1, customer.getLast_name());
                 ps.setString( Att_Customer.phone_no.column - 1, customer.getPhone_no());
                 //! Need to handle new addresses (Check if address_id = 0)
-                ps.setInt( Att_Customer.address.column - 1, customer.getAddress().getAddress_id());
+                ps.setLong( Att_Customer.address.column - 1, customer.getAddress().getAddress_id());
                 //  Execute update and get generated ID
                 int lines = ps.executeUpdate();
                 ResultSet keys = ps.getGeneratedKeys();
@@ -141,6 +141,7 @@ public class DAO {
             } else {
                 //  Open connection
                 open();
+                //  --- IGNORE THIS BIT
                 //  Get original customer data
                 ResultSet rs = stmt.executeQuery("SELECT * FROM customer WHERE customer_id = " + customer.getCustomer_id());
                 //  Check if customer data exists
@@ -159,6 +160,7 @@ public class DAO {
                     }
                     //  If changes detected
                     if (changed) {
+                        //  --- END IGNORE HERE
                         //  Base of the update
                         String update = "UPDATE customer SET ";
                         //  Update each value
@@ -168,7 +170,7 @@ public class DAO {
                         update += Att_Customer.address.name + " = " + customer.getAddress().getAddress_id() + " ";
                         //  Specify update target
                         update += "WHERE " + Att_Customer.customer_id.name + " = " + customer.getCustomer_id();
-                        //  Create statement and executeUpdate.
+                        //  Create statement and executeUpdate. (Cannot recall why prepared statement was used)
                         PreparedStatement ps = con.prepareStatement(update);
                         int lines = ps.executeUpdate();
                         close();
@@ -260,6 +262,14 @@ public class DAO {
             throw new DB_HandlerExceptionHandler(e.getMessage());
         }
     }*/
+
+
+    //  ====================================================================================================
+    // INVOICE
+
+
+    //  ====================================================================================================
+    // SUBSCRIPTION
 
 
     /** Connection controls */
