@@ -123,16 +123,20 @@ public class DAO {
             //  If customer ID == null , create new otherwise update
             if (customer.getCustomer_id() == 0) {
                 open();
-                //  Construct INSERT statement
-                PreparedStatement ps = con.prepareStatement("INSERT INTO customer VALUES(null, ?, ?, ?, ?)");
+                //  Construct INSERT statement and request generated keys
+                PreparedStatement ps = con.prepareStatement("INSERT INTO customer VALUES(null, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
                 //  Populate values for the preparedStatement
                 ps.setString( Att_Customer.first_name.column - 1, customer.getFirst_name());
                 ps.setString( Att_Customer.last_name.column - 1, customer.getLast_name());
                 ps.setString( Att_Customer.phone_no.column - 1, customer.getPhone_no());
                 //! Need to handle new addresses (Check if address_id = 0)
                 ps.setInt( Att_Customer.address.column - 1, customer.getAddress().getAddress_id());
-                //  Execute update and return lines changed
+                //  Execute update and get generated ID
                 int lines = ps.executeUpdate();
+                ResultSet keys = ps.getGeneratedKeys();
+                //  Get generated Key
+                if (keys.next())
+                    customer.setCustomer_id( keys.getLong(1));
                 close();
                 return lines;
             } else {
@@ -317,11 +321,7 @@ public class DAO {
 class DAOExceptionHandler extends Exception {
     String message;
 
-    public DAOExceptionHandler(String errMessage) {
-        message = errMessage;
-    }
+    public DAOExceptionHandler(String errMessage) { message = errMessage; }
 
-    public String getMessage() {
-        return message;
-    }
+    public String getMessage() { return message; }
 }

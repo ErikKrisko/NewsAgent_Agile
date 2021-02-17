@@ -4,7 +4,7 @@ import java.sql.SQLException;
 
 public class DB_Customer {
     //  Base customer attributes
-    private int customer_id = 0;
+    private long customer_id = 0;
     private String first_name, last_name, phone_no;
     //  External customer attributes
     private DB_Address address;
@@ -85,11 +85,12 @@ public class DB_Customer {
                 '}';
     }
     //  AUTO GENERATED getters and setters
-    public int getCustomer_id() {   return customer_id; }
+    public long getCustomer_id() {   return customer_id; }
     public String getFirst_name() { return first_name; }
     public String getLast_name() {  return last_name; }
     public String getPhone_no() {   return phone_no; }
     public DB_Address getAddress() {    return address; }
+    public void setCustomer_id(long customer_id) { this.customer_id = customer_id; }
     public void setFirst_name(String first_name) throws DB_CustomerExceptionHandler {  this.first_name = vEntry( Att_Customer.first_name, first_name); }
     public void setLast_name(String last_name) throws DB_CustomerExceptionHandler {    this.last_name = vEntry( Att_Customer.last_name, last_name); }
     public void setPhone_no(String phone_no) throws DB_CustomerExceptionHandler {  this.phone_no = vEntry( Att_Customer.phone_no, phone_no); }

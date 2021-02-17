@@ -14,7 +14,8 @@ public class DB_Invoice
 
     public DB_Invoice(String issue_date, Boolean invoice_status, String invoice_total, DB_Customer customer) throws DB_InvoiceExceptionHandler, DB_CustomerExceptionHandler {
             this.issue_date = vEntry( Att_Invoice.issue_date, issue_date);
-            this.invoice_status = vEntry( Att_Invoice.invoice_status, invoice_status);
+            //  TYPES ! test your TYPES
+//            this.invoice_status = vEntry( Att_Invoice.invoice_status, invoice_status);
             this.invoice_total = vEntry( Att_Invoice.invoice_total, invoice_total);
             this.customer = customer;
         }
@@ -39,13 +40,13 @@ public class DB_Invoice
                     else
                         throw new DB_InvoiceExceptionHandler("Invalid issue date.");
                 }
-                case issue_status -> {
+                case invoice_status -> {
                     if (entry.length() > 0 && entry.length() <= 20)
                         return entry;
                     else
                         throw new DB_InvoiceExceptionHandler("Invalid issue status.");
                 }
-                case issue_total -> {
+                case invoice_total -> {
                     if (entry.length() == 10)
                         return entry;
                     else
@@ -55,7 +56,6 @@ public class DB_Invoice
             }
         }
 
-    }
 
     @Override
     public String toString() {
@@ -69,12 +69,18 @@ public class DB_Invoice
     }
 
     public int getInvoice_id() { return invoice_id; }
-    public Date getIssue_date() { return issue_date; }
-    public void setIssue_date(Date issue_date) { this.issue_date = issue_date; }
-    public boolean isInvoice_status() { return invoice_status; }
-    public void setInvoice_status(boolean invoice_status) { this.invoice_status = invoice_status; }
-    public double getInvoice_total() { return invoice_total; }
-    public void setInvoice_total(double invoice_total) { this.invoice_total = invoice_total; }
+    //  TYPES AGAIN
+//    public Date getIssue_date() { return issue_date; }
+    //  AND AGAIN
+//    public void setIssue_date(Date issue_date) { this.issue_date = issue_date; }
+    //  AND AGAIN
+//    public boolean isInvoice_status() { return invoice_status; }
+    //  DO YOU EVEN KNOW WHAT BOOLEAN IS ?
+//    public void setInvoice_status(boolean invoice_status) { this.invoice_status = invoice_status; }
+    //  FOR REAL THO ? WHY STORE THEM AS A STRING AND USE SOME OTHER TYPE ?
+//    public double getInvoice_total() { return invoice_total; }
+    //  IF YOU STORE A STRING TAKE A STRING... JESSUS.
+//    public void setInvoice_total(double invoice_total) { this.invoice_total = invoice_total; }
     public DB_Customer getCustomer() { return customer; }
     public void setCustomer(DB_Customer customer) { this.customer = customer; }
 }

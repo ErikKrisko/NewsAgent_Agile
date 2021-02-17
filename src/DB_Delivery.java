@@ -45,13 +45,15 @@ public class DB_Delivery
     private String vEntry(att_delivery type, String entry) throws DB_DeliveryExceptionHandler {
         switch (type) {
             case delivery_date -> {
-                if ()
+                if (true)
                     return entry;
                 else
                     throw new DB_DeliveryExceptionHandler("Invalid delivery_date.");
             }
             case delivery_status -> {
-                if (entry == 0 || entry == 1)
+                //  Fix yer shet
+//                if (entry == 0 || entry == 1)
+                if (true)
                     return entry;
                 else
                     throw new DB_DeliveryExceptionHandler("Invalid delivery_status.");
@@ -91,8 +93,10 @@ public class DB_Delivery
     public boolean isDelivery_status() { return delivery_status; }
     public DB_Customer getCustomer() { return customer; }
     public DB_Invoice getInvoice() { return invoice; }
-    public void setDelivery_date(Date delivery_date) throws DB_DeliveryExceptionHandler { this.delivery_date = vEntry(att_delivery.delivery_date, delivery_date); }
-    public void setDelivery_status(boolean delivery_status) throws DB_DeliveryExceptionHandler { this.delivery_status = vEntry(att_delivery.delivery_status, delivery_status); }
+    //  Date it or string it
+//    public void setDelivery_date(Date delivery_date) throws DB_DeliveryExceptionHandler { this.delivery_date = vEntry(att_delivery.delivery_date, delivery_date); }
+    //  Likewise, do some data conversion
+//    public void setDelivery_status(boolean delivery_status) throws DB_DeliveryExceptionHandler { this.delivery_status = vEntry(att_delivery.delivery_status, delivery_status); }
     public void setCustomer(DB_Customer customer) { this.customer = customer; }
     public void setInvoice(DB_Invoice invoice) { this.invoice = invoice; }
 }
