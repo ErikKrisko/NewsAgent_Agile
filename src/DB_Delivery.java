@@ -125,24 +125,3 @@ class DB_DeliveryExceptionHandler extends Exception
 }
 
 
-
-/*
-    public void getByID(int id) throws DB_DeliveryExceptionHandler {
-        try {
-            ResultSet rs = connection.getSet("Select * from delivery where delivery_id = " + id);
-            if(rs.next())
-            {
-                delivery_id = rs.getInt(attributes.delivery_id.index);
-                delivery_date = rs.getDate(attributes.delivery_date.index);
-                delivery_status = rs.getBoolean(attributes.delivery_status.index);
-                customer = handler.getCustomer(rs.getInt(attributes.customer.index));
-                //invoice = handler.getInvoice(rs.getInt(attributes.invoice.index));
-                handler.addDelivery(this);
-            }
-        }
-        catch (JDBCExceptionHandler | SQLException | DB_HandlerExceptionHandler e)
-        {
-            throw new DB_DeliveryExceptionHandler(e.getMessage());
-        }
-    }
-*/

@@ -239,27 +239,107 @@ public class DAO {
     //  ====================================================================================================
     // DELIVERY
 
-    /*
-    public DB_Delivery getDelivery(int id) throws DB_HandlerExceptionHandler {
+    public DB_Delivery getDelivery(int ID) throws DAOExceptionHandler
+    {
         try {
-            if (checkDelivery(id)) {
-                for (DB_Delivery deli : deliveries) {
-                    if (deli.getDelivery_id() == id) {
-                        return deli;
-                    }
-                }
-            } else {
-                DB_Delivery temp = new DB_Delivery();
-                temp.getByID(id);
-                this.deliveries.add(temp);
+            open();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM delivery WHERE delivery_id = " + ID);
+            if ( rs.next()) {
+                DB_Delivery temp = populateDelivery(rs);
+                close();
                 return temp;
+            } else {
+                close();
+                throw new DAOExceptionHandler("No delivery with 'delivery_id = " + ID + " found.");
             }
-            throw new DB_HandlerExceptionHandler("Logical error with delivery handling.");
         }
-        catch (DB_DeliveryExceptionHandler e) {
-            throw new DB_HandlerExceptionHandler(e.getMessage());
+        catch (SQLException e) {
+            throw new DAOExceptionHandler(e.getMessage());
         }
-    }*/
+    }
+
+    public int updateDelivery(DB_Delivery delivery) throws DAOExceptionHandler {
+        try{
+            if(delivery.getDelivery_id() == 0)
+            {
+                open();
+                PreparedStatement pstmt = con.prepareStatement("INSERT INTO customer VALUES(null, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+                pstmt.setDate(att_delivery.delivery_date.column - 1, delivery.getDelivery_date());
+                pstmt.setBoolean(att_delivery.delivery_status.column - 1, delivery.isDelivery_status());
+                pstmt.setLong( att_delivery.customer.column - 1, delivery.getCustomer().getCustomer_id());
+                pstmt.setLong( att_delivery.invoice.column - 1, delivery.getInvoice().getInvoice_id());
+
+                int lines = pstmt.executeUpdate();
+                ResultSet keys = pstmt.getGeneratedKeys();
+                if(keys.next()){
+                    delivery.setDelivery_id(keys.getLong(1));
+                }
+                close();
+                return lines;
+            }
+            else{
+                open();
+                ResultSet rs = stmt.executeQuery("SELECT * FROM delivery WHERE delivery_id = " + delivery.getDelivery_id());
+                if(rs.next()){
+                    DB_Delivery og = populateDelivery(rs);
+
+                    String update = "UPDATE customer SET";
+                    update += att_delivery.delivery_date.columnName + " = '" + delivery.getDelivery_date() + "', ";
+                    update += att_delivery.delivery_status.columnName + " = '" + delivery.isDelivery_status() + "', ";
+                    update += att_delivery.customer.columnName + " = " + delivery.getCustomer().getCustomer_id() + " ";
+                    update += att_delivery.invoice.columnName + " = " + delivery.getInvoice().getInvoice_id() + " ";
+                    update += "WHERE " + att_delivery.delivery_id.columnName + " = " + delivery.getDelivery_id();
+
+                    PreparedStatement pstmt = con.prepareStatement(update);
+                    int lines = pstmt.executeUpdate();
+                    close();
+                    return lines;
+                }else{
+                   close();
+                    throw new DAOExceptionHandler("There was delivery_id mishandling.");
+                }
+            }
+        }
+        catch(SQLException e)
+        {
+            throw new DAOExceptionHandler( e.getMessage());
+        }
+    }
+
+    private int deleteDelivery(int ID) throws DAOExceptionHandler {
+        try{
+            open();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM delivery WHERE delivery_id = " + ID);
+            if(rs.next()){
+                PreparedStatement pstmt = con.prepareStatement("DELETE FROM delivery where delivery_id = " + ID);
+                int lines = pstmt.executeUpdate();
+                close();
+                return lines;
+            }
+            else
+            {
+                close();
+                throw new DAOExceptionHandler("No delivery with 'delivery_id = " + ID + " found.");
+            }
+        }
+        catch(SQLException e) {
+            throw new DAOExceptionHandler(e.getMessage());
+        }
+    }
+
+    private DB_Delivery populateDelivery(ResultSet rs) throws DAOExceptionHandler {
+        try {
+            DB_Delivery temp = new DB_Delivery(rs);
+            temp.setCustomer(getCustomer(rs.getInt(att_delivery.customer.column)));
+            //temp.setInvoice(getInvoice(rs.getInt(att_delivery.invoice.column)));
+            return temp;
+        }
+        catch(SQLException | DB_DeliveryExceptionHandler e) {
+            throw new DAOExceptionHandler(e.getMessage());
+        }
+    }
+
+
 
 
     /** Connection controls */
