@@ -4,33 +4,43 @@ import java.sql.SQLException;
 
 public class DB_Invoice
 {
-    private int invoice_id;
-    private String issue_date;
-    private String invoice_status;
-    private String invoice_total;
+    private long invoice_id;
+    private Date issue_date;
+    private boolean invoice_status;
+    private double invoice_total;
     private DB_Customer customer;
 
     public DB_Invoice() { }
 
-    public DB_Invoice(String issue_date, Boolean invoice_status, String invoice_total, DB_Customer customer) throws DB_InvoiceExceptionHandler, DB_CustomerExceptionHandler {
-            this.issue_date = vEntry( Att_Invoice.issue_date, issue_date);
-            //  TYPES ! test your TYPES
-//            this.invoice_status = vEntry( Att_Invoice.invoice_status, invoice_status);
-            this.invoice_total = vEntry( Att_Invoice.invoice_total, invoice_total);
-            this.customer = customer;
-        }
+    public DB_Invoice(Date issue_date, boolean invoice_status, double invoice_total, DB_Customer customer) throws DB_InvoiceExceptionHandler, DB_CustomerExceptionHandler {
+        this.issue_date = vDate( issue_date);
+        this.invoice_status = invoice_status;
+        this.invoice_total = vTotal( invoice_total);
+        this.customer = customer;
+    }
 
     public DB_Invoice(ResultSet rs) throws DB_InvoiceExceptionHandler, DB_CustomerExceptionHandler {
-            try {
-                invoice_id = rs.getInt( Att_Invoice.invoice_id.column);
-                issue_date = rs.getString( Att_Invoice.issue_date.column);
-                invoice_status = rs.getString( Att_Invoice.invoice_status.column);
-                invoice_total = rs.getString( Att_Invoice.invoice_total.column);
-            } catch (SQLException e) {
-                throw new DB_CustomerExceptionHandler(e.getMessage());
-            }
+        try {
+            invoice_id = rs.getInt( Att_Invoice.invoice_id.column);
+            issue_date = rs.getDate( Att_Invoice.issue_date.column);
+            invoice_status = rs.getBoolean( Att_Invoice.invoice_status.column);
+            invoice_total = rs.getDouble( Att_Invoice.invoice_total.column);
+        } catch (SQLException e) {
+            throw new DB_CustomerExceptionHandler(e.getMessage());
+        }
+    }
+
+        private Date vDate(Date date) {
+            return new Date(System.currentTimeMillis());
         }
 
+        private double vTotal(double total) throws DB_InvoiceExceptionHandler {
+            if (total >= 0) {
+                return total;
+            } else {
+                throw new DB_InvoiceExceptionHandler("Invoice cannot be negative.");
+            }
+        }
         //  Validate attributes
         private String vEntry(Att_Invoice type, String entry) throws DB_InvoiceExceptionHandler, DB_CustomerExceptionHandler {
             switch (type) {
@@ -79,8 +89,8 @@ public class DB_Invoice
 //    public void setInvoice_status(boolean invoice_status) { this.invoice_status = invoice_status; }
     //  FOR REAL THO ? WHY STORE THEM AS A STRING AND USE SOME OTHER TYPE ?
 //    public double getInvoice_total() { return invoice_total; }
-    //  IF YOU STORE A STRING TAKE A STRING... JESSUS.
-//    public void setInvoice_total(double invoice_total) { this.invoice_total = invoice_total; }
+    //  IF YOU STORE A STRING TAKE A STRING... JESUS.
+    public void setInvoice_total(double invoice_total) { this.invoice_total = invoice_total; }
     public DB_Customer getCustomer() { return customer; }
     public void setCustomer(DB_Customer customer) { this.customer = customer; }
 }
