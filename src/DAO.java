@@ -283,12 +283,11 @@ public class DAO {
                 open();
                 ResultSet rs = stmt.executeQuery("SELECT * FROM delivery WHERE delivery_id = " + delivery.getDelivery_id());
                 if(rs.next()){
-                    //DB_Delivery og = populateDelivery(rs); //Not needed
 
-                    String update = "UPDATE customer SET";
+                    String update = "UPDATE delivery SET ";
                     update += att_delivery.delivery_date.columnName + " = '" + delivery.getDelivery_date() + "', ";
-                    update += att_delivery.delivery_status.columnName + " = '" + delivery.isDelivery_status() + "', ";
-                    update += att_delivery.customer.columnName + " = " + delivery.getCustomer().getCustomer_id() + " ";
+                    update += att_delivery.delivery_status.columnName + " = " + delivery.getDelivery_status() + ", ";
+                    update += att_delivery.customer.columnName + " = " + delivery.getCustomer().getCustomer_id() + ", ";
                     update += att_delivery.invoice.columnName + " = " + delivery.getInvoice().getInvoice_id() + " ";
                     update += "WHERE " + att_delivery.delivery_id.columnName + " = " + delivery.getDelivery_id();
 
