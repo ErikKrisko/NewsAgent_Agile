@@ -283,7 +283,7 @@ public class DAO {
                 open();
                 ResultSet rs = stmt.executeQuery("SELECT * FROM delivery WHERE delivery_id = " + delivery.getDelivery_id());
                 if(rs.next()){
-                    DB_Delivery og = populateDelivery(rs);
+                    //DB_Delivery og = populateDelivery(rs); //Not needed
 
                     String update = "UPDATE customer SET";
                     update += att_delivery.delivery_date.columnName + " = '" + delivery.getDelivery_date() + "', ";
@@ -311,7 +311,7 @@ public class DAO {
     private int deleteDelivery(int ID) throws DAOExceptionHandler {
         try{
             open();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM delivery WHERE delivery_id = " + ID);
+            ResultSet rs = stmt.executeQuery("SELECT * FROM delivery WHERE delivery_id = " + ID); //Check if resultset exists instead of deleting something that doesnt exist
             if(rs.next()){
                 PreparedStatement pstmt = con.prepareStatement("DELETE FROM delivery where delivery_id = " + ID);
                 int lines = pstmt.executeUpdate();
