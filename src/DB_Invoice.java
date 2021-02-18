@@ -99,6 +99,13 @@ public class DB_Invoice
         return invoice_status;
     }
 
+    public int getInvoice_status() {
+        if (invoice_status)
+            return 1;
+        else
+            return 0;
+    }
+
     public void setInvoice_status(boolean invoice_status) {
         this.invoice_status = invoice_status;
     }

@@ -42,7 +42,7 @@ public class DAO {
 
     /** Returns customer by specified search criteria or all of no search terms provided.
      * @param search_list Keywords to search for or null to return all customers.
-     * @throws DAOExceptionHandler if an SQL error occured
+     * @throws DAOExceptionHandler if an SQL error occurred
      */
     public LinkedList<DB_Customer> getCustomers(Search_Customer[] search_list) throws DAOExceptionHandler {
         //  Create bew Linked list of customers
@@ -352,6 +352,7 @@ public class DAO {
      * @throws DAOExceptionHandler if an SQL error occurred or there was invoice_id misshandling.
      */
     public int updateInvoice(DB_Invoice invoice) throws DAOExceptionHandler {
+        System.out.println();
         try {
             //  If customer ID == null , create new otherwise update
             if (invoice.getInvoice_id() == 0) {
@@ -375,33 +376,22 @@ public class DAO {
             } else {
                 //  Open connection
                 open();
-                //  --- IGNORE THIS BIT
-                //  Get original customer data
-                ResultSet rs = stmt.executeQuery("SELECT * FROM invoice WHERE customer_id = " + invoice.getCustomer().getCustomer_id());
-                //  Check if customer data exists
-                if ( rs.next()) {
-                    //  Create comparable object
-                    DB_Invoice original = populateInvoice(rs);
-
-                //  --- END IGNORE HERE
-                    //  Base of the update
-                    //  Update each value
-                   String update = "UPDATE invoice SET";
-                    update += Att_Invoice.invoice_id.name + " = '" + invoice.getInvoice_id() + "', ";
-                    update += Att_Invoice.issue_date.name + " = '" + invoice.getIssue_date() + "', ";
-                    update += Att_Invoice.invoice_status.name + " = '" + invoice.isInvoice_status() + "', ";
-                    update += Att_Invoice.invoice_total.name + " = " + invoice.getInvoice_total() + " ";
-                    //  Specify update target
-                    update += "WHERE " + Att_Invoice.invoice_id.name + " = " + invoice.getCustomer().getCustomer_id();
-                    //  Create statement and executeUpdate. (Cannot recall why prepared statement was used)
-                    PreparedStatement ps = con.prepareStatement(update);
-                    int lines = ps.executeUpdate();
-                    close();
-                    return lines;
-                } else {
-                    close();
-                    throw new DAOExceptionHandler("There was invoice_id mishandling.");
-                }
+                //  Base of the update
+                //  Update each value
+                String update = "UPDATE invoice SET ";
+                update += Att_Invoice.invoice_id.name + " = '" + invoice.getInvoice_id() + "', ";
+                update += Att_Invoice.issue_date.name + " = '" + invoice.getIssue_date() + "', ";
+                //! Removed quotes that would be present in string, used a getInvoice_status() method that returns 1 or 0
+                update += Att_Invoice.invoice_status.name + " = " + invoice.getInvoice_status() + ", ";
+                update += Att_Invoice.invoice_total.name + " = " + invoice.getInvoice_total() + " ";
+                //  Specify update target
+                update += "WHERE " + Att_Invoice.invoice_id.name + " = " + invoice.getCustomer().getCustomer_id();
+                //  Create statement and executeUpdate. (Cannot recall why prepared statement was used)
+                System.out.println(update);
+                PreparedStatement ps = con.prepareStatement(update);
+                int lines = ps.executeUpdate();
+                close();
+                return lines;
             }
         }
         catch (SQLException e) {

@@ -23,6 +23,8 @@ public class testClass {
             handler.updateCustomer(customer2);
             System.out.println( customer2.toString());
 
+            DB_Customer test1 = handler.getCustomer(3);
+
 
 
 
