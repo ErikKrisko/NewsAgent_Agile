@@ -363,13 +363,13 @@ public class DAO {
                 ps.setBoolean( Att_Invoice.invoice_status.column - 1, Invoice.getinvoice_status());
                 ps.setDouble( Att_Invoice.invoice_total.column - 1, Invoice.getinvoice_total());
                 //! Need to handle new addresses (Check if address_id = 0)
-                ps.setLong( Att_Customer.address.column - 1, customer.getAddress().getAddress_id());
+                ps.setLong( Att_Customer.address.column - 1, customer.getcustomer().getCustomer_id());
                 //  Execute update and get generated ID
                 int lines = ps.executeUpdate();
                 ResultSet keys = ps.getGeneratedKeys();
                 //  Get generated Key
                 if (keys.next())
-                    invoice.setInvoice_id( keys.getLong(1));
+                    Invoice.setInvoice_id( keys.getLong(1));
                 close();
                 return lines;
             } else {

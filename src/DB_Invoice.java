@@ -82,7 +82,32 @@ public class DB_Invoice
     public void setInvoice_total(double invoice_total) { this.invoice_total = invoice_total; }
     public DB_Customer getCustomer() { return customer; }
     public void setCustomer(DB_Customer customer) { this.customer = customer; }
+
+    public void setInvoice_id(long invoice_id) {
+        this.invoice_id = invoice_id;
+    }
+
+    public Date getIssue_date() {
+        return issue_date;
+    }
+
+    public void setIssue_date(Date issue_date) {
+        this.issue_date = issue_date;
+    }
+
+    public boolean isInvoice_status() {
+        return invoice_status;
+    }
+
+    public void setInvoice_status(boolean invoice_status) {
+        this.invoice_status = invoice_status;
+    }
+
+    public double getInvoice_total() {
+        return invoice_total;
+    }
 }
+
 /** List of customer attributes */
 enum Att_Invoice {
     //  Customer table attributes
