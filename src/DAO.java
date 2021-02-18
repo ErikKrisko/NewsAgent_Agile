@@ -449,6 +449,30 @@ public class DAO {
         }
     }
 
+    /////Delete
+    private int deleteInvoice(int ID) throws DAOExceptionHandler {
+        try{
+            open();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM invoice WHERE invoice_id = " + ID); //Check if resultset exists instead of deleting something that doesnt exist
+            if(rs.next()){
+                PreparedStatement pstmt = con.prepareStatement("DELETE FROM invoice where invoice_id = " + ID);
+                int lines = pstmt.executeUpdate();
+                close();
+                return lines;
+            }
+            else
+            {
+                close();
+                throw new DAOExceptionHandler("No invoice with 'invoice_id = " + ID + " found.");
+            }
+        }
+        catch(SQLException e) {
+            throw new DAOExceptionHandler(e.getMessage());
+        }
+    }
+
+
+
     //  ====================================================================================================
     // SUBSCRIPTION
 
