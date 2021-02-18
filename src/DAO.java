@@ -357,9 +357,9 @@ public class DAO {
             if (Invoice.getInvoice_id() == 0) {
                 open();
                 //  Construct INSERT statement and request generated keys
-                PreparedStatement ps = con.prepareStatement("INSERT INTO customer VALUES(null, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+                PreparedStatement ps = con.prepareStatement("INSERT INTO invoice VALUES(null, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
                 //  Populate values for the preparedStatement
-                ps.setDate( Att_Invoice.issue_date.column - 1, Invoice.getinvoice_date());
+                ps.setDate( Att_Invoice.issue_date.column - 1, Invoice.getissue_date());
                 ps.setBoolean( Att_Invoice.invoice_status.column - 1, Invoice.getinvoice_status());
                 ps.setDouble( Att_Invoice.invoice_total.column - 1, Invoice.getinvoice_total());
                 //! Need to handle new addresses (Check if address_id = 0)
