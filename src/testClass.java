@@ -47,6 +47,7 @@ public class testClass {
 //            dev1.setDelivery_status(true);
 //          handler.updateDelivery(dev1);
 
+
         }
         catch (Exception e) {
             System.out.println(e.getMessage());

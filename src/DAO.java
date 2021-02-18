@@ -307,7 +307,7 @@ public class DAO {
         }
     }
 
-    private int deleteDelivery(int ID) throws DAOExceptionHandler {
+    public int deleteDelivery(int ID) throws DAOExceptionHandler {
         try{
             open();
             ResultSet rs = stmt.executeQuery("SELECT * FROM delivery WHERE delivery_id = " + ID); //Check if resultset exists instead of deleting something that doesnt exist
