@@ -1,6 +1,6 @@
 public class DB_Subscription {
     private static JDBC connection;
-    //  Handler for storing initialized elements
+    // Handler for storing initialized elements
     private static DAO handler;
     //Private count thats an integer
     private int[] count = new int[0];
@@ -49,31 +49,7 @@ public class DB_Subscription {
         }
     }*/
 
-    public static JDBC getConnection()
-    {
-        return connection;
-    }
 
-    public static void setConnection(JDBC connection)
-    {
-        DB_Subscription.connection = connection;
-    }
-
-    public static DAO getHandler() {
-        return handler;
-    }
-
-    public static void setHandler(DAO handler) {
-        DB_Subscription.handler = handler;
-    }
-
-    public DB_Customer getCustomer() {
-        return customer;
-    }
-
-    public void setCustomer(DB_Customer customer) {
-        this.customer = customer;
-    }
 }
 
 

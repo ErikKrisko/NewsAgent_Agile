@@ -464,7 +464,143 @@ public class DAO {
 
     //  ====================================================================================================
     // SUBSCRIPTION
+    //GetSubscription
+    private DB_Subscription getSubscription(int ID) throws DAOExceptionHandler
+    {
+        try
+        {
+            open();
+            //cus_id comes up wrong
+            ResultSet rs = stmt.executeQuery("SELECT * FROM subscription WHERE subscription_id" +  ID);
+            if(rs.next())
+            {
+                DB_Subscription temp = populateSubscription(rs);
+                close();
+                return temp;
+            }
+            else
+            {
+                close();
+                throw new DAOExceptionHandler("No subscription with 'subscription_id'=" + ID + "found");
+            }
+        }
+        catch (SQLException e)
+        {
+            throw new DAOExceptionHandler(e.getMessage());
+        }
+    }
+    //---------------------------------------------------
+    //Update Subscription
 
+    public int updateSubscription(DB_Subscription Subscription) throws DAOExceptionHandler
+    {
+        try
+        {
+            if(subscription.getSub);
+            {
+                open();
+                //This is creating a INSERT statement and requesting generated keys
+                PreparedStatement pstmt = con.prepareStatement("INSERT INTO customer VALUES(null, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+                //Trying to populate values for the preparedStatement
+                pstmt.setLong(att_subscription.customer.column -1, subscription.getCustomer().getCustomer_id());
+                //Not really sure what I'm doing here
+                ps.setCount(Att_Subsciption.count.column -1, Subscription.getSubscription_count());
+                ps.setProduct(Att_Subscription.product.column -1, Subscription.geSubscription_proudct());
+                //Update and get a generated ID
+                int lines = pstmt.executeUpdate();
+                ResultSet keys = pstmt.getGeneratedKeys();
+                //Get the generated key
+                if(keys.next())
+                    getSubscription().setCustomer(keys.getLong(1));
+                close();
+                return lines;
+            }
+            else
+            {
+                //Open the connection again
+                open();
+                ResultSet rs = stmt.executeQuery("SELECT * FROM subsciption WHERE customer_id" + subscription.getCustomer_id());
+                // Checking to see if customers data exists
+                if(rs.next())
+                {
+                    DB_Subscription original = populateSubscription(rs);
+                    boolean changed = false;
+                    for(ATT_Subscription attribute : Att_Subscription.values())
+                    {
+                        if(! original.get(attribute).equals(subscription.get(attribute)))
+                        {
+                            System.out.println(attribute.name);
+                            changed = true;
+                        }
+                    }
+                    if(changed)
+                    {
+                        update += Att_Subscription.cus_id.name + " = '" + subscription.getCustomer_id() + "',";
+                        update += Att_Subscription.prod_id.name + " = '" + subscription.getprodu_id() + "',";
+                        update += Att_Subscription.count_id.name + " = '" + subscription.getCount_id() + "',";
+
+                        update += "WHERE " + Att_Subscription.cus_id.name + " = " + subscription.getCustomer_id();
+                        PreparedStatement ps = con.prepareStatement(update);
+                        int lines = ps.executeUpdate();
+                        close();
+                        return lines;
+                    } else {
+                        close();
+                        return 0;
+                    }
+                } else {
+                    close();
+                    throw new DAOExceptionHandler("There was an error");
+                }
+            }
+        }
+        catch (SQLException | DB_CustomerExceptionHandler e) {
+            throw new DAOExceptionHandler( e.getMessage());
+                    }
+                }
+
+
+
+
+
+    //-----------------------------------------------------
+    //Delete Subscription
+
+    private int deleteSubscription(int ID) throws DAOExceptionHandler
+    {
+        try {
+            open();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM subscription WHERE cus_id = " + ID);
+            if (rs.next()) {
+                PreparedStatement pstmt = con.prepareStatement("DELETE FROM subscription WHERE cus_id =" + ID);
+                int lines = pstmt.executeUpdate();
+                close();
+                return lines;
+            } else {
+                close();
+                throw new DAOExceptionHandler("No subscription with 'cus_id' =" + ID + "found");
+            }
+        }
+        catch(SQLException e)
+        {
+            throw new DAOExceptionHandler(e.getMessage());
+        }
+    }
+    //------------------------------------------------------
+    //Populate
+
+    private DB_Subscription populateSubscription(ResultSet rs) throws DAOExceptionHandler
+    {
+        try {
+            DB_Subscription temp = new DB_Subscription(rs);
+            temp.setCustomer(getCustomer(rs.getInt(att_subscription.customer.column)));
+            return temp;
+        }
+        catch (SQLException | DB_SubscriptionExceptionHandler e)
+        {
+            throw new DAOExceptionHandler(e.getMessage());
+        }
+    }
 
     /** Connection controls */
     /** Closes the current connection.
