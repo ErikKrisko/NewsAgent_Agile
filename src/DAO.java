@@ -333,7 +333,7 @@ public class DAO {
         try {
             DB_Delivery temp = new DB_Delivery(rs);
             temp.setCustomer(getCustomer(rs.getInt(att_delivery.customer.column)));
-            //temp.setInvoice(getInvoice(rs.getInt(att_delivery.invoice.column)));
+            temp.setInvoice(getInvoice(rs.getInt(att_delivery.invoice.column)));
             return temp;
         }
         catch(SQLException | DB_DeliveryExceptionHandler e) {
@@ -438,6 +438,30 @@ public class DAO {
             throw new DAOExceptionHandler(e.getMessage());
         }
     }
+
+    /////Delete
+    private int deleteInvoice(int ID) throws DAOExceptionHandler {
+        try{
+            open();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM invoice WHERE invoice_id = " + ID); //Check if resultset exists instead of deleting something that doesnt exist
+            if(rs.next()){
+                PreparedStatement pstmt = con.prepareStatement("DELETE FROM invoice where invoice_id = " + ID);
+                int lines = pstmt.executeUpdate();
+                close();
+                return lines;
+            }
+            else
+            {
+                close();
+                throw new DAOExceptionHandler("No invoice with 'invoice_id = " + ID + " found.");
+            }
+        }
+        catch(SQLException e) {
+            throw new DAOExceptionHandler(e.getMessage());
+        }
+    }
+
+
 
     //  ====================================================================================================
     // SUBSCRIPTION

@@ -68,13 +68,13 @@ public class DB_Delivery
     public boolean isDelivery_status() { return delivery_status; }
     public DB_Customer getCustomer() { return customer; }
     public DB_Invoice getInvoice() { return invoice; }
-    //  Date it or string it
-//    public void setDelivery_date(Date delivery_date) throws DB_DeliveryExceptionHandler { this.delivery_date = vEntry(att_delivery.delivery_date, delivery_date); }
 
     public void setDelivery_id(long delivery_id) { this.delivery_id = delivery_id; }
+    public void setDelivery_date(Date delivery_date) throws DB_DeliveryExceptionHandler { this.delivery_date = vDevDate(delivery_date); }
     public void setDelivery_status(boolean delivery_status) { this.delivery_status = delivery_status; }
     public void setCustomer(DB_Customer customer) { this.customer = customer; }
     public void setInvoice(DB_Invoice invoice) { this.invoice = invoice; }
+
 }
 
 enum att_delivery {
