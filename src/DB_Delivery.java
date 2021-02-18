@@ -38,7 +38,7 @@ public class DB_Delivery
     }
 
     /**Validate Attributes*/
-    private Date vDevDate(Date entry) throws DB_DeliveryExceptionHandler
+    private Date validateDevDate(Date entry) throws DB_DeliveryExceptionHandler
     {
         if (entry.after(new Date(System.currentTimeMillis() - 86400000))) //86400000 one day in milli seconds
         {
@@ -79,7 +79,7 @@ public class DB_Delivery
     }
 
     public void setDelivery_id(long delivery_id) { this.delivery_id = delivery_id; }
-    public void setDelivery_date(Date delivery_date) throws DB_DeliveryExceptionHandler { this.delivery_date = vDevDate(delivery_date); }
+    public void setDelivery_date(Date delivery_date) throws DB_DeliveryExceptionHandler { this.delivery_date = validateDevDate(delivery_date); }
     public void setDelivery_status(boolean delivery_status) { this.delivery_status = delivery_status; }
     public void setCustomer(DB_Customer customer) { this.customer = customer; }
     public void setInvoice(DB_Invoice invoice) { this.invoice = invoice; }

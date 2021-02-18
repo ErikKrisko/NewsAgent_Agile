@@ -310,6 +310,7 @@ public class DAO {
     public int deleteDelivery(int ID) throws DAOExceptionHandler {
         try{
             open();
+
             ResultSet rs = stmt.executeQuery("SELECT * FROM delivery WHERE delivery_id = " + ID); //Check if resultset exists instead of deleting something that doesnt exist
             if(rs.next()){
                 PreparedStatement pstmt = con.prepareStatement("DELETE FROM delivery where delivery_id = " + ID);
