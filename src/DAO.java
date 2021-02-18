@@ -333,7 +333,7 @@ public class DAO {
         try {
             DB_Delivery temp = new DB_Delivery(rs);
             temp.setCustomer(getCustomer(rs.getInt(att_delivery.customer.column)));
-            //temp.setInvoice(getInvoice(rs.getInt(att_delivery.invoice.column)));
+            temp.setInvoice(getInvoice(rs.getInt(att_delivery.invoice.column)));
             return temp;
         }
         catch(SQLException | DB_DeliveryExceptionHandler e) {
