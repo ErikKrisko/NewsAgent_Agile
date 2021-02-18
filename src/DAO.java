@@ -347,29 +347,29 @@ public class DAO {
     //  ====================================================================================================
     // INVOICE
     /** Issues update for customer. Creates if ID is = 0 or updates an existing entry.
-     * @param Invoice object which to update / create.
+     * @param invoice object which to update / create.
      * @return int number of lines changed
      * @throws DAOExceptionHandler if an SQL error occurred or there was invoice_id misshandling.
      */
-    public int updateInvoice(DB_Invoice Invoice) throws DAOExceptionHandler {
+    public int updateInvoice(DB_Invoice invoice) throws DAOExceptionHandler {
         try {
             //  If customer ID == null , create new otherwise update
-            if (Invoice.getInvoice_id() == 0) {
+            if (invoice.getInvoice_id() == 0) {
                 open();
                 //  Construct INSERT statement and request generated keys
                 PreparedStatement ps = con.prepareStatement("INSERT INTO invoice VALUES(null, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
                 //  Populate values for the preparedStatement
-                ps.setDate( Att_Invoice.issue_date.column - 1, Invoice.getissue_date());
-                ps.setBoolean( Att_Invoice.invoice_status.column - 1, Invoice.getinvoice_status());
-                ps.setDouble( Att_Invoice.invoice_total.column - 1, Invoice.getinvoice_total());
+                ps.setDate( Att_Invoice.issue_date.column - 1, invoice.getIssue_date());
+                ps.setBoolean( Att_Invoice.invoice_status.column - 1, invoice.isInvoice_status());
+                ps.setDouble( Att_Invoice.invoice_total.column - 1, invoice.getInvoice_total());
                 //! Need to handle new addresses (Check if address_id = 0)
-                ps.setLong( Att_Customer.address.column - 1, customer.getcustomer().getCustomer_id());
+                ps.setLong( Att_Invoice.customer.column - 1, invoice.getCustomer().getCustomer_id());
                 //  Execute update and get generated ID
                 int lines = ps.executeUpdate();
                 ResultSet keys = ps.getGeneratedKeys();
                 //  Get generated Key
                 if (keys.next())
-                    Invoice.setInvoice_id( keys.getLong(1));
+                    invoice.setInvoice_id( keys.getLong(1));
                 close();
                 return lines;
             } else {
@@ -377,48 +377,34 @@ public class DAO {
                 open();
                 //  --- IGNORE THIS BIT
                 //  Get original customer data
-                ResultSet rs = stmt.executeQuery("SELECT * FROM invoice WHERE customer_id = " + invoice.getCustomer_id());
+                ResultSet rs = stmt.executeQuery("SELECT * FROM invoice WHERE customer_id = " + invoice.getCustomer().getCustomer_id());
                 //  Check if customer data exists
                 if ( rs.next()) {
                     //  Create comparable object
                     DB_Invoice original = populateInvoice(rs);
-                    //  Set changed state to false
-                    boolean changed = false;
-                    //  Check each attribute
-                    for (Att_Invoice attribute : Att_Invoice.values()) {
-                        //  If attributes do not match change=true
-                        if (! original.get( attribute).equals( invoice.get( attribute))) {
-                            System.out.println(attribute.name);
-                            changed = true;
-                        }
-                    }
-                    //  If changes detected
-                    if (changed) {
-                        //  --- END IGNORE HERE
-                        //  Base of the update
-                        //  Update each value
-                        update += Att_Invoice.invoice_id.name + " = '" + invoice.getinvoice_id() + "', ";
-                        update += Att_Invoice.issue_date.name + " = '" + invoice.getissue_date() + "', ";
-                        update += Att_Invoice.invoice_status.name + " = '" + invoice.getinvoice_status() + "', ";
-                        update += Att_Invoice.invoice_total.name + " = " + invoice.getinvoice_total().getAddress_id() + " ";
-                        //  Specify update target
-                        update += "WHERE " + Att_Invoice.invoice_id.name + " = " + invoice.getCustomer_id();
-                        //  Create statement and executeUpdate. (Cannot recall why prepared statement was used)
-                        PreparedStatement ps = con.prepareStatement(update);
-                        int lines = ps.executeUpdate();
-                        close();
-                        return lines;
-                    } else {
-                        close();
-                        return 0;
-                    }
+
+                //  --- END IGNORE HERE
+                    //  Base of the update
+                    //  Update each value
+                   String update = "UPDATE invoice SET";
+                    update += Att_Invoice.invoice_id.name + " = '" + invoice.getInvoice_id() + "', ";
+                    update += Att_Invoice.issue_date.name + " = '" + invoice.getIssue_date() + "', ";
+                    update += Att_Invoice.invoice_status.name + " = '" + invoice.isInvoice_status() + "', ";
+                    update += Att_Invoice.invoice_total.name + " = " + invoice.getInvoice_total() + " ";
+                    //  Specify update target
+                    update += "WHERE " + Att_Invoice.invoice_id.name + " = " + invoice.getCustomer().getCustomer_id();
+                    //  Create statement and executeUpdate. (Cannot recall why prepared statement was used)
+                    PreparedStatement ps = con.prepareStatement(update);
+                    int lines = ps.executeUpdate();
+                    close();
+                    return lines;
                 } else {
                     close();
                     throw new DAOExceptionHandler("There was invoice_id mishandling.");
                 }
             }
         }
-        catch (SQLException | DB_CustomerExceptionHandler e) {
+        catch (SQLException e) {
             throw new DAOExceptionHandler( e.getMessage());
         }
     }

@@ -14,7 +14,7 @@ public class testClass {
 
             DAO handler = new DAO("jdbc:mysql://localhost:3306/newsagent?useTimezone=true&serverTimezone=UTC", "root", "admin");
 
-            DB_Customer custo1 = handler.getCustomer(9);
+
 
             DB_Customer customer1 = new DB_Customer("Buz","Smit","1234567890", handler.getAddress(2));
             DB_Customer customer2 = new DB_Customer("Bob", "Lid", "0987654321", handler.getAddress(2));
@@ -32,6 +32,10 @@ public class testClass {
                 System.out.println(cust.toString());
             }
 
+            DB_Invoice Invoice1 = handler.getInvoice(2);
+            System.out.println(Invoice1.toString());
+            Invoice1.setInvoice_total(21.34);
+            handler.updateInvoice(Invoice1);
 
         }
         catch (Exception e) {
