@@ -4,7 +4,7 @@ import java.sql.SQLException;
 
 public class DB_Invoice
 {
-    private long invoice_id;
+    private long invoice_id = 0;
     private Date issue_date;
     private boolean invoice_status;
     private double invoice_total;
