@@ -266,12 +266,11 @@ public class DAO {
                 open();
                 ResultSet rs = stmt.executeQuery("SELECT * FROM delivery WHERE delivery_id = " + delivery.getDelivery_id());
                 if(rs.next()){
-                    //DB_Delivery og = populateDelivery(rs); //Not needed
 
-                    String update = "UPDATE customer SET";
+                    String update = "UPDATE delivery SET ";
                     update += att_delivery.delivery_date.columnName + " = '" + delivery.getDelivery_date() + "', ";
-                    update += att_delivery.delivery_status.columnName + " = '" + delivery.isDelivery_status() + "', ";
-                    update += att_delivery.customer.columnName + " = " + delivery.getCustomer().getCustomer_id() + " ";
+                    update += att_delivery.delivery_status.columnName + " = " + delivery.getDelivery_status() + ", ";
+                    update += att_delivery.customer.columnName + " = " + delivery.getCustomer().getCustomer_id() + ", ";
                     update += att_delivery.invoice.columnName + " = " + delivery.getInvoice().getInvoice_id() + " ";
                     update += "WHERE " + att_delivery.delivery_id.columnName + " = " + delivery.getDelivery_id();
 
@@ -291,20 +290,23 @@ public class DAO {
         }
     }
 
-    private int deleteDelivery(int ID) throws DAOExceptionHandler {
+    public int deleteDelivery(DB_Delivery delivery) throws DAOExceptionHandler {
         try{
             open();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM delivery WHERE delivery_id = " + ID); //Check if resultset exists instead of deleting something that doesnt exist
+
+            ResultSet rs = stmt.executeQuery("SELECT * FROM delivery WHERE delivery_id = " + delivery.getDelivery_id()); //Check if resultset exists instead of deleting something that doesnt exist
             if(rs.next()){
-                PreparedStatement pstmt = con.prepareStatement("DELETE FROM delivery where delivery_id = " + ID);
-                int lines = pstmt.executeUpdate();
+                PreparedStatement pstmt = con.prepareStatement("DELETE FROM delivery where delivery_id = " + delivery.getDelivery_id());
+                PreparedStatement pstmt2 = con.prepareStatement("DELETE FROM prod_for_delivery where delivery_id = " + delivery.getDelivery_id());
+                int lines =+ pstmt.executeUpdate();
+                lines =+pstmt2.executeUpdate();
                 close();
                 return lines;
             }
             else
             {
                 close();
-                throw new DAOExceptionHandler("No delivery with 'delivery_id = " + ID + " found.");
+                throw new DAOExceptionHandler("No delivery with 'delivery_id = " + delivery.getDelivery_id() + " found.");
             }
         }
         catch(SQLException e) {

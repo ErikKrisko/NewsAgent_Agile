@@ -37,17 +37,21 @@ public class testClass {
 
             DB_Invoice Invoice1 = handler.getInvoice(2);
             System.out.println(Invoice1.toString());
-            Invoice1.setInvoice_total(21.34);
+            //Invoice1.setInvoice_total(21.34);
             handler.updateInvoice(Invoice1);
 
 
-            /*DB_Delivery dev1 = handler.getDelivery(5);
-            System.out.println(dev1.toString());
-
-            dev1.setDelivery_id(6);
-            dev1.setDelivery_date(Date.valueOf("2022-05-05"));
-            dev1.setDelivery_status(true);
-            handler.updateDelivery(dev1);*/
+            DB_Delivery dev1 = handler.getDelivery(5);
+//            System.out.println(dev1.toString());
+//            dev1.setDelivery_id(0);
+//            dev1.setDelivery_date(Date.valueOf("2022-05-05"));
+//            dev1.setDelivery_status(true);
+//            dev1.setCustomer(customer1);
+//            dev1.setInvoice(Invoice1);
+//            System.out.println(dev1.toString());
+//            handler.updateDelivery(dev1);
+//            System.out.println(dev1.toString());
+            handler.deleteDelivery(dev1);
 
         }
         catch (Exception e) {
