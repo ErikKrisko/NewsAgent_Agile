@@ -15,7 +15,7 @@ public class DB_Address {
         this.eir_code = vEntry( Att_Address.eir_code, eir_code);
     }
 
-    public DB_Address(ResultSet rs) {
+    public DB_Address(ResultSet rs) throws DB_AddressExceptionHandler {
         try {
             address_id = rs.getInt( Att_Address.address_id.column);
             full_address = rs.getString( Att_Address.full_address.column);
@@ -23,7 +23,7 @@ public class DB_Address {
             eir_code = rs.getString( Att_Address.eir_code.column);
         }
         catch (SQLException e){
-
+            throw new DB_AddressExceptionHandler(e.getMessage());
         }
     }
 

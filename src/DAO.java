@@ -216,7 +216,7 @@ public class DAO {
                 throw new DAOExceptionHandler("No address with 'address_id = " + ID + " found.");
             }
         }
-        catch (SQLException e) {
+        catch (SQLException | DB_AddressExceptionHandler e) {
             throw new DAOExceptionHandler(e.getMessage());
         }
     }
@@ -455,7 +455,7 @@ public class DAO {
     /** Connection controls */
     /** Closes the current connection.
      */
-    private void close() throws DAOExceptionHandler {
+    public void close() throws DAOExceptionHandler {
         try {
             con.close();
         }
@@ -467,7 +467,7 @@ public class DAO {
     /** Establishes database connection
      * @throws JDBCExceptionHandler
      */
-    private void open() throws DAOExceptionHandler {
+    public void open() throws DAOExceptionHandler {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             if (dbName == null)
