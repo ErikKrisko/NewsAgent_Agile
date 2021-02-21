@@ -53,6 +53,14 @@ public class testClass {
 //            System.out.println(dev1.toString());
             handler.deleteDelivery(dev1);
 
+
+            DB_Subscription sub1 = handler.getSubscription(1, 3);
+            sub1.setCount(4);
+            handler.updateSubscription(sub1);
+            System.out.println(sub1);
+
+
+
         }
         catch (Exception e) {
             System.out.println(e.getMessage());

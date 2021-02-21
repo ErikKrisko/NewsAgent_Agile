@@ -1,65 +1,97 @@
-public class DB_Subscription {
-    private static JDBC connection;
-    // Handler for storing initialized elements
-    private static DAO handler;
-    //Private count thats an integer
-    private int[] count = new int[0];
-    private int size;
-    private DB_Customer customer = null;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
+public class DB_Subscription {
+    //Private count thats an integer
+    private int count = 0;
+    private int size;
+    private DB_Customer customer;
+    //private DB_Publication  prod;
     //private DB_Product product[];
 
-
-    /** A list of columnIndexes for resultSet */
-    public enum attributes {
-        customer(1),
-        product(2),
-        count(3);
-
-        public final int index;
-
-        attributes(int i) { this.index = i; }
-    }
 
     public DB_Subscription() {
 
     }
-/*
-    public void getByID(int cus_id) throws DB_SubscriptionExceptionHandler {
+
+
+    public DB_Subscription(int count, DB_Customer customer /*,DB_Publication prod*/) throws DB_SubscriptionExceptionHandler {
+        this.customer = customer;
+        this.count = count;
+        //this.publication = prod;
+    }
+
+    public DB_Subscription(ResultSet rs) throws DB_SubscriptionExceptionHandler {
         try {
-            ResultSet rs = connection.getSet(" SELECT * FROM subscription WHERE customer_id = " + cus_id);
-
-            while (rs.next()) {
-                int[] temp = new int[count.length + 1];
-                System.arraycopy(count, 0, temp, 0, count.length);
-                temp[rs.getRow() - 1] = rs.getInt(attributes.count.index);
-                count = temp.clone();
-
-//                System.arraycopy(count, 0, temp, 0, count.length);
-//                temp[rs.getRow()-1] = rs.getInt(3);
-//                count = temp.clone();
-                //Product needs to go in here
-                if (customer == null) {
-                    customer = handler.getCustomer(rs.getInt(attributes.customer.index));
-                }
-
-            }
-        } catch (JDBCExceptionHandler | SQLException | DB_HandlerExceptionHandler e) {
+            count = rs.getInt(2);
+        } catch (SQLException e) {
             throw new DB_SubscriptionExceptionHandler(e.getMessage());
         }
-    }*/
+    }
+    //Validate attributes will do after
+//    public String vEntry(Att_Subscription type, String entry) throws DB_SubscriptionExceptionHandler
+//    {
+//        switch(type)
+//        {
+//            case customer:
+//        }
+//    }
 
 
+    @Override
+    public String toString() {
+        return "DB_Subscription{" +
+                "customer=" + customer +
+                "count=" + count;
+        //"publication=" + prod +
+    }
+
+
+    /**
+     * A list of columnIndexes for resultSet
+     */
+//    public enum attributes {
+//        customer(1),
+//        product(2),
+//        count(3);
+//
+//        public final int index;
+//
+//        attributes(int i) {
+//            this.index = i;
+//        }
+   // }
+
+
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
+    }
+
+    public DB_Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(DB_Customer customer) {
+        this.customer = customer;
+    }
 }
 
-
-
-class DB_SubscriptionExceptionHandler extends Exception
-{
+class DB_SubscriptionExceptionHandler extends Exception {
     String message;
 
-    public DB_SubscriptionExceptionHandler(String errormessage)
-    {
+    public DB_SubscriptionExceptionHandler(String errormessage) {
         message = errormessage;
     }
 
