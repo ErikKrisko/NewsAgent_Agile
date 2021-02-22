@@ -10,9 +10,9 @@ public class DB_Address {
     public DB_Address() { }
 
     public DB_Address(String full_address, String area_code, String eir_code) throws DB_AddressExceptionHandler {
-        this.full_address = vEntry( Att_Address.full_address, full_address);
-        this.area_code = vEntry( Att_Address.area_code, area_code);
-        this.eir_code = vEntry( Att_Address.eir_code, eir_code);
+        this.full_address = validateEntry( Att_Address.full_address, full_address);
+        this.area_code = validateEntry( Att_Address.area_code, area_code);
+        this.eir_code = validateEntry( Att_Address.eir_code, eir_code);
     }
 
     public DB_Address(ResultSet rs) throws DB_AddressExceptionHandler {
@@ -27,7 +27,7 @@ public class DB_Address {
         }
     }
 
-    private String vEntry(Att_Address attribute, String entry) throws DB_AddressExceptionHandler {
+    public String validateEntry(Att_Address attribute, String entry) throws DB_AddressExceptionHandler {
         switch (attribute) {
             case full_address -> {
                 if (entry.length() > 0 && entry.length() <= 50)
@@ -68,9 +68,9 @@ public class DB_Address {
     public String getFull_address() {   return full_address; }
     public String getArea_code() {  return area_code; }
     public String getEir_code() {   return eir_code; }
-    public void setFull_address(String full_address) throws DB_AddressExceptionHandler {  this.full_address = vEntry( Att_Address.full_address, full_address); }
-    public void setArea_code(String area_code) throws DB_AddressExceptionHandler {    this.area_code = vEntry( Att_Address.area_code, area_code); }
-    public void setEir_code(String eir_code) throws DB_AddressExceptionHandler {  this.eir_code = vEntry( Att_Address.eir_code, eir_code); }
+    public void setFull_address(String full_address) throws DB_AddressExceptionHandler {  this.full_address = validateEntry( Att_Address.full_address, full_address); }
+    public void setArea_code(String area_code) throws DB_AddressExceptionHandler {    this.area_code = validateEntry( Att_Address.area_code, area_code); }
+    public void setEir_code(String eir_code) throws DB_AddressExceptionHandler {  this.eir_code = validateEntry( Att_Address.eir_code, eir_code); }
 }
 
 enum Att_Address {
