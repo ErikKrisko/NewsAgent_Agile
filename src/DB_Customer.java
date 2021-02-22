@@ -13,23 +13,24 @@ public class DB_Customer {
     /** Blank constructor */
     public DB_Customer() { }
 
-    public DB_Customer(String first_name, String last_name, String phone_no, DB_Address address) throws DB_CustomerExceptionHandler {
+    public DB_Customer(long customer_id,String first_name, String last_name, String phone_no, DB_Address address) throws DB_CustomerExceptionHandler {
+        this.customer_id = customer_id;
         this.first_name = validateEntry( Att_Customer.first_name, first_name);
         this.last_name = validateEntry( Att_Customer.last_name, last_name);
         this.phone_no = validateEntry( Att_Customer.phone_no, phone_no);
         this.address = address;
     }
 
-    public DB_Customer(ResultSet rs) throws DB_CustomerExceptionHandler {
-        try {
-            customer_id = rs.getInt( Att_Customer.customer_id.column);
-            first_name = rs.getString( Att_Customer.first_name.column);
-            last_name = rs.getString( Att_Customer.last_name.column);
-            phone_no = rs.getString( Att_Customer.phone_no.column);
-        } catch (SQLException e) {
-            throw new DB_CustomerExceptionHandler(e.getMessage());
-        }
-    }
+//    public DB_Customer(ResultSet rs) throws DB_CustomerExceptionHandler {
+//        try {
+//            customer_id = rs.getInt( Att_Customer.customer_id.column);
+//            first_name = rs.getString( Att_Customer.first_name.column);
+//            last_name = rs.getString( Att_Customer.last_name.column);
+//            phone_no = rs.getString( Att_Customer.phone_no.column);
+//        } catch (SQLException e) {
+//            throw new DB_CustomerExceptionHandler(e.getMessage());
+//        }
+//    }
 
     //  Validate attributes
     public String validateEntry(Att_Customer type, String entry) throws DB_CustomerExceptionHandler {
