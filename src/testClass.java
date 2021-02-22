@@ -17,15 +17,15 @@ public class testClass {
 
 
 
-            DB_Customer customer1 = new DB_Customer("Buz","Smit","1234567890", handler.getAddress(2));
-            DB_Customer customer2 = new DB_Customer("Bob", "Lid", "0987654321", handler.getAddress(2));
+            DB_Customer customer1 = new DB_Customer(0, "Buz","Smit","1234567890", handler.getAddress(2));
+            DB_Customer customer2 = new DB_Customer(0, "Bob", "Lid", "0987654321", handler.getAddress(2));
             handler.updateCustomer( customer1);
             System.out.println( customer1.toString());
             handler.updateCustomer(customer2);
             System.out.println( customer2.toString());
 
             DB_Customer test1 = handler.getCustomer(3);
-
+            System.out.println(test1);
 
 
 

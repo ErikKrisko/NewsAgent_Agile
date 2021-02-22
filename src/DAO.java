@@ -6,7 +6,6 @@ public class DAO {
     private String url, user, pass, dbName;
     //  Connection objects
     private Connection con = null;
-    private Statement stmt = null;
     //  List of loaded elements
     //  TO BE removed ASAP
 
@@ -18,10 +17,11 @@ public class DAO {
      * @param user should default to "root"
      * @param pass should default to "admin"
      */
-    public DAO(String url, String user, String pass) {
+    public DAO(String url, String user, String pass) throws DAOExceptionHandler {
         this.url = url;
         this.user = user;
         this.pass = pass;
+        open();
     }
 
     /** Creates DB_Handler with given connection
@@ -30,11 +30,12 @@ public class DAO {
      * @param pass should default to "admin"
      * @param dbName should default to "newsagent"
      */
-    public DAO(String url, String user, String pass, String dbName) {
+    public DAO(String url, String user, String pass, String dbName) throws DAOExceptionHandler {
         this.url = url;
         this.user = user;
         this.pass = pass;
         this.dbName = dbName;
+        open();
     }
 
     //  ====================================================================================================
@@ -48,25 +49,21 @@ public class DAO {
         //  Create bew Linked list of customers
         LinkedList<DB_Customer> list = new LinkedList<>();
         try {
-            //  Open connection
-            open();
             //  If no search parameters are specified
             if (search_list == null || search_list.length <= 0) {
                 //  Create new result set
-                ResultSet rs = stmt.executeQuery("SELECT * FROM customer");
+                Statement st = con.createStatement();
+                ResultSet rs = st.executeQuery("SELECT * FROM customer");
                 //  While there are results in the list create customer objects
                 if ( rs.next()) {
                     do {
                         list.add( populateCustomer( rs));
                     } while ( rs.next());
-                    close();
                     return list;
                 } else {
                     throw new DAOExceptionHandler("No Customers where found in the database.");
                 }
             } else {
-                //  Open connection
-                open();
                 //  Construct a query
                 String query = "SELECT * FROM customer WHERE ";
                 for (Search_Customer search : search_list) {
@@ -78,13 +75,13 @@ public class DAO {
                 //  Cut the last two characters off ( ", " ) from the end
                 query = query.substring(0, query.length() - 2 );
                 System.out.println(query);
-                ResultSet rs = stmt.executeQuery(query);
+                Statement st = con.createStatement();
+                ResultSet rs = st.executeQuery(query);
                 LinkedList<DB_Customer> tempList = new LinkedList<>();
                 while (rs.next()) {
                     DB_Customer temp = populateCustomer(rs);
                     tempList.add(temp);
                 }
-                close();
                 return tempList;
             }
         }
@@ -100,15 +97,12 @@ public class DAO {
      */
     public DB_Customer getCustomer(int ID) throws DAOExceptionHandler {
         try {
-            //  Open connection and get new result set
-            open();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM customer WHERE customer_id = " + ID);
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM customer WHERE customer_id = " + ID);
             if ( rs.next()) {
                 DB_Customer temp = populateCustomer(rs);
-                close();
                 return temp;
             } else {
-                close();
                 //  If somehow this is reached throw an error
                 throw new DAOExceptionHandler("No customer with 'customer_id = " + ID + " not found.");
             }
@@ -125,8 +119,6 @@ public class DAO {
      */
     public int updateCustomer(DB_Customer customer) throws DAOExceptionHandler {
         try {
-            //  Open connection
-            open();
             //  If customer ID == null , create new otherwise update
             if (customer.getCustomer_id() == 0) {
                 //  Construct INSERT statement and request generated keys
@@ -143,11 +135,11 @@ public class DAO {
                 //  Get generated Key
                 if ( keys.next())
                     customer.setCustomer_id( keys.getLong(1));
-                close();
                 return lines;
             } else {
                 //  Get original customer data
-                ResultSet rs = stmt.executeQuery("SELECT * FROM customer WHERE customer_id = " + customer.getCustomer_id());
+                Statement st = con.createStatement();
+                ResultSet rs = st.executeQuery("SELECT * FROM customer WHERE customer_id = " + customer.getCustomer_id());
                 //  Check if customer data exists
                 if ( rs.next()) {
                     //  Base of the update
@@ -162,10 +154,8 @@ public class DAO {
                     //  Create statement and executeUpdate. (Cannot recall why prepared statement was used)
                     PreparedStatement ps = con.prepareStatement(update);
                     int lines = ps.executeUpdate();
-                    close();
                     return lines;
                 } else {
-                    close();
                     throw new DAOExceptionHandler("There was customer_id mishandling.");
                 }
             }
@@ -183,10 +173,13 @@ public class DAO {
     private DB_Customer populateCustomer(ResultSet rs) throws DAOExceptionHandler {
         try {
             //  Create customer with given result set
-            DB_Customer temp = new DB_Customer(rs);
-            //  Set customer address with given ID
-            temp.setAddress( getAddress( rs.getInt(Att_Customer.address.column)));
-            return temp;
+            return new DB_Customer(
+                    rs.getInt( Att_Customer.customer_id.column),
+                    rs.getString( Att_Customer.first_name.column),
+                    rs.getString( Att_Customer.last_name.column),
+                    rs.getString( Att_Customer.phone_no.column),
+                    getAddress( rs.getInt(Att_Customer.address.column))
+            );
         }
         catch (SQLException | DB_CustomerExceptionHandler e) {
             throw new DAOExceptionHandler(e.getMessage());
@@ -204,14 +197,16 @@ public class DAO {
      */
     public DB_Address getAddress(int ID) throws DAOExceptionHandler {
         try {
-            open();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM address WHERE address_id = " + ID);
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM address WHERE address_id = " + ID);
             if ( rs.next()) {
-                DB_Address temp = new DB_Address(rs);
-                close();
-                return temp;
+                return new DB_Address(
+                        rs.getInt( Att_Address.address_id.column),
+                        rs.getString( Att_Address.full_address.column),
+                        rs.getString( Att_Address.area_code.column),
+                        rs.getString( Att_Address.eir_code.column)
+                );
             } else {
-                close();
                 //  If somehow this is reached throw an error
                 throw new DAOExceptionHandler("No address with 'address_id = " + ID + " found.");
             }
@@ -227,14 +222,12 @@ public class DAO {
     public DB_Delivery getDelivery(int ID) throws DAOExceptionHandler
     {
         try {
-            open();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM delivery WHERE delivery_id = " + ID);
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM delivery WHERE delivery_id = " + ID);
             if ( rs.next()) {
                 DB_Delivery temp = populateDelivery(rs);
-                close();
                 return temp;
             } else {
-                close();
                 throw new DAOExceptionHandler("No delivery with 'delivery_id = " + ID + " found.");
             }
         }
@@ -247,7 +240,6 @@ public class DAO {
         try{
             if(delivery.getDelivery_id() == 0)
             {
-                open();
                 PreparedStatement pstmt = con.prepareStatement("INSERT INTO customer VALUES(null, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
                 pstmt.setDate(att_delivery.delivery_date.column - 1, delivery.getDelivery_date());
                 pstmt.setBoolean(att_delivery.delivery_status.column - 1, delivery.isDelivery_status());
@@ -259,12 +251,11 @@ public class DAO {
                 if(keys.next()){
                     delivery.setDelivery_id(keys.getLong(1));
                 }
-                close();
                 return lines;
             }
             else{
-                open();
-                ResultSet rs = stmt.executeQuery("SELECT * FROM delivery WHERE delivery_id = " + delivery.getDelivery_id());
+                Statement st = con.createStatement();
+                ResultSet rs = st.executeQuery("SELECT * FROM delivery WHERE delivery_id = " + delivery.getDelivery_id());
                 if(rs.next()){
 
                     String update = "UPDATE delivery SET ";
@@ -276,10 +267,8 @@ public class DAO {
 
                     PreparedStatement pstmt = con.prepareStatement(update);
                     int lines = pstmt.executeUpdate();
-                    close();
                     return lines;
                 }else{
-                   close();
                     throw new DAOExceptionHandler("There was delivery_id mishandling.");
                 }
             }
@@ -292,20 +281,17 @@ public class DAO {
 
     public int deleteDelivery(DB_Delivery delivery) throws DAOExceptionHandler {
         try{
-            open();
-
-            ResultSet rs = stmt.executeQuery("SELECT * FROM delivery WHERE delivery_id = " + delivery.getDelivery_id()); //Check if resultset exists instead of deleting something that doesnt exist
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM delivery WHERE delivery_id = " + delivery.getDelivery_id()); //Check if resultset exists instead of deleting something that doesnt exist
             if(rs.next()){
                 PreparedStatement pstmt = con.prepareStatement("DELETE FROM delivery where delivery_id = " + delivery.getDelivery_id());
                 PreparedStatement pstmt2 = con.prepareStatement("DELETE FROM prod_for_delivery where delivery_id = " + delivery.getDelivery_id());
                 int lines =+ pstmt.executeUpdate();
                 lines =+pstmt2.executeUpdate();
-                close();
                 return lines;
             }
             else
             {
-                close();
                 throw new DAOExceptionHandler("No delivery with 'delivery_id = " + delivery.getDelivery_id() + " found.");
             }
         }
@@ -341,7 +327,6 @@ public class DAO {
         try {
             //  If customer ID == null , create new otherwise update
             if (invoice.getInvoice_id() == 0) {
-                open();
                 //  Construct INSERT statement and request generated keys
                 PreparedStatement ps = con.prepareStatement("INSERT INTO invoice VALUES(null, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
                 //  Populate values for the preparedStatement
@@ -356,11 +341,8 @@ public class DAO {
                 //  Get generated Key
                 if (keys.next())
                     invoice.setInvoice_id( keys.getLong(1));
-                close();
                 return lines;
             } else {
-                //  Open connection
-                open();
                 //  Base of the update
                 //  Update each value
                 String update = "UPDATE invoice SET ";
@@ -375,7 +357,6 @@ public class DAO {
                 System.out.println(update);
                 PreparedStatement ps = con.prepareStatement(update);
                 int lines = ps.executeUpdate();
-                close();
                 return lines;
             }
         }
@@ -394,15 +375,12 @@ public class DAO {
      */
     public DB_Invoice getInvoice(int ID) throws DAOExceptionHandler {
         try {
-            //  Open connection and get new result set
-            open();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM invoice WHERE invoice_id = " + ID);
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM invoice WHERE invoice_id = " + ID);
             if ( rs.next()) {
                 DB_Invoice temp = populateInvoice(rs);
-                close();
                 return temp;
             } else {
-                close();
                 //  If somehow this is reached throw an error
                 throw new DAOExceptionHandler("No invoice with 'invoice_id = " + ID + " not found.");
             }
@@ -427,17 +405,15 @@ public class DAO {
     /////Delete
     private int deleteInvoice(int ID) throws DAOExceptionHandler {
         try{
-            open();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM invoice WHERE invoice_id = " + ID); //Check if resultset exists instead of deleting something that doesnt exist
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM invoice WHERE invoice_id = " + ID); //Check if resultset exists instead of deleting something that doesnt exist
             if(rs.next()){
                 PreparedStatement pstmt = con.prepareStatement("DELETE FROM invoice where invoice_id = " + ID);
                 int lines = pstmt.executeUpdate();
-                close();
                 return lines;
             }
             else
             {
-                close();
                 throw new DAOExceptionHandler("No invoice with 'invoice_id = " + ID + " found.");
             }
         }
@@ -474,7 +450,6 @@ public class DAO {
                 con = DriverManager.getConnection( url, user, pass);
             else
                 con = DriverManager.getConnection( url + dbName, user, pass);
-            stmt = con.createStatement();
         }
         catch(SQLException | ClassNotFoundException e) {
             throw new DAOExceptionHandler(e.getMessage());

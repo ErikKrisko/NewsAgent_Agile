@@ -3,29 +3,30 @@ import java.sql.SQLException;
 
 public class DB_Address {
     //  Base address attributes
-    private int address_id = 0;
+    private long address_id = 0;
     private String full_address, area_code, eir_code;
 
     /** Blank constructor */
     public DB_Address() { }
 
-    public DB_Address(String full_address, String area_code, String eir_code) throws DB_AddressExceptionHandler {
+    public DB_Address(long address_id, String full_address, String area_code, String eir_code) throws DB_AddressExceptionHandler {
+        this.address_id = address_id;
         this.full_address = validateEntry( Att_Address.full_address, full_address);
         this.area_code = validateEntry( Att_Address.area_code, area_code);
         this.eir_code = validateEntry( Att_Address.eir_code, eir_code);
     }
 
-    public DB_Address(ResultSet rs) throws DB_AddressExceptionHandler {
-        try {
-            address_id = rs.getInt( Att_Address.address_id.column);
-            full_address = rs.getString( Att_Address.full_address.column);
-            area_code = rs.getString( Att_Address.area_code.column);
-            eir_code = rs.getString( Att_Address.eir_code.column);
-        }
-        catch (SQLException e){
-            throw new DB_AddressExceptionHandler(e.getMessage());
-        }
-    }
+//    public DB_Address(ResultSet rs) throws DB_AddressExceptionHandler {
+//        try {
+//            address_id = rs.getInt( Att_Address.address_id.column);
+//            full_address = rs.getString( Att_Address.full_address.column);
+//            area_code = rs.getString( Att_Address.area_code.column);
+//            eir_code = rs.getString( Att_Address.eir_code.column);
+//        }
+//        catch (SQLException e){
+//            throw new DB_AddressExceptionHandler(e.getMessage());
+//        }
+//    }
 
     public String validateEntry(Att_Address attribute, String entry) throws DB_AddressExceptionHandler {
         switch (attribute) {
@@ -64,7 +65,7 @@ public class DB_Address {
                 '}';
     }
     //  AUTO GENERATED getters and setters
-    public int getAddress_id() {    return address_id; }
+    public long getAddress_id() {    return address_id; }
     public String getFull_address() {   return full_address; }
     public String getArea_code() {  return area_code; }
     public String getEir_code() {   return eir_code; }

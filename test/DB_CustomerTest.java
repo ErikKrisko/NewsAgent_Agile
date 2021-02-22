@@ -185,7 +185,7 @@ public class DB_CustomerTest extends TestCase {
      */
     public void testDB_Customer011() {
         try {
-            DB_Customer testCustomer = new DB_Customer("Jo", "Bar", "1234567890", new DB_Address());
+            DB_Customer testCustomer = new DB_Customer(0, "Jo", "Bar", "1234567890", new DB_Address());
             assertEquals( "Jo", testCustomer.getFirst_name());
             assertEquals( "Bar", testCustomer.getLast_name());
             assertEquals( "1234567890", testCustomer.getPhone_no());
