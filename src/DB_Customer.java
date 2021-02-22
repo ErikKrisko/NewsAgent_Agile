@@ -1,4 +1,3 @@
-import java.awt.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -15,9 +14,9 @@ public class DB_Customer {
     public DB_Customer() { }
 
     public DB_Customer(String first_name, String last_name, String phone_no, DB_Address address) throws DB_CustomerExceptionHandler {
-        this.first_name = vEntry( Att_Customer.first_name, first_name);
-        this.last_name = vEntry( Att_Customer.last_name, last_name);
-        this.phone_no = vEntry( Att_Customer.phone_no, phone_no);
+        this.first_name = validateEntry( Att_Customer.first_name, first_name);
+        this.last_name = validateEntry( Att_Customer.last_name, last_name);
+        this.phone_no = validateEntry( Att_Customer.phone_no, phone_no);
         this.address = address;
     }
 
@@ -33,27 +32,31 @@ public class DB_Customer {
     }
 
     //  Validate attributes
-    private String vEntry(Att_Customer type, String entry) throws DB_CustomerExceptionHandler {
-        switch (type) {
-            case first_name -> {
-                if (entry.length() > 0 && entry.length() <= 20)
-                    return entry;
-                else
-                    throw new DB_CustomerExceptionHandler("Invalid first_name.");
+    public String validateEntry(Att_Customer type, String entry) throws DB_CustomerExceptionHandler {
+        if (!entry.isBlank() || !entry.isEmpty()) {
+            switch (type) {
+                case first_name, last_name -> {
+                    if (entry.length() <= 20)
+                        if (!entry.matches(".*\\d.*"))
+                            return entry;
+                        else
+                            throw new DB_CustomerExceptionHandler("Entry = \"" + entry + "\", cannot contain numbers.");
+                    else
+                        throw new DB_CustomerExceptionHandler("Entry = \"" + entry + "\", is too long.");
+                }
+                case phone_no -> {
+                    if (entry.length() == 10)
+                        if (entry.matches("\\d+"))
+                            return entry;
+                        else
+                            throw new DB_CustomerExceptionHandler( "Entry = \"" + entry + "\", cannot contain letters.");
+                    else
+                        throw new DB_CustomerExceptionHandler("Entry = \"" + entry + "\", has to be of length 10.");
+                }
+                default -> throw new DB_CustomerExceptionHandler("Internal error. Unhandled attribute.");
             }
-            case last_name -> {
-                if (entry.length() > 0 && entry.length() <= 20)
-                    return entry;
-                else
-                    throw new DB_CustomerExceptionHandler("Invalid last_name.");
-            }
-            case phone_no -> {
-                if (entry.length() == 10)
-                    return entry;
-                else
-                    throw new DB_CustomerExceptionHandler("Invalid phone_no.");
-            }
-            default -> throw new DB_CustomerExceptionHandler("Internal error. Unhandled attribute.");
+        } else {
+            throw new DB_CustomerExceptionHandler("Entry = \"" + entry + "\", cannot be an empty String.");
         }
     }
 
@@ -91,9 +94,9 @@ public class DB_Customer {
     public String getPhone_no() {   return phone_no; }
     public DB_Address getAddress() {    return address; }
     public void setCustomer_id(long customer_id) { this.customer_id = customer_id; }
-    public void setFirst_name(String first_name) throws DB_CustomerExceptionHandler {  this.first_name = vEntry( Att_Customer.first_name, first_name); }
-    public void setLast_name(String last_name) throws DB_CustomerExceptionHandler {    this.last_name = vEntry( Att_Customer.last_name, last_name); }
-    public void setPhone_no(String phone_no) throws DB_CustomerExceptionHandler {  this.phone_no = vEntry( Att_Customer.phone_no, phone_no); }
+    public void setFirst_name(String first_name) throws DB_CustomerExceptionHandler {  this.first_name = validateEntry( Att_Customer.first_name, first_name); }
+    public void setLast_name(String last_name) throws DB_CustomerExceptionHandler {    this.last_name = validateEntry( Att_Customer.last_name, last_name); }
+    public void setPhone_no(String phone_no) throws DB_CustomerExceptionHandler {  this.phone_no = validateEntry( Att_Customer.phone_no, phone_no); }
     public void setAddress(DB_Address address) {    this.address = address; }
 }
 
