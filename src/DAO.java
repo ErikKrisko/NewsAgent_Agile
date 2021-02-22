@@ -429,72 +429,50 @@ public class DAO {
     //  ====================================================================================================
     // SUBSCRIPTION
     //GetSubscription
-    public DB_Subscription getSubscription(int cus_id, int prod_id) throws DAOExceptionHandler
-    {
-        try
-        {
-            open();
+    public DB_Subscription getSubscription(int cus_id, int prod_id) throws DAOExceptionHandler {
+        try {
             //cus_id comes up wrong
-            ResultSet rs = stmt.executeQuery("SELECT * FROM subscription WHERE customer_id = " + cus_id + " AND prod_id = " + prod_id);
-            if(rs.next())
-            {
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM subscription WHERE customer_id = " + cus_id + " AND prod_id = " + prod_id);
+            if(rs.next()) {
                 DB_Subscription temp = populateSubscription(rs);
-                close();
                 return temp;
-            }
-            else
-            {
-                close();
+            } else {
                 throw new DAOExceptionHandler("No subscription with customer_id = " + cus_id + " AND prod_id = " + prod_id + "found");
             }
-        }
-        catch (SQLException e)
-        {
+        } catch (SQLException e) {
             throw new DAOExceptionHandler(e.getMessage());
         }
     }
 
-    public DB_Subscription getSubscriptionByCustomer(int cus_id) throws DAOExceptionHandler
-    {
-        try
-        {
-            open();
+    public DB_Subscription getSubscriptionByCustomer(int cus_id) throws DAOExceptionHandler {
+        try {
             //cus_id comes up wrong
-            ResultSet rs = stmt.executeQuery("SELECT * FROM subscription WHERE customer_id = " + cus_id);
-            if(rs.next())
-            {
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM subscription WHERE customer_id = " + cus_id);
+            if(rs.next()) {
                 DB_Subscription temp = populateSubscription(rs);
-                close();
                 return temp;
-            }
-            else
-            {
-                close();
+            } else {
                 throw new DAOExceptionHandler("No subscription with customer_id = " + cus_id + "found");
             }
-        }
-        catch (SQLException e)
-        {
+        } catch (SQLException e) {
             throw new DAOExceptionHandler(e.getMessage());
         }
     }
 
-    public DB_Subscription getSubscriptionByPublication( int publication_id) throws DAOExceptionHandler
-    {
-        try
-        {
-            open();
+    public DB_Subscription getSubscriptionByPublication( int publication_id) throws DAOExceptionHandler {
+        try {
             //cus_id comes up wrong
-            ResultSet rs = stmt.executeQuery("SELECT * FROM subscription WHERE publication_id = " + publication_id);
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM subscription WHERE publication_id = " + publication_id);
             if(rs.next())
             {
                 DB_Subscription temp = populateSubscription(rs);
-                close();
                 return temp;
             }
             else
             {
-                close();
                 throw new DAOExceptionHandler("No subscription with publication_id = " + publication_id + "found");
             }
         }
@@ -510,14 +488,13 @@ public class DAO {
     public int updateSubscription(DB_Subscription subscription) throws DAOExceptionHandler
     {
         try {
-            open();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM subscription WHERE customer_id ="+ subscription.getCustomer().getCustomer_id() + " and prod_id = " + 1 /* subscription.getPublication().getProd_id()*/);
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM subscription WHERE customer_id ="+ subscription.getCustomer().getCustomer_id() + " and prod_id = " + 1 /* subscription.getPublication().getProd_id()*/);
             if(rs.next())
             {
                 String update = "UPDATE subscription SET count =" + subscription.getCount() + "WHERE customer_id ="+ subscription.getCustomer().getCustomer_id() + " and prod_id = " + 1; /* subscription.getPublication().getProd_id()*/
                 PreparedStatement ps = con.prepareStatement(update);
                 int lines = ps.executeUpdate();
-                close();
                 return lines;
             }
             else
@@ -530,7 +507,6 @@ public class DAO {
 
                 pstmt.setInt(3, subscription.getCount());
                 int lines = pstmt.executeUpdate();
-                close();
                 return lines;
             }
         }
@@ -549,15 +525,13 @@ public class DAO {
     private int deleteSubscription(DB_Subscription subscription) throws DAOExceptionHandler
     {
         try {
-            open();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM subscription WHERE customer_id ="+ subscription.getCustomer().getCustomer_id() + " and prod_id = " + 1 /* subscription.getPublication().getProd_id()*/);
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM subscription WHERE customer_id ="+ subscription.getCustomer().getCustomer_id() + " and prod_id = " + 1 /* subscription.getPublication().getProd_id()*/);
             if (rs.next()) {
                 PreparedStatement pstmt = con.prepareStatement("DELETE FROM subscription WHERE customer_id ="+ subscription.getCustomer().getCustomer_id() + " and prod_id = " + 1 /* subscription.getPublication().getProd_id()*/ );
                 int lines = pstmt.executeUpdate();
-                close();
                 return lines;
             } else {
-                close();
                 throw new DAOExceptionHandler("No subscription with customer_id ="+ subscription.getCustomer().getCustomer_id() + " and prod_id = " + 1 /* subscription.getPublication().getProd_id()*/ + "found");
             }
         }
