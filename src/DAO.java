@@ -405,21 +405,23 @@ public class DAO {
     }
 
     /////Delete
-    private int deleteInvoice(int ID) throws DAOExceptionHandler {
-        try{
+    //Delete Subscription
+
+    private int deleteInvoice(DB_Invoice invoice) throws DAOExceptionHandler
+    {
+        try {
             Statement st = con.createStatement();
-            ResultSet rs = st.executeQuery("SELECT * FROM invoice WHERE invoice_id = " + ID); //Check if resultset exists instead of deleting something that doesnt exist
-            if(rs.next()){
-                PreparedStatement pstmt = con.prepareStatement("DELETE FROM invoice where invoice_id = " + ID);
+            ResultSet rs = st.executeQuery("SELECT * FROM invoice WHERE invoice_id ="+ invoice.getinvoice().invoice_id() + " and invoice_id = " + 1 /* subscription.getPublication().getProd_id()*/);
+            if (rs.next()) {
+                PreparedStatement pstmt = con.prepareStatement("DELETE FROM invoice WHERE invoice_id ="+ invoice.getinvoice().getinvoice_id() + " and invoice_id = " + 1 /* subscription.getPublication().getProd_id()*/ );
                 int lines = pstmt.executeUpdate();
                 return lines;
-            }
-            else
-            {
-                throw new DAOExceptionHandler("No invoice with 'invoice_id = " + ID + " found.");
+            } else {
+                throw new DAOExceptionHandler("No subscription with invoice_id ="+ invoice.getCustomer().getCustomer_id() + " and prod_id = " + 1 /* subscription.getPublication().getProd_id()*/ + "found");
             }
         }
-        catch(SQLException e) {
+        catch(SQLException e)
+        {
             throw new DAOExceptionHandler(e.getMessage());
         }
     }
