@@ -41,18 +41,18 @@ public class DB_InvoiceTest extends TestCase {
     }
 
     /** TEST 003
-     *  Test invoice total for too long entry
+     *  Test invoice total for value below 1
      *  ==========
      *  Inputs: Att_Invoice.invoice_total
      *          "0.01"
      *  ==========
-     *  Expected Outputs:   DB_InvoiceExceptionHandler = "Entry = "0.01", has be below the length of ."
+     *  Expected Outputs:   DB_InvoiceExceptionHandler = "Entry = "0.01", Invoice total has to be over 1 ."
      */
     public void testDB_Invoice003() {
         try {
             invoice.validateTotal(0.01);
         } catch (DB_InvoiceExceptionHandler e) {
-            assertEquals("Entry = \"0.01\", has be above the length of 1.", e.getMessage());
+            assertEquals("Entry = \"0.01\", Invoice total has to be over 1.", e.getMessage());
         }
     }
 
