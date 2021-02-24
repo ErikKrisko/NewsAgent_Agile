@@ -51,7 +51,7 @@ public class newsagent_interface {
         try {
             //  Customer Menu controller values
             int menuChoice = 0;
-            final int CUS_EXIT = 7;
+            final int CUS_EXIT = 8;
             //  Customer menu loop
             while (menuChoice != CUS_EXIT) {
                 //  Display menu
@@ -161,6 +161,7 @@ public class newsagent_interface {
                     }
                 }
             }
+            customer = null;
         } catch (Exception e) {
             e.printStackTrace();
         }
