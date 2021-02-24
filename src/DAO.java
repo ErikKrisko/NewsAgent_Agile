@@ -70,12 +70,12 @@ public class DAO {
                 String query = "SELECT * FROM customer WHERE ";
                 for (Search_Customer search : search_list) {
                     if (search.isStrong())
-                        query += search.getAttribute().name + " = '" + search.getTerm() + "', ";
+                        query += search.getAttribute().name + " = '" + search.getTerm() + "'AND ";
                     else
-                        query += search.getAttribute().name + " LIKE '" + search.getTerm() + "', ";
+                        query += search.getAttribute().name + " LIKE '" + search.getTerm() + "'AND ";
                 }
                 //  Cut the last two characters off ( ", " ) from the end
-                query = query.substring(0, query.length() - 2 );
+                query = query.substring(0, query.length() - 4 );
                 System.out.println(query);
                 Statement st = con.createStatement();
                 ResultSet rs = st.executeQuery(query);
@@ -164,6 +164,25 @@ public class DAO {
         }
         catch (SQLException e) {
             throw new DAOExceptionHandler( e.getMessage());
+        }
+    }
+
+
+    public int deleteCustomer(DB_Customer customer) throws DAOExceptionHandler {
+        if (customer.getCustomer_id() == 0) {
+            throw new DAOExceptionHandler("Customer was not inserted into the database.");
+        } else {
+            try {
+                Statement st = con.createStatement();
+                ResultSet rs = st.executeQuery("SELECT * FROM customer WHERE customer_id = " + customer.getCustomer_id());
+                if ( rs.next()) {
+                    return st.executeUpdate("DELETE FROM customer WHERE " + Att_Customer.customer_id.name + " = " + customer.getCustomer_id() );
+                } else {
+                    throw new DAOExceptionHandler("Cannot delete, customer_id = '" + customer.getCustomer_id() + "' does not exist in the database.");
+                }
+            } catch (SQLException e) {
+                throw new DAOExceptionHandler(e.getMessage());
+            }
         }
     }
 

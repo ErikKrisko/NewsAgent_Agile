@@ -21,7 +21,7 @@ CREATE TABLE customer (
 	last_name VARCHAR(20) NOT NULL DEFAULT '',
 	phone_no VARCHAR(12) NOT NULL DEFAULT '',
 	address_id INTEGER NOT NULL,
-    FOREIGN KEY (address_id) REFERENCES address(address_id),
+    FOREIGN KEY (address_id) REFERENCES address(address_id) ON DELETE CASCADE,
 	PRIMARY KEY (customer_id)
 );
 
@@ -33,7 +33,7 @@ CREATE TABLE invoice (
      invoice_status BIT NOT NULL,
      invoice_total DECIMAL(5,2) NOT NULL,
      customer_id INTEGER NOT NULL,
-     FOREIGN KEY (customer_id) REFERENCES customer(customer_id),
+     FOREIGN KEY (customer_id) REFERENCES customer(customer_id) ON DELETE CASCADE,
      PRIMARY KEY (invoice_id)
 );
 
@@ -44,7 +44,7 @@ CREATE TABLE holiday (
 	start_date DATE NOT NULL,
 	end_date DATE NOT NULL,
     customer_id INTEGER NOT NULL,
-    FOREIGN KEY (customer_id) REFERENCES customer(customer_id),
+    FOREIGN KEY (customer_id) REFERENCES customer(customer_id) ON DELETE CASCADE,
 	PRIMARY KEY (holiday_id)
 );
  
@@ -56,7 +56,7 @@ CREATE TABLE delivery (
 	delivery_status BIT NOT NULL,
     customer_id INTEGER NOT NULL,
     invoice_id INTEGER NOT NULL,
-    FOREIGN KEY (customer_id) REFERENCES customer(customer_id),
+    FOREIGN KEY (customer_id) REFERENCES customer(customer_id) ON DELETE CASCADE,
     FOREIGN KEY (invoice_id) REFERENCES invoice(invoice_id),
 	PRIMARY KEY (delivery_id)
 );
@@ -110,7 +110,7 @@ CREATE TABLE prod_for_delivery (
 	prod_id INTEGER NOT NULL,
 	delivery_id INTEGER NOT NULL,
 	FOREIGN KEY (prod_id) REFERENCES publication(prod_id),
-	FOREIGN KEY (delivery_id) REFERENCES delivery(delivery_id),
+	FOREIGN KEY (delivery_id) REFERENCES delivery(delivery_id) ON DELETE CASCADE,
 	PRIMARY KEY (prod_id,delivery_id)
 );
 	
@@ -119,7 +119,7 @@ DROP TABLE IF EXISTS delivers;
 CREATE TABLE delivers (
     delivery_id INTEGER NOT NULL,
     employee_id INTEGER NOT NULL,
-	FOREIGN KEY (delivery_id) REFERENCES delivery(delivery_id),
+	FOREIGN KEY (delivery_id) REFERENCES delivery(delivery_id) ON DELETE CASCADE,
 	FOREIGN KEY (employee_id) REFERENCES employee(employee_id),
 	PRIMARY KEY (delivery_id,employee_id)
 );
@@ -130,7 +130,7 @@ CREATE TABLE subscription (
       customer_id INTEGER NOT NULL,
       prod_id INTEGER NOT NULL,
       count INTEGER NOT NULL,
-      FOREIGN KEY (customer_id) REFERENCES customer(customer_id),
+      FOREIGN KEY (customer_id) REFERENCES customer(customer_id) ON DELETE CASCADE,
       FOREIGN KEY (prod_id) REFERENCES publication(prod_id),
       PRIMARY KEY (customer_id,prod_id)
 );
