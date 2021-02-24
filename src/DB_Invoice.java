@@ -41,6 +41,16 @@ public class DB_Invoice
         }
     }
 
+    public long validateId(long id) throws DB_InvoiceExceptionHandler {
+        if (id < 0) {
+
+            throw new DB_InvoiceExceptionHandler("Invoice id invalid.");
+        }
+        else {
+            return id;
+        }
+    }
+
 
     public Date validateDate(Date entry) throws DB_InvoiceExceptionHandler
     {
