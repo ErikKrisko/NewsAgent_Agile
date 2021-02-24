@@ -13,9 +13,9 @@ public class DB_Invoice
     public DB_Invoice() { }
 
     public DB_Invoice(Date issue_date, boolean invoice_status, double invoice_total, DB_Customer customer) throws DB_InvoiceExceptionHandler, DB_CustomerExceptionHandler {
-        this.issue_date = vDate( issue_date);
+        this.issue_date = validateDate( issue_date);
         this.invoice_status = invoice_status;
-        this.invoice_total = vTotal( invoice_total);
+        this.invoice_total = validateTotal( invoice_total);
         this.customer = customer;
     }
 
@@ -29,42 +29,40 @@ public class DB_Invoice
             throw new DB_CustomerExceptionHandler(e.getMessage());
         }
     }
+    //  Validate attributes
 
-        private Date vDate(Date date) {
-            return new Date(System.currentTimeMillis());
-        }
+    public double validateTotal(double total) throws DB_InvoiceExceptionHandler {
+        if (total >= 100 || total < 0) {
 
-        private double vTotal(double total) throws DB_InvoiceExceptionHandler {
-            if (total >= 0) {
-                return total;
-            } else {
-                throw new DB_InvoiceExceptionHandler("Invoice cannot be negative.");
-            }
+            throw new DB_InvoiceExceptionHandler("Invoice total invalid.");
         }
-        //  Validate attributes
-        private String vEntry(Att_Invoice type, String entry) throws DB_InvoiceExceptionHandler, DB_CustomerExceptionHandler {
-            switch (type) {
-                case issue_date -> {
-                    if (entry.length() > 0 && entry.length() <= 20)
-                        return entry;
-                    else
-                        throw new DB_InvoiceExceptionHandler("Invalid issue date.");
-                }
-                case invoice_status -> {
-                    if (entry.length() > 0 && entry.length() <= 20)
-                        return entry;
-                    else
-                        throw new DB_InvoiceExceptionHandler("Invalid issue status.");
-                }
-                case invoice_total -> {
-                    if (entry.length() == 10)
-                        return entry;
-                    else
-                        throw new DB_InvoiceExceptionHandler("Invalid issue total.");
-                }
-                default -> throw new DB_CustomerExceptionHandler("Internal error. Unhandled attribute.");
-            }
+        else {
+            return total;
         }
+    }
+
+    public long validateId(long id) throws DB_InvoiceExceptionHandler {
+        if (id < 0) {
+
+            throw new DB_InvoiceExceptionHandler("Invoice id invalid.");
+        }
+        else {
+            return id;
+        }
+    }
+
+
+    public Date validateDate(Date entry) throws DB_InvoiceExceptionHandler
+    {
+        if (entry.after(new Date(System.currentTimeMillis() - 86400000))) //86400000 one day in milli seconds
+        {
+            return entry;
+        }
+        else
+        {
+            throw new DB_InvoiceExceptionHandler("Invalid invoice date.");
+        }
+    }
 
 
     @Override
