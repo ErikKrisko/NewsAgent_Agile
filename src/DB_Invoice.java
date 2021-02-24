@@ -34,7 +34,7 @@ public class DB_Invoice
     public double validateTotal(double total) throws DB_InvoiceExceptionHandler {
         if (total >= 100 || total < 0) {
 
-            throw new DB_InvoiceExceptionHandler("Invoice total cant more than 99.99.");
+            throw new DB_InvoiceExceptionHandler("Invoice total invalid.");
         }
         else {
             return total;

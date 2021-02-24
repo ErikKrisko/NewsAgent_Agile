@@ -30,31 +30,30 @@ public class DB_InvoiceTest extends TestCase {
      *  Inputs: Att_Invoice.invoice_total
      *          "100"
      *  ==========
-     *  Expected Outputs:   DB_InvoiceExceptionHandler = "Entry = "100", Invoice total cant be more than 99.99."
+     *  Expected Outputs:   DB_InvoiceExceptionHandler = "Entry = "100", Invoice total invalid."
      */
     public void testDB_Invoice002() {
         try {
             invoice.validateTotal(100);
         } catch (DB_InvoiceExceptionHandler e) {
-            assertEquals("Invoice total cant more than 99.99.", e.getMessage());
+            assertEquals("Invoice total invalid.", e.getMessage());
         }
     }
 
     /** TEST 003
-     *  Test invoice total for value below 1
+     *  Test invoice total for value below 0
      *  ==========
      *  Inputs: Att_Invoice.invoice_total
-     *          "0.01"
+     *          "-0.01"
      *  ==========
-     *  Expected Outputs:   DB_InvoiceExceptionHandler = "Entry = "0.01", Invoice total has to be over 1 ."
+     *  Expected Outputs:   DB_InvoiceExceptionHandler = "Entry = "-0.01", Invoice total invalid."
      */
     public void testDB_Invoice003() {
         try {
-            invoice.validateTotal(0.01);
+            invoice.validateTotal(-0.01);
         } catch (DB_InvoiceExceptionHandler e) {
-            assertEquals("Entry = \"0.01\", Invoice total has to be over 1.", e.getMessage());
+            assertEquals("Invoice total invalid.", e.getMessage());
         }
     }
-
 
 }
