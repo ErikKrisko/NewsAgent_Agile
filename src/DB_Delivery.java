@@ -38,7 +38,7 @@ public class DB_Delivery
     }
 
     /**Validate Attributes*/
-    private Date validateDevDate(Date entry) throws DB_DeliveryExceptionHandler
+    public Date validateDevDate(Date entry) throws DB_DeliveryExceptionHandler
     {
         if (entry.after(new Date(System.currentTimeMillis() - 86400000))) //86400000 one day in milli seconds
         {

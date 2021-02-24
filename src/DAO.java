@@ -411,9 +411,9 @@ public class DAO {
     {
         try {
             Statement st = con.createStatement();
-            ResultSet rs = st.executeQuery("SELECT * FROM invoice WHERE invoice_id ="+ invoice.getinvoice().invoice_id() + " and invoice_id = " + 1 /* subscription.getPublication().getProd_id()*/);
+            ResultSet rs = st.executeQuery("SELECT * FROM invoice WHERE invoice_id ="+ invoice.getInvoice_id() + " and invoice_id = " + 1 /* subscription.getPublication().getProd_id()*/);
             if (rs.next()) {
-                PreparedStatement pstmt = con.prepareStatement("DELETE FROM invoice WHERE invoice_id ="+ invoice.getinvoice().getinvoice_id() + " and invoice_id = " + 1 /* subscription.getPublication().getProd_id()*/ );
+                PreparedStatement pstmt = con.prepareStatement("DELETE FROM invoice WHERE invoice_id ="+ invoice.getInvoice_id() + " and invoice_id = " + 1 /* subscription.getPublication().getProd_id()*/ );
                 int lines = pstmt.executeUpdate();
                 return lines;
             } else {
