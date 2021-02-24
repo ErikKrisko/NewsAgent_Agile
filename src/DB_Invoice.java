@@ -31,14 +31,15 @@ public class DB_Invoice
     }
     //  Validate attributes
 
-        public double validateTotal(double total) throws DB_InvoiceExceptionHandler {
-            if (total >= 0) {
-                return total;
-            } else {
-                throw new DB_InvoiceExceptionHandler("Invoice total be negative.");
-            }
-        }
+    public double validateTotal(double total) throws DB_InvoiceExceptionHandler {
+        if (total >= 100 || total < 0) {
 
+            throw new DB_InvoiceExceptionHandler("Invoice total cant more than 99.99.");
+        }
+        else {
+            return total;
+        }
+    }
 
 
     public Date validateDate(Date entry) throws DB_InvoiceExceptionHandler

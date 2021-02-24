@@ -11,34 +11,32 @@ public class DB_InvoiceTest extends TestCase {
     /** TEST 001
      *  Test invoice_date for empty
      *  ==========
-     *  Inputs: att_date
+     *  Inputs: issue_date
      *  ==========
-     *  Expected Outputs:   DB_DeliveryExceptionHandler = "Invalid delivery_date."
+     *  Expected Outputs:   DB_InvoiceExceptionHandler = "Invalid issue_date."
      */
     public void testDB_invoice001() {
         try {
             invoice.validateDate(Date.valueOf(""));
-            fail("Exception expected.");
         } catch (DB_InvoiceExceptionHandler e) {
-            assertEquals("Invalid invoice date.", e.getMessage());
+            assertEquals("Invalid issue date.", e.getMessage());
         }
     }
 
 
     /** TEST 002
-     *  Test invoice total for too long entry
+     *  Test invoice total for value over 100
      *  ==========
      *  Inputs: Att_Invoice.invoice_total
      *          "100"
      *  ==========
-     *  Expected Outputs:   DB_InvoiceExceptionHandler = "Entry = "100", has be below the length of 10000."
+     *  Expected Outputs:   DB_InvoiceExceptionHandler = "Entry = "100", Invoice total cant more than 99.99."
      */
     public void testDB_Invoice002() {
         try {
             invoice.validateTotal(100);
-            fail("Exception expected.");
         } catch (DB_InvoiceExceptionHandler e) {
-            assertEquals("Entry = \"100\", has be below the length of 100.", e.getMessage());
+            assertEquals("Entry = \"100\",Invoice total cant more than 99.99.", e.getMessage());
         }
     }
 
@@ -53,7 +51,6 @@ public class DB_InvoiceTest extends TestCase {
     public void testDB_Invoice003() {
         try {
             invoice.validateTotal(0.01);
-            fail("Exception expected.");
         } catch (DB_InvoiceExceptionHandler e) {
             assertEquals("Entry = \"0.01\", has be above the length of 1.", e.getMessage());
         }
