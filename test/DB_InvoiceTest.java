@@ -30,13 +30,13 @@ public class DB_InvoiceTest extends TestCase {
      *  Inputs: Att_Invoice.invoice_total
      *          "100"
      *  ==========
-     *  Expected Outputs:   DB_InvoiceExceptionHandler = "Entry = "100", Invoice total cant more than 99.99."
+     *  Expected Outputs:   DB_InvoiceExceptionHandler = "Entry = "100", Invoice total cant be more than 99.99."
      */
     public void testDB_Invoice002() {
         try {
             invoice.validateTotal(100);
         } catch (DB_InvoiceExceptionHandler e) {
-            assertEquals("Entry = \"100\",Invoice total cant more than 99.99.", e.getMessage());
+            assertEquals("Invoice total cant more than 99.99.", e.getMessage());
         }
     }
 
