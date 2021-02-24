@@ -40,13 +40,31 @@ public class DB_Delivery
     /**Validate Attributes*/
     public Date validateDevDate(Date entry) throws DB_DeliveryExceptionHandler
     {
-        if (entry.after(new Date(System.currentTimeMillis() - 86400000))) //86400000 one day in milli seconds
+        if(entry != null)
+        {
+            if (entry.after(new Date(System.currentTimeMillis() - 24*60*60*1000))) //24*60*60*1000 one day in milli seconds. hours*mins*secs*millisecs
+            {
+                return entry;
+            }
+            else
+            {
+                throw new DB_DeliveryExceptionHandler("delivery_date is older than a day");
+            }
+        }
+        else
+        {
+            throw new DB_DeliveryExceptionHandler("delivery_date is null");
+        }
+
+    }
+    public long validateDevID(long entry) throws DB_DeliveryExceptionHandler {
+        if(entry >= 0)
         {
             return entry;
         }
         else
         {
-            throw new DB_DeliveryExceptionHandler("Invalid delivery_date.");
+            throw new DB_DeliveryExceptionHandler("delivery_id has to be greater than or equal to 0");
         }
     }
 
@@ -83,6 +101,8 @@ public class DB_Delivery
     public void setDelivery_status(boolean delivery_status) { this.delivery_status = delivery_status; }
     public void setCustomer(DB_Customer customer) { this.customer = customer; }
     public void setInvoice(DB_Invoice invoice) { this.invoice = invoice; }
+
+    public void replaceDelivery_date(){this.delivery_date = delivery_date;}
 
 }
 
