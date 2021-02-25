@@ -306,9 +306,7 @@ public class DAO {
             ResultSet rs = st.executeQuery("SELECT * FROM delivery WHERE delivery_id = " + delivery.getDelivery_id()); //Check if resultset exists instead of deleting something that doesnt exist
             if(rs.next()){
                 PreparedStatement pstmt = con.prepareStatement("DELETE FROM delivery where delivery_id = " + delivery.getDelivery_id());
-                PreparedStatement pstmt2 = con.prepareStatement("DELETE FROM prod_for_delivery where delivery_id = " + delivery.getDelivery_id());
-                int lines =+ pstmt.executeUpdate();
-                lines =+pstmt2.executeUpdate();
+                int lines = pstmt.executeUpdate();
                 return lines;
             }
             else
