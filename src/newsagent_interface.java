@@ -10,6 +10,7 @@ public class newsagent_interface {
     //  Global customer object
     static DB_Customer customer = null;
     static DB_Delivery delivery = null;
+    static DB_Invoice invoice = null;
 
     public static void main(String[] args){
         try {
@@ -36,8 +37,12 @@ public class newsagent_interface {
                         //  If customer menu selected
                         case 1 -> customerMenu();
 
+                        //  Invoice menu selected
+                        case 3 -> invoiceMenu();
+
                         //  Delivery menu selected
                         case 4 -> deliveryMenu();
+
 
                         //  Close
                         case 6 -> System.out.println("Exiting...");
@@ -280,6 +285,114 @@ public class newsagent_interface {
         }
     }
 
+    public static void invoiceMenu()
+    {
+        try {
+            //Controller values
+            int menuChoice = 0;
+            final int menuExit = 7;
+
+            while(menuChoice != menuExit) {
+                printMenu(3); //Display Menu
+                if(sc.hasNextInt()) {
+                    menuChoice = sc.nextInt();
+                    switch (menuChoice){
+                        //Create new Invoice
+                        case 1 -> {
+                            invoice = new DB_Invoice();
+                            System.out.println("Enter invoice date (yyyy-mm-dd): ");
+                            invoice.setIssue_date(Date.valueOf(sc.next()));
+                            System.out.println("Enter invoice status (true or false): ");
+                            invoice.setInvoice_status(Boolean.valueOf(sc.next()));
+                            System.out.println("Enter invoice total (yyyy-mm-dd): ");
+                            invoice.setInvoice_total(sc.nextDouble());
+                            System.out.println("Enter the customer id: ");
+                            invoice.setCustomer(dao.getCustomer(sc.nextInt()));
+                            System.out.println(customer);
+                        }
+                        //Load existing Invoice
+                        case 2 -> {
+                            System.out.println("Enter invoice id: ");
+                            int invoice_id = sc.nextInt();
+                            invoice = dao.getInvoice(invoice_id);
+                            System.out.println(invoice);
+                        }
+                        //Edit Invoice
+                        case 3 -> {
+                            if(invoice == null){
+                                System.out.println("Need to load invoice first.");
+                            }else{
+                                System.out.println("Editing: " + invoice);
+                                System.out.println("invoice date(yyyy-mm-dd): " + invoice.getIssue_date() + " -> ");
+                                if(sc.hasNextLine() && sc.hasNext()){
+                                    invoice.setIssue_date(Date.valueOf(sc.next()));
+                                }
+                                System.out.println("Invoice status(true or false): " + invoice.getInvoice_status() + " -> ");
+                                if(sc.hasNextLine() && sc.hasNext()){
+                                    invoice.setInvoice_status(Boolean.valueOf(sc.next()));
+                                }
+                                System.out.println("Invoice total: " + invoice.getInvoice_total() + " -> ");
+                                if(sc.hasNextLine() && sc.hasNext()) {
+                                    invoice.setInvoice_total(Double.valueOf(sc.next()));
+                                }
+                                System.out.println("Customer id: " + invoice.getCustomer().getCustomer_id());
+                                if(sc.hasNextLine() && sc.hasNext()){
+                                    invoice.setCustomer(dao.getCustomer(sc.nextInt()));
+                                }
+                                System.out.println("Changed invoice: " + invoice);
+                            }
+                        }
+                        //Insert/Update Invoice
+                        case 4 -> {
+                            if(invoice == null){
+                                System.out.println("Need to load or create invoice first.");
+                            }else{
+                                System.out.println("Updating invoice: " + invoice);
+                                boolean idChange = invoice.getInvoice_id() == 0;
+                                dao.updateInvoice(invoice);
+                                if(idChange){
+                                    System.out.println("Id changed: " + invoice);
+                                }
+                            }
+                        }
+                        //View selected invoice
+                        case 5 -> {
+
+                            if(invoice == null){
+                                System.out.println("Need to load or create invoice first.");
+                            }else{
+                                System.out.println(invoice);
+                            }
+                        }
+                        //Delete invoice
+                        case 6 -> {
+                            if(invoice == null){
+                                System.out.println("Need to load invoice first.");
+                            }
+                            else if(invoice.getInvoice_id() == 0){
+                                System.out.println("Invoice must be loaded from database.");
+                            }
+                            else{
+                                System.out.println("Deleting: " + invoice);
+                                dao.deleteInvoice(invoice);
+                                invoice = null;
+                            }
+                        }
+                        //Exit
+                        case 7 -> {
+                            System.out.println("Returning to Main Menu.....");
+                            invoice = null;
+                        }
+                        default -> System.out.println("Invalid Choice.");
+                    }
+                }
+            }
+            invoice = null;
+        }catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void printMenu(int menu) {
         switch (menu) {
             //  Main Menu
@@ -287,7 +400,7 @@ public class newsagent_interface {
                 System.out.println("\n=====Main Menu=====");
                 System.out.println("1. Customer");
                 System.out.println("2. Address (unimplemented)");
-                System.out.println("3. Invoice (unimplemented)");
+                System.out.println("3. Invoice");
                 System.out.println("4. Delivery");
                 System.out.println("5. Subscription (unimplemented)");
                 System.out.println("6. Exit");
@@ -308,6 +421,18 @@ public class newsagent_interface {
             case 4 -> {
                 System.out.println("\n=====Delivery Menu=====");
                 System.out.println("1. Create new delivery");
+                System.out.println("2. Load existing ID");
+                System.out.println("3. Edit");
+                System.out.println("4. Update database");
+                System.out.println("5. Check");
+                System.out.println("6. Delete");
+                System.out.println("7. To Main Menu");
+            }
+
+            //  Invoice menu
+            case 3 -> {
+                System.out.println("\n=====Invoice Menu=====");
+                System.out.println("1. Create new invoice");
                 System.out.println("2. Load existing ID");
                 System.out.println("3. Edit");
                 System.out.println("4. Update database");
