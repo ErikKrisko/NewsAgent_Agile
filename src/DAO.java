@@ -306,9 +306,7 @@ public class DAO {
             ResultSet rs = st.executeQuery("SELECT * FROM delivery WHERE delivery_id = " + delivery.getDelivery_id()); //Check if resultset exists instead of deleting something that doesnt exist
             if(rs.next()){
                 PreparedStatement pstmt = con.prepareStatement("DELETE FROM delivery where delivery_id = " + delivery.getDelivery_id());
-                PreparedStatement pstmt2 = con.prepareStatement("DELETE FROM prod_for_delivery where delivery_id = " + delivery.getDelivery_id());
-                int lines =+ pstmt.executeUpdate();
-                lines =+pstmt2.executeUpdate();
+                int lines = pstmt.executeUpdate();
                 return lines;
             }
             else
@@ -423,24 +421,23 @@ public class DAO {
         }
     }
 
-    /////Delete
-    //Delete Subscription
+    //Delete Invoice
 
-    private int deleteInvoice(DB_Invoice invoice) throws DAOExceptionHandler
-    {
-        try {
+    public int deleteInvoice(DB_Invoice invoice) throws DAOExceptionHandler {
+        try{
             Statement st = con.createStatement();
-            ResultSet rs = st.executeQuery("SELECT * FROM invoice WHERE invoice_id ="+ invoice.getInvoice_id() + " and invoice_id = " + 1 /* subscription.getPublication().getProd_id()*/);
-            if (rs.next()) {
-                PreparedStatement pstmt = con.prepareStatement("DELETE FROM invoice WHERE invoice_id ="+ invoice.getInvoice_id() + " and invoice_id = " + 1 /* subscription.getPublication().getProd_id()*/ );
-                int lines = pstmt.executeUpdate();
+            ResultSet rs = st.executeQuery("SELECT * FROM invoice WHERE invoice_id = " + invoice.getInvoice_id()); //Check if resultset exists instead of deleting something that doesnt exist
+            if(rs.next()){
+                PreparedStatement pstmt = con.prepareStatement("DELETE FROM invoice where invoice_id = " + invoice.getInvoice_id());
+                int lines =+ pstmt.executeUpdate();
                 return lines;
-            } else {
-                throw new DAOExceptionHandler("No subscription with invoice_id ="+ invoice.getCustomer().getCustomer_id() + " and prod_id = " + 1 /* subscription.getPublication().getProd_id()*/ + "found");
+            }
+            else
+            {
+                throw new DAOExceptionHandler("No invoice with 'Invoice id = " + invoice.getInvoice_id() + " found.");
             }
         }
-        catch(SQLException e)
-        {
+        catch(SQLException e) {
             throw new DAOExceptionHandler(e.getMessage());
         }
     }
