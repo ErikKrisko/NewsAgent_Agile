@@ -28,14 +28,19 @@ public class DB_Subscription {
             throw new DB_SubscriptionExceptionHandler(e.getMessage());
         }
     }
-    //Validate attributes will do after
-//    public String vEntry(Att_Subscription type, String entry) throws DB_SubscriptionExceptionHandler
-//    {
-//        switch(type)
-//        {
-//            case customer:
-//        }
-//    }
+    //Validate Attributes
+    //Customer_ID
+    //Prod_ID
+    //Count
+    public int validateCount(int count) throws DB_SubscriptionExceptionHandler{
+        if(count > 0 && count < 99)
+        {
+           return count;
+        }else{
+            throw new DB_SubscriptionExceptionHandler("Number must be between 0 and 99");
+        }
+    }
+
 
 
     @Override
@@ -88,6 +93,9 @@ public class DB_Subscription {
     }
 }
 
+
+
+
 class DB_SubscriptionExceptionHandler extends Exception {
     String message;
 
@@ -99,4 +107,5 @@ class DB_SubscriptionExceptionHandler extends Exception {
     public String getMessage() {
         return message;
     }
+
 }
