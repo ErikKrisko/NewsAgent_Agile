@@ -1,3 +1,4 @@
+import java.sql.Date;
 import java.util.LinkedList;
 import java.util.Scanner;
 
@@ -8,6 +9,7 @@ public class newsagent_interface {
     static DAO dao;
     //  Global customer object
     static DB_Customer customer = null;
+    static DB_Delivery delivery = null;
 
     public static void main(String[] args){
         try {
@@ -33,6 +35,9 @@ public class newsagent_interface {
                     switch (menuChoice) {
                         //  If customer menu selected
                         case 1 -> customerMenu();
+
+                        //  Delivery menu selected
+                        case 4 -> deliveryMenu();
 
                         //  Close
                         case 6 -> System.out.println("Exiting...");
@@ -167,6 +172,114 @@ public class newsagent_interface {
         }
     }
 
+    public static void deliveryMenu()
+    {
+        try {
+            //Controller values
+            int menuChoice = 0;
+            final int menuExit = 7;
+
+            while(menuChoice != menuExit) {
+                printMenu(4); //Display Menu
+                if(sc.hasNextInt()) {
+                    menuChoice = sc.nextInt();
+                    switch (menuChoice){
+                        //Create new delivery
+                        case 1 -> {
+                            delivery = new DB_Delivery();
+                            System.out.println("Enter delivery date (yyyy-mm-dd): ");
+                            delivery.setDelivery_date(Date.valueOf(sc.next()));
+                            System.out.println("Enter delivery status (true or false): ");
+                            delivery.setDelivery_status(Boolean.valueOf(sc.next()));
+                            System.out.println("Enter the customer id: ");
+                            delivery.setCustomer(dao.getCustomer(sc.nextInt()));
+                            System.out.println("Enter the invoice id: ");
+                            delivery.setInvoice(dao.getInvoice(sc.nextInt()));
+                            System.out.println(delivery);
+                        }
+                        //Load existing delivery
+                        case 2 -> {
+                            System.out.println("Enter delivery id: ");
+                            int devID = sc.nextInt();
+                            delivery = dao.getDelivery(devID);
+                            System.out.println(delivery);
+                        }
+                        //Edit Delivery
+                        case 3 -> {
+                            if(delivery == null){
+                                System.out.println("Need to load delivery first.");
+                            }else{
+                                System.out.println("Editing: " + delivery);
+                                System.out.println("Delivery date(yyyy-mm-dd): " + delivery.getDelivery_date() + " -> ");
+                                if(sc.hasNextLine() && sc.hasNext()){
+                                    delivery.setDelivery_date(Date.valueOf(sc.next()));
+                                }
+                                System.out.println("Delivery status(true or false): " + delivery.getDelivery_status() + " -> ");
+                                if(sc.hasNextLine() && sc.hasNext()){
+                                    delivery.setDelivery_status(Boolean.valueOf(sc.next()));
+                                }
+                                System.out.println("Customer id: " + delivery.getCustomer().getCustomer_id());
+                                if(sc.hasNextLine() && sc.hasNext()){
+                                    delivery.setCustomer(dao.getCustomer(sc.nextInt()));
+                                }
+                                System.out.println("Invoice id: " + delivery.getInvoice().getInvoice_id());
+                                if(sc.hasNextLine() && sc.hasNext()){
+                                    delivery.setInvoice(dao.getInvoice(sc.nextInt()));
+                                }
+                                System.out.println("Changed delivery: " + delivery);
+                            }
+                        }
+                        //Insert/Update Delivery
+                        case 4 -> {
+                            if(delivery == null){
+                                System.out.println("Need to load or create delivery first.");
+                            }else{
+                                System.out.println("Updating delivery: " + delivery);
+                                boolean idChange = delivery.getDelivery_id() == 0;
+                                dao.updateDelivery(delivery);
+                                if(idChange){
+                                    System.out.println("Id changed: " + delivery);
+                                }
+                            }
+                        }
+                        //View selected delivery
+                        case 5 -> {
+
+                            if(delivery == null){
+                                System.out.println("Need to load or create delivery first.");
+                            }else{
+                                System.out.println(delivery);
+                            }
+                        }
+                        //Delete delivery
+                        case 6 -> {
+                            if(delivery == null){
+                                System.out.println("Need to load delivery first.");
+                            }
+                            else if(delivery.getDelivery_id() == 0){
+                                System.out.println("Delivery must be loaded from database.");
+                            }
+                            else{
+                                System.out.println("Deleting: " + delivery);
+                                dao.deleteDelivery(delivery);
+                                delivery = null;
+                            }
+                        }
+                        //Exit
+                        case 7 -> {
+                            System.out.println("Returning to Main Menu.....");
+                            delivery = null;
+                        }
+                        default -> System.out.println("Invalid Choice.");
+                    }
+                }
+            }
+            delivery = null;
+        }catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void printMenu(int menu) {
         switch (menu) {
             //  Main Menu
@@ -175,7 +288,7 @@ public class newsagent_interface {
                 System.out.println("1. Customer");
                 System.out.println("2. Address (unimplemented)");
                 System.out.println("3. Invoice (unimplemented)");
-                System.out.println("4. Delivery (unimplemented)");
+                System.out.println("4. Delivery");
                 System.out.println("5. Subscription (unimplemented)");
                 System.out.println("6. Exit");
             }
@@ -190,6 +303,17 @@ public class newsagent_interface {
                 System.out.println("6. Check");
                 System.out.println("7. Delete");
                 System.out.println("8. To Main Menu");
+            }
+            //  Delivery menu
+            case 4 -> {
+                System.out.println("\n=====Delivery Menu=====");
+                System.out.println("1. Create new delivery");
+                System.out.println("2. Load existing ID");
+                System.out.println("3. Edit");
+                System.out.println("4. Update database");
+                System.out.println("5. Check");
+                System.out.println("6. Delete");
+                System.out.println("7. To Main Menu");
             }
             default -> {
                 System.out.println("Invalid menu");
