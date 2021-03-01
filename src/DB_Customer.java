@@ -14,7 +14,7 @@ public class DB_Customer {
     public DB_Customer() { }
 
     public DB_Customer(long customer_id,String first_name, String last_name, String phone_no, DB_Address address) throws DB_CustomerExceptionHandler {
-        this.customer_id = customer_id;
+        this.customer_id = validateID( customer_id);
         this.first_name = validateEntry( Att_Customer.first_name, first_name);
         this.last_name = validateEntry( Att_Customer.last_name, last_name);
         this.phone_no = validateEntry( Att_Customer.phone_no, phone_no);
@@ -48,6 +48,13 @@ public class DB_Customer {
         } else {
             throw new DB_CustomerExceptionHandler("Entry = \"" + entry + "\", cannot be an empty String.");
         }
+    }
+
+    private long validateID(long id) throws DB_CustomerExceptionHandler {
+        if (id >=0)
+            return id;
+        else
+            throw new DB_CustomerExceptionHandler("ID must be 0 or greater.");
     }
 
     /** Returns specified Att_Customer attribute as a String
@@ -90,9 +97,17 @@ public class DB_Customer {
     public void setAddress(DB_Address address) {    this.address = address; }
 }
 
-/** List of customer attributes */
+/** This is the SQL table layout reference in java code.
+ *  Allows easier access and guidance of variable locations.
+ *      Column 1    Column 2     Column 3    Column 4     Column 5
+ *  +-------------+------------+-----------+------------+------------+
+ *  | customer_id | first_name | last_name | phone_no   | address_id |
+ *  +-------------+------------+-----------+------------+------------+
+ *  |           1 | Bill       | Birr      | 0951078281 |          1 |
+ *  +-------------+------------+-----------+------------+------------+
+ */
 enum Att_Customer {
-    //  Customer table attributes
+    //  Customer table attributes for column #, column Name
     customer_id(1, "customer_id"),
     first_name(2, "first_name"),
     last_name(3, "last_name"),
@@ -104,25 +119,51 @@ enum Att_Customer {
     //  Name of column in which te attribute appears by default
     public final String name;
 
+    //  Constructor (it just makes it work ? I think)
     Att_Customer(int column, String columnName) {
         this.column = column;
         this.name = columnName;
     }
 }
 
-/** Search object for customer WIP! */
+/** A search object to help search for any criteria of customer.
+ *  Fully able to handle customer_id, first_name, last_name, phone_no.
+ *  Address implementation WIP
+ */
 class Search_Customer {
+    //  Customer attribute type
     private Att_Customer attribute;
+    //  Search term
     private String term;
+    //  Search type to use : = || LIKE
     private boolean strong;
+    //  Search_Address object
+    private Search_Address search_address;
 
-    public Search_Customer(Att_Customer attribute, String term, boolean strong) {
+
+    /** Used as an object to more easily handle search criteria.
+     * @param attribute the attribute to search for (customer_id, first_name,...)
+     * @param search_term the term to search for ( "John", "%i%,...) to construct a search criteria ( first_name = "John" )
+     * @param strong if the search is strong or weak. Strong uses "=", weak uses "LIKE" ( last_name LIKE "_oh%" )
+     */
+    public Search_Customer(Att_Customer attribute, String search_term, boolean strong) {
         this.attribute = attribute;
-        this.term = term;
+        this.term = search_term;
         this.strong = strong;
     }
 
+    /** Extended constructor to pass Search_Address around. WIP
+     * @param search_address object with its own set of criteria
+     */
+    public Search_Customer(Search_Address search_address) {
+        attribute = Att_Customer.address;
+        this.search_address = search_address;
+    }
+
     //  AUTO GENERATED getters and setters
+
+    public Search_Address getSearch_address() { return search_address; }
+    public void setSearch_address(Search_Address search_address) { this.search_address = search_address; }
     public Att_Customer getAttribute() { return attribute; }
     public void setAttribute(Att_Customer attribute) { this.attribute = attribute; }
     public String getTerm() { return term; }

@@ -68,13 +68,14 @@ public class DAO {
             } else {
                 //  Construct a query
                 String query = "SELECT * FROM customer WHERE ";
+                //  Martina extensively advised against expanding this methodology to include any more search criteria such as address or publication and told us to do it in separate methods.
                 for (Search_Customer search : search_list) {
                     if (search.isStrong())
                         query += search.getAttribute().name + " = '" + search.getTerm() + "'AND ";
                     else
                         query += search.getAttribute().name + " LIKE '" + search.getTerm() + "'AND ";
                 }
-                //  Cut the last two characters off ( ", " ) from the end
+                //  Cut the last four characters off ( "AND " ) from the end
                 query = query.substring(0, query.length() - 4 );
                 System.out.println(query);
                 Statement st = con.createStatement();
@@ -117,7 +118,7 @@ public class DAO {
     /** Issues update for customer. Creates if ID is = 0 or updates an existing entry.
      * @param customer object which to update / create.
      * @return int number of lines changed
-     * @throws DAOExceptionHandler if an SQL error occurred or there was customer_id misshandling.
+     * @throws DAOExceptionHandler if an SQL error occurred or there was customer_id mishandling.
      */
     public int updateCustomer(DB_Customer customer) throws DAOExceptionHandler {
         try {
