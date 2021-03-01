@@ -50,7 +50,8 @@ public class DB_Customer {
         }
     }
 
-    private long validateID(long id) throws DB_CustomerExceptionHandler {
+    //  Validate Customer ID
+    public long validateID(long id) throws DB_CustomerExceptionHandler {
         if (id >=0)
             return id;
         else
@@ -172,11 +173,10 @@ class Search_Customer {
     public void setStrong(boolean strong) { this.strong = strong; }
 }
 
-
+/** A specific exception handler for DB_Customer.
+ */
 class DB_CustomerExceptionHandler extends Exception {
     String message;
-
     public DB_CustomerExceptionHandler(String errMessage){  message = errMessage; }
-
     public String getMessage() {    return message; }
 }

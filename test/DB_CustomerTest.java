@@ -143,8 +143,7 @@ public class DB_CustomerTest extends TestCase {
     /** TEST 008
      *  Test phone_no for valid entry
      *  ==========
-     *  Inputs: Att_Customer.phone_no
-     *          "1234567890"
+     *  Inputs: customer.validateEntry( Att_Customer.phone_no, "1234567890")
      *  ==========
      *  Expected Outputs:   "1234567890"
      */
@@ -175,23 +174,75 @@ public class DB_CustomerTest extends TestCase {
     }
 
     /** Test 011
-     *  Test for customer constructor (and getters)
+     *  Test for customer_id out of bounds lower value
      *  ==========
-     *  Inputs: new DB_Customer( "Jo", "Bar", "1234567890", new DB_Address())
+     *  Inputs: customer.validateID(-Long.MAX_VALUE)
+     *  ==========
+     *  Expected Outputs:   DB_CustomerExceptionHandler = "ID must be 0 or greater."
+     */
+    public void testDB_Customer011() {
+        try {
+            customer.validateID(-Long.MAX_VALUE);
+            fail("Exception expected.");
+        } catch (DB_CustomerExceptionHandler e) {
+            assertEquals("ID must be 0 or greater.", e.getMessage());
+        }
+    }
+
+    /** Test 012
+     *  Test for customer constructor fail due to customer_id at out of bounds upper value
+     *  ==========
+     *  Inputs: new DB_Customer( -1, "", "", "", new DB_Address())
+     *  ==========
+     *  Expected Outputs:   DB_CustomerExceptionHandler = "ID must be 0 or greater."
+     */
+    public void testDB_Customer012() {
+        try {
+            new DB_Customer(-1, "", "", "", new DB_Address());
+            fail("Exception expected.");
+        } catch (DB_CustomerExceptionHandler e) {
+            assertEquals("ID must be 0 or greater.", e.getMessage());
+        }
+    }
+
+    /** Test 013
+     *  Test for customer constructor (and getters) and customer_id in bounds lower value
+     *  ==========
+     *  Inputs: new DB_Customer( 0, "Jo", "Bar", "1234567890", new DB_Address())
      *  ==========
      *  Expected Outputs:   getFirst_name() = "Jo"
      *                      getLast_name() = "Bar"
      *                      getPhone_no() = "1234567890"
      */
-    public void testDB_Customer011() {
+    public void testDB_Customer013() {
         try {
             DB_Customer testCustomer = new DB_Customer(0, "Jo", "Bar", "1234567890", new DB_Address());
+            assertEquals( 0, testCustomer.getCustomer_id());
             assertEquals( "Jo", testCustomer.getFirst_name());
             assertEquals( "Bar", testCustomer.getLast_name());
             assertEquals( "1234567890", testCustomer.getPhone_no());
         } catch (DB_CustomerExceptionHandler e) {
+            e.printStackTrace();
             fail("Exception not expected.");
         }
     }
+
+    /** Test 014
+     *  Test for customer_id in bounds upper value
+     *  ==========
+     *  Inputs: customer.validateID( Long.MAX_VALUE)
+     *  ==========
+     *  Expected Outputs:   Long.MAX_VALUE
+     */
+    public void testDB_Customer014() {
+        try {
+            assertEquals( Long.MAX_VALUE, customer.validateID(Long.MAX_VALUE));
+        } catch (DB_CustomerExceptionHandler e) {
+            e.printStackTrace();
+            fail("Exception not expected.");
+        }
+    }
+
+
 
 }

@@ -14,10 +14,10 @@ public class DB_Publication {
     public DB_Publication() { }
 
     public DB_Publication(String prod_name, String type, Double prod_price) throws DB_PublicationExceptionHandler/*,DB_CustomerExceptionHandler probably won't need this expectionHandler Donny*/ {
-        this.prod_name = vEntry( Att_Publication.prod_name, prod_name);
-        this.prod_type = vEntry( Att_Publication.prod_type, prod_type);
-        this.prod_price = vEntry( Att_Publication.prod_price, prod_price); //May need need to change from a string to a double currency is always double Donny
-        this.frequency = vEntry( Att_Publication.frequency, frequency);
+//        this.prod_name = vEntry( Att_Publication.prod_name, prod_name);
+//        this.prod_type = vEntry( Att_Publication.prod_type, prod_type);
+//        this.prod_price = vEntry( Att_Publication.prod_price, prod_price); //May need need to change from a string to a double currency is always double Donny
+//        this.frequency = vEntry( Att_Publication.frequency, frequency);
     }
 
     public DB_Publication(ResultSet rs) throws DB_PublicationExceptionHandler {
@@ -64,21 +64,21 @@ public class DB_Publication {
         }
     }
 
-    /** Returns specified Att_Publication attribute as a String
-     * @param attribute attribute type to be returned
-     * @return an attribute value
-     * @throws DB_CustomerExceptionHandler
-     */
-    public String get(Att_Publication attribute) throws DB_CustomerExceptionHandler {
-        switch (attribute) {
-            case prod_id -> { return "" + prod_id; }
-            case prod_name -> { return prod_name; }
-            case prod_type -> { return prod_type; }
-            case prod_price -> {return prod_price; }
-            // case frequency -> { return "" + frequency.getFreq_id(); } //
-            default -> { throw new DB_CustomerExceptionHandler("Attribute error"); }
-        }
-    }
+//    /** Returns specified Att_Publication attribute as a String
+//     * @param attribute attribute type to be returned
+//     * @return an attribute value
+//     * @throws DB_CustomerExceptionHandler
+//     */
+//    public String get(Att_Publication attribute) throws DB_CustomerExceptionHandler {
+//        switch (attribute) {
+//            case prod_id -> { return "" + prod_id; }
+//            case prod_name -> { return prod_name; }
+//            case prod_type -> { return prod_type; }
+//            case prod_price -> {return prod_price; }
+//            // case frequency -> { return "" + frequency.getFreq_id(); } //
+//            default -> { throw new DB_CustomerExceptionHandler("Attribute error"); }
+//        }
+//    }
 
     //  AUTO GENERATED toString
     @Override
@@ -100,7 +100,7 @@ public class DB_Publication {
     public void setprod_id(long prod_id) { this.prod_id = prod_id; }
     public void setprod_name(String prod_name) throws DB_CustomerExceptionHandler {  this.prod_name = vEntry( Att_Publication.prod_name, prod_name); }
     public void setprod_type(String prod_type) throws DB_CustomerExceptionHandler {    this.prod_type = vEntry( Att_Publication.prod_type, prod_type); }
-    public void setprod_price(String prod_price) throws DB_CustomerExceptionHandler {  this.prod_price = vEntry( Att_Publication.prod_price, prod_price); }
+//    public void setprod_price(String prod_price) throws DB_CustomerExceptionHandler {  this.prod_price = vEntry( Att_Publication.prod_price, prod_price); }
 }
 
 
