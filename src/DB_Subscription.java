@@ -2,11 +2,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class DB_Subscription {
-    //Private count thats an integer
+    //Private count that's an integer
     private int count = 0;
     private int size;
     private DB_Customer customer;
-    //private DB_Publication  prod;
+    private DB_Publication publication;
     //private DB_Product product[];
 
 
@@ -15,10 +15,10 @@ public class DB_Subscription {
     }
 
 
-    public DB_Subscription(int count, DB_Customer customer /*,DB_Publication prod*/) throws DB_SubscriptionExceptionHandler {
+    public DB_Subscription(int count, DB_Customer customer, DB_Publication prod_id) throws DB_SubscriptionExceptionHandler {
         this.customer = customer;
         this.count = count;
-        //this.publication = prod;
+        this.publication = prod_id;
     }
 
     public DB_Subscription(ResultSet rs) throws DB_SubscriptionExceptionHandler {
@@ -46,26 +46,26 @@ public class DB_Subscription {
     @Override
     public String toString() {
         return "DB_Subscription{" +
-                "customer=" + customer +
-                "count=" + count;
-        //"publication=" + prod +
+                "customer=" + customer.toString() +
+                "count=" + count +
+        "publication=" + publication.toString();
     }
 
 
     /**
      * A list of columnIndexes for resultSet
      */
-//    public enum attributes {
-//        customer(1),
-//        product(2),
-//        count(3);
-//
-//        public final int index;
-//
-//        attributes(int i) {
-//            this.index = i;
-//        }
-   // }
+    public enum attributes {
+        customer(1),
+        product(2),
+        count(3);
+
+        public final int index;
+
+        attributes(int i) {
+            this.index = i;
+        }
+   }
 
 
     public int getCount() {
