@@ -1,6 +1,7 @@
-import java.sql.Date;
+import java.util.Date;
 
 public class DB_Holiday {
+    //  Base holiday attributes
     private long holiday_id;
     private Date start_date, end_date;
     private DB_Customer customer;
@@ -9,7 +10,8 @@ public class DB_Holiday {
      */
     public DB_Holiday() { }
 
-    public DB_Holiday (long holiday_id, Date start_date, Date end_date, DB_Customer customer) {
+    public DB_Holiday (long holiday_id, Date start_date, Date end_date, DB_Customer customer) throws DB_HolidayExceptionHandler {
+        throw new DB_HolidayExceptionHandler("No product code.");
 
     }
 
@@ -47,6 +49,34 @@ public class DB_Holiday {
     public void setEnd_date(Date end_date) { this.end_date = end_date; }
     public DB_Customer getCustomer() { return customer; }
     public void setCustomer(DB_Customer customer) { this.customer = customer; }
+}
+
+/** This is the SQL table layout reference in java code.
+ *  Allows easier access and guidance of variable locations.
+ *      Column 1    Column 2    Column 3     Column 4
+ *  +------------+------------+------------+-------------+
+ *  | holiday_id | start_date | end_date   | customer_id |
+ *  +------------+------------+------------+-------------+
+ *  |          1 | 2021-02-10 | 2021-02-15 |           1 |
+ *  +------------+------------+------------+-------------+
+ */
+enum Att_Holiday {
+    //  Address table attributes for column #, column Name
+    holiday_id(1, "holiday_id"),
+    start_date(2, "start_date"),
+    end_date(3, "end_date"),
+    customer(4, "customer_id");
+
+    //  Column in which the given attribute appears by default
+    public final int column;
+    //  Name of column in which te attribute appears by default
+    public final String name;
+
+    //  Constructor (it just makes it work ? I think)
+    Att_Holiday(int column, String name) {
+        this.column = column;
+        this.name = name;
+    }
 }
 
 /** A specific exception handler for DB_Holiday.

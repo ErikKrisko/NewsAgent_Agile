@@ -30,7 +30,7 @@ public class DB_Address {
      * @param entry String entry to verify.
      * @return returns entry if valid.
      * @throws DB_AddressExceptionHandler if entry is invalid.
-     */
+    */
     public String validateEntry(Att_Address attribute, String entry) throws DB_AddressExceptionHandler {
         if (!entry.isBlank() || !entry.isEmpty()) {
             switch (attribute) {
