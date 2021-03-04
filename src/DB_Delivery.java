@@ -15,9 +15,9 @@ public class DB_Delivery
 
     public DB_Delivery() { }
 
-    public DB_Delivery(Date delivery_date, boolean delivery_status, DB_Customer customer, DB_Invoice invoice)
-    {
-        this.delivery_date = delivery_date;
+    public DB_Delivery(long delivery_id,Date delivery_date, boolean delivery_status, DB_Customer customer, DB_Invoice invoice) throws DB_DeliveryExceptionHandler {
+        this.delivery_id = validateDevID(delivery_id);
+        this.delivery_date = validateDevDate(delivery_date);
         this.delivery_status = delivery_status;
         this.customer = customer;
         this.invoice = invoice;
@@ -42,7 +42,7 @@ public class DB_Delivery
     {
         if(entry != null)
         {
-            if (entry.after(new Date(System.currentTimeMillis() - 24*60*60*1000))) //24*60*60*1000 one day in milli seconds. hours*mins*secs*millisecs
+            if (entry.after(new Date(System.currentTimeMillis() - 24*60*60*1000))) //24*60*60*1000 one day in milli seconds. hours*mins*secs*millisecs 24 hours
             {
                 return entry;
             }
@@ -81,7 +81,7 @@ public class DB_Delivery
 
     //AUTO GENERATED GETTERS AND SETTERS
 
-    public Long getDelivery_id() { return delivery_id; }
+    public long getDelivery_id() { return delivery_id; }
     public Date getDelivery_date() { return delivery_date; }
     public boolean isDelivery_status() { return delivery_status; }
     public DB_Customer getCustomer() { return customer; }

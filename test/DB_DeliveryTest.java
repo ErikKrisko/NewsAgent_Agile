@@ -156,4 +156,57 @@ public class DB_DeliveryTest extends TestCase
         }
     }
 
+    /** Test 011
+     *  Test for delivery constructor fail due to delivery_id out of bounds
+     *  ==========
+     *  Inputs: new DB_Delivery( -1,Date.delivery.validateDevDate(new Date(System.currentTimeMillis())), true, new DB_Customer(), new DB_Invoice())
+     *  ==========
+     *  Expected Outputs:   DB_DeliveryExceptionHandler = "delivery_id has to be greater than or equal to 0"
+     */
+    public void testDB_Delivery011() {
+        try {
+            new DB_Delivery(-1,delivery.validateDevDate(new Date(System.currentTimeMillis())),true, new DB_Customer(), new DB_Invoice());
+            fail("Exception expected.");
+        } catch (DB_DeliveryExceptionHandler e) {
+            assertEquals("delivery_id has to be greater than or equal to 0", e.getMessage());
+        }
+    }
+
+    /** Test 012
+     *  Test for delivery constructor fail due to delivery_date out of bounds
+     *  ==========
+     *  Inputs: new DB_Delivery( 0, delivery.validateDevDate(new Date(System.currentTimeMillis() - 2*24*60*60*1000)), false, new DB_Customer(), new DB_Invoice());
+     *  ==========
+     *  Expected Outputs:   delivery_date is older than a day
+     */
+    public void testDB_Delivery012() {
+        try {
+            new DB_Delivery(0,delivery.validateDevDate(new Date(System.currentTimeMillis() - 2*24*60*60*1000)), false, new DB_Customer(), new DB_Invoice());
+            fail("Exception expected.");
+        } catch (DB_DeliveryExceptionHandler e) {
+            assertEquals("delivery_date is older than a day", e.getMessage());
+
+        }
+    }
+
+    /** Test 013
+     *  Test for delivery constructor (and getters) and delivery_id in bounds
+     *  ==========
+     *  Inputs: new DB_Delivery( 0, delivery.validateDevDate(new Date(System.currentTimeMillis())), true, new DB_Customer(), new DB_Invoice())
+     *  ==========
+     *  Expected Outputs:   getDelivery_date() = 2021-03-04
+     *                      getDelivery_status() = true
+     */
+    public void testDB_Customer013() {
+        try {
+            DB_Delivery testDelivery = new DB_Delivery(0, delivery.validateDevDate(new Date(System.currentTimeMillis())), true, new DB_Customer(), new DB_Invoice());
+            assertEquals( 0, testDelivery.getDelivery_id());
+            assertEquals( delivery.validateDevDate(new Date(System.currentTimeMillis())), testDelivery.getDelivery_date());
+            assertEquals( true, testDelivery.getDelivery_status());
+        } catch (DB_DeliveryExceptionHandler e) {
+            e.printStackTrace();
+            fail("Exception not expected.");
+        }
+    }
+
 }
