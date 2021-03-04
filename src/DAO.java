@@ -137,7 +137,11 @@ public class DAO {
                 ResultSet keys = ps.getGeneratedKeys();
                 //  Get generated Key
                 if ( keys.next())
-                    customer.setCustomer_id( keys.getLong(1));
+                    try {
+                        customer.setCustomer_id(keys.getLong(1));
+                    } catch (DB_CustomerExceptionHandler e){
+                        throw new DAOExceptionHandler(e.getMessage());
+                    }
                 return lines;
             } else {
                 //  Get original customer data

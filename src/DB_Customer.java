@@ -10,9 +10,19 @@ public class DB_Customer {
     //  List of customer holidays
     //! Holidays WIP
 
-    /** Blank constructor */
+    /** Blank Constructor for DB_Customer.
+     */
     public DB_Customer() { }
 
+    /** Creates DB_Customer object with provided specifications.
+     *  All variables are validated.
+     * @param customer_id should be 0 for internally created objects or returned from query.
+     * @param first_name of the customer. Cannot contain number and has to be <= 20 in length.
+     * @param last_name of the customer. Cannot contain number and has to be <= 20 in length.
+     * @param phone_no of the customer. May only contain digits and has to be 10 in length.
+     * @param address address object for customer.
+     * @throws DB_CustomerExceptionHandler
+     */
     public DB_Customer(long customer_id,String first_name, String last_name, String phone_no, DB_Address address) throws DB_CustomerExceptionHandler {
         this.customer_id = validateID( customer_id);
         this.first_name = validateEntry( Att_Customer.first_name, first_name);
@@ -21,7 +31,12 @@ public class DB_Customer {
         this.address = address;
     }
 
-    //  Validate attributes
+    /** Validation class to validate all string elements for DB_Customer.
+     * @param type type of attribute to verify. Only applicable to first_name, last_name, phone_no.
+     * @param entry String entry to verify.
+     * @return returns entry if valid.
+     * @throws DB_CustomerExceptionHandler if entry is invalid.
+     */
     public String validateEntry(Att_Customer type, String entry) throws DB_CustomerExceptionHandler {
         if (!entry.isBlank() || !entry.isEmpty()) {
             switch (type) {
@@ -50,7 +65,11 @@ public class DB_Customer {
         }
     }
 
-    //  Validate Customer ID
+    /** Validates ID to ensure no negative number is used.
+     * @param id of the object, should be 0 if created internally.
+     * @return id of the object if it is valid.
+     * @throws DB_CustomerExceptionHandler if entry is invalid.
+     */
     public long validateID(long id) throws DB_CustomerExceptionHandler {
         if (id >=0)
             return id;
@@ -58,21 +77,6 @@ public class DB_Customer {
             throw new DB_CustomerExceptionHandler("ID must be 0 or greater.");
     }
 
-    /** Returns specified Att_Customer attribute as a String
-     * @param attribute attribute type to be returned
-     * @return an attribute value
-     * @throws DB_CustomerExceptionHandler
-     */
-    public String get(Att_Customer attribute) throws DB_CustomerExceptionHandler {
-        switch (attribute) {
-            case customer_id -> { return "" + customer_id; }
-            case first_name -> { return first_name; }
-            case last_name -> { return last_name; }
-            case phone_no -> { return phone_no; }
-            case address -> { return "" + address.getAddress_id(); }
-            default -> { throw new DB_CustomerExceptionHandler("Attribute error"); }
-        }
-    }
 
     //  AUTO GENERATED toString
     @Override
@@ -85,13 +89,14 @@ public class DB_Customer {
                 ", address=" + address.toString() +
                 '}';
     }
+
     //  AUTO GENERATED getters and setters
     public long getCustomer_id() {   return customer_id; }
     public String getFirst_name() { return first_name; }
     public String getLast_name() {  return last_name; }
     public String getPhone_no() {   return phone_no; }
     public DB_Address getAddress() {    return address; }
-    public void setCustomer_id(long customer_id) { this.customer_id = customer_id; }
+    public void setCustomer_id(long customer_id) throws DB_CustomerExceptionHandler { this.customer_id = validateID( customer_id); }
     public void setFirst_name(String first_name) throws DB_CustomerExceptionHandler {  this.first_name = validateEntry( Att_Customer.first_name, first_name); }
     public void setLast_name(String last_name) throws DB_CustomerExceptionHandler {    this.last_name = validateEntry( Att_Customer.last_name, last_name); }
     public void setPhone_no(String phone_no) throws DB_CustomerExceptionHandler {  this.phone_no = validateEntry( Att_Customer.phone_no, phone_no); }
