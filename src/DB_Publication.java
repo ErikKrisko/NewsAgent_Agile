@@ -13,11 +13,19 @@ public class DB_Publication {
     //Maybe have frequency as an array?
 
     /**
-     * Blank constructor
+     * Blank constructor for DB_Publication
      */
     public DB_Publication() {
     }
 
+    /** Creates DB_Publication object with provided specifications
+     * All variables are validated
+     * @param prod_id
+     * @param prod_name
+     * @param type
+     * @param prod_price
+     * @throws DB_PublicationExceptionHandler
+     */
     public DB_Publication(long prod_id, String prod_name, String type, Double prod_price) throws DB_PublicationExceptionHandler {
         this.prod_id = validateID(prod_id);
         this.prod_name = validateEntry(Att_Publication.prod_name, prod_name);
@@ -26,32 +34,30 @@ public class DB_Publication {
         //this.frequency = validateEntry(Att_Frequency.frequency, frequency);
     }
 
-    public String validateEntry(Att_Customer type, String entry) throws DB_PublicationException {
-        if (!entry.isBlank() || !entry.isEmpty()) {
-            switch (type) {
-                case prod_name -> {
-                    if (entry.length() <= 20)
-                        if (!entry.matches(".*\\d.*"))
-                            return entry;
-
-                        else
-                            throw new DB_PublicationExceptionHandler("Entry = \"" + entry + "\", cannot contain letters.");
-                    else
-                        throw new DB_PublicationExceptionHandler("Entry = \"" + entry + "\", has to be of length 10.");
-                }
-                default -> throw new DB_PublicationExceptionHandler("Internal error. Unhandled attribute.");
-            }
-        } else {
-            throw new DB_PublicationExceptionHandler("Entry = \"" + entry + "\", cannot be an empty String.");
-        }
-    }
-
     public long validateID(long id) throws DB_PublicationExceptionHandler {
         if (id >= 0)
             return id;
         else
             throw new DB_PublicationExceptionHandler("ID can be 0 or more than");
     }
+
+    public String validateEntry(String name) throws DB_PublicationExceptionHandler{
+        if(name)
+            return name;
+        else
+            throw new DB_PublicationExceptionHandler("Name must be zero or greater");
+    }
+
+    public String ValidateEntry(String type) throws DB_PublicationExceptionHandler {
+
+    }
+
+    public Double validateEntry(Double price) throws DB_PublicationExceptionHandler {
+
+    }
+
+    //public String validateEntry(frequency)
+
 
     //ToString not auto generated Donny
     @Override
@@ -83,6 +89,7 @@ public class DB_Publication {
     }
 
     //public int getFrequency() { return frequency; }
+
     public void setProd_id(long prod_id) throws DB_PublicationExceptionHandler {
         this.prod_id = validateID(prod_id);
     }
@@ -100,12 +107,9 @@ public class DB_Publication {
     }
 
 }
+
 enum Att_Publication {
-//    prod_id(1, "prod_id"),
-//    prod_name(2, "prod_name"),
-//    prod_type(3, "prod_type"),
-//    prod_price(4, "prod_price"),
-//    frequency(5, "frequency")
+
 }
 
 class DB_PublicationExceptionHandler extends Exception {
