@@ -3,153 +3,113 @@ import java.sql.SQLException;
 
 public class DB_Publication {
     //  Base Publication attributes
-    private long prod_id = 0;
+    //Changed prod_id from equal to zero to just prod_id;
+    private long prod_id;
     private String prod_name, prod_type, frequency;
     private Double prod_price;
     //  External customer attributes
-    //Leave line 12 commented out for now until DB_Frequency is done. Donny
-    //private DB_Frequency Frequency;
+    //Leave line 11 commented out for now until DB_Frequency is done. Donny
+    //private DB_Frequency Frequency[];
+    //Maybe have frequency as an array?
 
-    /** Blank constructor */
-    public DB_Publication() { }
-
-    public DB_Publication(String prod_name, String type, Double prod_price) throws DB_PublicationExceptionHandler/*,DB_CustomerExceptionHandler probably won't need this expectionHandler Donny*/ {
-//        this.prod_name = vEntry( Att_Publication.prod_name, prod_name);
-//        this.prod_type = vEntry( Att_Publication.prod_type, prod_type);
-//        this.prod_price = vEntry( Att_Publication.prod_price, prod_price); //May need need to change from a string to a double currency is always double Donny
-//        this.frequency = vEntry( Att_Publication.frequency, frequency);
+    /**
+     * Blank constructor
+     */
+    public DB_Publication() {
     }
 
-    public DB_Publication(ResultSet rs) throws DB_PublicationExceptionHandler {
-        try {
-            prod_id = rs.getInt( Att_Publication.prod_id.column);
-            prod_name = rs.getString( Att_Publication.prod_name.column);
-            prod_type = rs.getString( Att_Publication.prod_type.column);
-            prod_price = rs.getDouble( Att_Publication.prod_price.column);
-            frequency = rs.getString( Att_Publication.frequency.column);
-        }
-        catch (SQLException e) {
-            throw new DB_PublicationExceptionHandler(e.getMessage());
-        }
+    public DB_Publication(long prod_id, String prod_name, String type, Double prod_price) throws DB_PublicationExceptionHandler {
+        this.prod_id = validateID(prod_id);
+        this.prod_name = validateEntry(Att_Publication.prod_name, prod_name);
+        this.prod_type = validateEntry(Att_Publication.prod_type, prod_type);
+        this.prod_price = validateEntry(Att_Publication.prod_price, prod_price);
+        //this.frequency = validateEntry(Att_Frequency.frequency, frequency);
     }
 
-    //  Validate attributes
-    private String vEntry(Att_Publication type, String entry) throws DB_CustomerExceptionHandler {
-        switch (type) {
-            case prod_name -> {
-                if (entry.length() > 0 && entry.length() <= 25)
-                    return entry;
-                else
-                    throw new DB_CustomerExceptionHandler("Invalid prod_name.");
+    public String validateEntry(Att_Customer type, String entry) throws DB_PublicationException {
+        if (!entry.isBlank() || !entry.isEmpty()) {
+            switch (type) {
+                case prod_name -> {
+                    if (entry.length() <= 20)
+                        if (!entry.matches(".*\\d.*"))
+                            return entry;
+
+                        else
+                            throw new DB_PublicationExceptionHandler("Entry = \"" + entry + "\", cannot contain letters.");
+                    else
+                        throw new DB_PublicationExceptionHandler("Entry = \"" + entry + "\", has to be of length 10.");
+                }
+                default -> throw new DB_PublicationExceptionHandler("Internal error. Unhandled attribute.");
             }
-            case prod_type -> {
-                if (entry.length() > 0 && entry.length() <= 25)
-                    return entry;
-                else
-                    throw new DB_CustomerExceptionHandler("Invalid prod_type.");
-            }
-            case prod_price -> {
-                if (entry.length() > 2 && entry.length() <= 4)
-                    return entry;
-                else
-                    throw new DB_CustomerExceptionHandler("Invalid prod_price.");
-            }
-            case frequency -> {
-                if (entry.length() == 10)
-                    return entry;
-                else
-                    throw new DB_CustomerExceptionHandler("Invalid frequency.");
-            }
-            default -> throw new DB_CustomerExceptionHandler("Internal error. Unhandled attribute.");
+        } else {
+            throw new DB_PublicationExceptionHandler("Entry = \"" + entry + "\", cannot be an empty String.");
         }
     }
 
-//    /** Returns specified Att_Publication attribute as a String
-//     * @param attribute attribute type to be returned
-//     * @return an attribute value
-//     * @throws DB_CustomerExceptionHandler
-//     */
-//    public String get(Att_Publication attribute) throws DB_CustomerExceptionHandler {
-//        switch (attribute) {
-//            case prod_id -> { return "" + prod_id; }
-//            case prod_name -> { return prod_name; }
-//            case prod_type -> { return prod_type; }
-//            case prod_price -> {return prod_price; }
-//            // case frequency -> { return "" + frequency.getFreq_id(); } //
-//            default -> { throw new DB_CustomerExceptionHandler("Attribute error"); }
-//        }
-//    }
+    public long validateID(long id) throws DB_PublicationExceptionHandler {
+        if (id >= 0)
+            return id;
+        else
+            throw new DB_PublicationExceptionHandler("ID can be 0 or more than");
+    }
 
-    //  AUTO GENERATED toString
+    //ToString not auto generated Donny
     @Override
     public String toString() {
         return "DB_Publication{" +
-                "prod_id=" + prod_id +
-                ", prod_name='" + prod_name + '\'' +
-                ", prod_type='" + prod_type + '\'' +
-                ", prod_price='" + prod_price + '\'' +
-                ", frequency=" + frequency.toString() +
+                "prod_id =" + prod_id +
+                ", prod_name =" + prod_name + '\'' +
+                "prod_type =" + prod_type + '\'' +
+                "prod_price =" + prod_price + '\'' +
+                //"frequency =" + frequency +
                 '}';
     }
-    //  AUTO GENERATED getters and setters
-    public long getprod_id() {   return prod_id; }
-    public String getprod_name() { return prod_name; }
-    public String getprod_type() {  return prod_type; }
-    public Double getprod_price() {   return prod_price; }
-    public String getfrequency() {    return frequency; }
-    public void setprod_id(long prod_id) { this.prod_id = prod_id; }
-    public void setprod_name(String prod_name) throws DB_CustomerExceptionHandler {  this.prod_name = vEntry( Att_Publication.prod_name, prod_name); }
-    public void setprod_type(String prod_type) throws DB_CustomerExceptionHandler {    this.prod_type = vEntry( Att_Publication.prod_type, prod_type); }
-//    public void setprod_price(String prod_price) throws DB_CustomerExceptionHandler {  this.prod_price = vEntry( Att_Publication.prod_price, prod_price); }
-}
 
-
-
-/** Search object for customer WIP! */
-class Search_Publication {
-    private Att_Publication attribute;
-    private String term;
-    private boolean strong;
-
-    public Search_Publication(Att_Publication attribute, String term, boolean strong) {
-        this.attribute = attribute;
-        this.term = term;
-        this.strong = strong;
+    //Getter and Setters not auto generated Donny
+    public long getProd_id() {
+        return prod_id;
     }
 
-    //  AUTO GENERATED getters and setters
-    public Att_Publication getAttribute() { return attribute; }
-    public void setAttribute(Att_Publication attribute) { this.attribute = attribute; }
-    public String getTerm() { return term; }
-    public void setTerm(String term) { this.term = term; }
-    public boolean isStrong() { return strong; }
-    public void setStrong(boolean strong) { this.strong = strong; }
-}
+    public String getProd_name() {
+        return prod_name;
+    }
 
+    public String getProd_type() {
+        return prod_type;
+    }
+
+    public Double getProd_price() {
+        return prod_price;
+    }
+
+    //public int getFrequency() { return frequency; }
+    public void setProd_id(long prod_id) throws DB_PublicationExceptionHandler {
+        this.prod_id = validateID(prod_id);
+    }
+
+    public void setProd_name(String prod_name) throws DB_PublicationExceptionHandler {
+        this.prod_name = validateEntry(Att_Publication.prod_name, prod_name);
+    }
+
+    public void setProd_type(String prod_type) throws DB_PublicationExceptionHandler {
+        this.prod_type = validateEntry(Att_Publication.prod_type, prod_type);
+    }
+
+    public void setProd_price(Double prod_price) throws DB_PublicationExceptionHandler {
+        this.prod_price = validateEntry(Att_Publication.prod_price, prod_price);
+    }
+
+}
+enum Att_Publication {
+//    prod_id(1, "prod_id"),
+//    prod_name(2, "prod_name"),
+//    prod_type(3, "prod_type"),
+//    prod_price(4, "prod_price"),
+//    frequency(5, "frequency")
+}
 
 class DB_PublicationExceptionHandler extends Exception {
     String message;
-
-    public DB_PublicationExceptionHandler(String errMessage){  message = errMessage; }
-
-    public String getMessage() {    return message; }
-}
-/** List of customer attributes */
-enum Att_Publication {
-    //  Customer table attributes
-    prod_id(1, "prod_id"),
-    prod_name(2, "prod_name"),
-    prod_type(3, "prod_type"),
-    prod_price(4, "prod_price"),
-    frequency(5, "frequency");
-
-    //  Column in which the given attribute appears by default
-    public final int column;
-    //  prod_name of column in which the attribute appears by default
-    public final String column_name;
-
-    Att_Publication(int column, String column_name) {
-        this.column = column;
-        this.column_name = column_name;
-    }
+    public DB_PublicationExceptionHandler(String errMessage) { message = errMessage;}
+    public String getMessage() { return message;}
 }
