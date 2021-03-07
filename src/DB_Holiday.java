@@ -12,24 +12,46 @@ public class DB_Holiday {
     public DB_Holiday() { }
 
     public DB_Holiday (long holiday_id, Date start_date, Date end_date, DB_Customer customer) throws DB_HolidayExceptionHandler {
-        throw new DB_HolidayExceptionHandler("No product code.");
-
+        this.holiday_id = validateID( holiday_id);
+        this.start_date = validateStartDate( start_date);
+        this.end_date = validateEndDate( end_date);
+        this.customer = customer;
     }
 
+    /** Validates the starting holiday date to be after the year 2000
+     * @param start_date to be verified
+     * @return start_date if its valid
+     * @throws DB_HolidayExceptionHandler if start_date is invalid
+     */
     public Date validateStartDate (Date start_date) throws DB_HolidayExceptionHandler {
-        if (start_date.after( new Date()))
+        if (start_date.after( new Date(946684799000L)))
             return start_date;
         else
             throw new DB_HolidayExceptionHandler("Date cannot be before the year 2000.");
     }
 
+    /** Validates the ending holiday date to be after the starting date.
+     * @param end_date to be verified
+     * @return end_date if its valid
+     * @throws DB_HolidayExceptionHandler if end_date is invalid
+     */
     public Date validateEndDate (Date end_date) throws DB_HolidayExceptionHandler {
-        throw new DB_HolidayExceptionHandler("No product code.");
-
+        if (end_date.after( start_date))
+            return end_date;
+        else
+            throw new DB_HolidayExceptionHandler("End date has to come after Start date.");
     }
 
+    /** Validates ID to ensure no negative number is used.
+     * @param id of the object, should be 0 if created internally.
+     * @return id of the object if it is valid.
+     * @throws DB_HolidayExceptionHandler if entry is invalid.
+     */
     public long validateID (long id) throws DB_HolidayExceptionHandler {
-        throw new DB_HolidayExceptionHandler("No product code.");
+        if (id >=0)
+            return id;
+        else
+            throw new DB_HolidayExceptionHandler("ID must be 0 or greater.");
     }
 
     //  AUTO GENERATED toString
@@ -45,11 +67,11 @@ public class DB_Holiday {
 
     //  AUTO GENERATED getters and setters
     public long getHoliday_id() { return holiday_id; }
-    public void setHoliday_id(long holiday_id) { this.holiday_id = holiday_id; }
+    public void setHoliday_id(long holiday_id) throws DB_HolidayExceptionHandler { this.holiday_id = validateID( holiday_id); }
     public Date getStart_date() { return start_date; }
-    public void setStart_date(Date start_date) { this.start_date = start_date; }
+    public void setStart_date(Date start_date) throws DB_HolidayExceptionHandler { this.start_date = validateStartDate( start_date); }
     public Date getEnd_date() { return end_date; }
-    public void setEnd_date(Date end_date) { this.end_date = end_date; }
+    public void setEnd_date(Date end_date) throws DB_HolidayExceptionHandler { this.end_date = validateEndDate( end_date); }
     public DB_Customer getCustomer() { return customer; }
     public void setCustomer(DB_Customer customer) { this.customer = customer; }
 }

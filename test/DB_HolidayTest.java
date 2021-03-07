@@ -97,7 +97,7 @@ public class DB_HolidayTest extends TestCase {
      */
     public void testDB_Holiday008() {
         try {
-            assertEquals( 0, holiday.validateID(Long.MAX_VALUE));
+            assertEquals( Long.MAX_VALUE, holiday.validateID(Long.MAX_VALUE));
         } catch (DB_HolidayExceptionHandler e) {
             fail("Exception not expected");
         }
