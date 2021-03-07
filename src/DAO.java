@@ -131,7 +131,7 @@ public class DAO {
      */
     public int updateCustomer(DB_Customer customer) throws DAOExceptionHandler {
         try {
-            //  If customer ID == null , create new otherwise update
+            //  If customer ID == 0 , create new otherwise update
             if (customer.getCustomer_id() == 0) {
                 //  Construct INSERT statement and request generated keys
                 PreparedStatement ps = con.prepareStatement("INSERT INTO customer VALUES(null, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
@@ -146,18 +146,14 @@ public class DAO {
                 ResultSet keys = ps.getGeneratedKeys();
                 //  Get generated Key
                 if ( keys.next())
-                    try {
-                        customer.setCustomer_id(keys.getLong(1));
-                    } catch (DB_CustomerExceptionHandler e){
-                        throw new DAOExceptionHandler(e.getMessage());
-                    }
+                    customer.setCustomer_id(keys.getLong(1));
                 keys.close();
                 ps.close();
                 return lines;
             } else {
                 //  Get original customer data
                 Statement st = con.createStatement();
-                ResultSet rs = st.executeQuery("SELECT * FROM customer WHERE customer_id = " + customer.getCustomer_id());
+                ResultSet rs = st.executeQuery("SELECT * FROM customer WHERE " + Att_Customer.customer_id.name + " = " + customer.getCustomer_id());
                 //  Check if customer data exists
                 if ( rs.next()) {
                     //  Base of the update
@@ -172,6 +168,7 @@ public class DAO {
                     //  Create statement and executeUpdate. (Cannot recall why prepared statement was used)
                     PreparedStatement ps = con.prepareStatement(update);
                     int lines = ps.executeUpdate();
+                    ps.close();
                     rs.close();
                     st.close();
                     return lines;
@@ -182,7 +179,7 @@ public class DAO {
                 }
             }
         }
-        catch (SQLException e) {
+        catch (SQLException | DB_CustomerExceptionHandler e) {
             throw new DAOExceptionHandler( e.getMessage());
         }
     }
@@ -198,7 +195,7 @@ public class DAO {
         } else {
             try {
                 Statement st = con.createStatement();
-                ResultSet rs = st.executeQuery("SELECT * FROM customer WHERE customer_id = " + customer.getCustomer_id());
+                ResultSet rs = st.executeQuery("SELECT * FROM customer WHERE " + Att_Customer.customer_id.name + " = " + customer.getCustomer_id());
                 if ( rs.next()) {
                     int lines = st.executeUpdate("DELETE FROM customer WHERE " + Att_Customer.customer_id.name + " = " + customer.getCustomer_id() );
                     rs.close();
@@ -207,7 +204,7 @@ public class DAO {
                 } else {
                     rs.close();
                     st.close();
-                    throw new DAOExceptionHandler("Cannot delete, customer_id = '" + customer.getCustomer_id() + "' does not exist in the database.");
+                    throw new DAOExceptionHandler("Cannot delete, customer with ID = '" + customer.getCustomer_id() + "', does not exist in the database.");
                 }
             } catch (SQLException e) {
                 throw new DAOExceptionHandler(e.getMessage());
@@ -246,7 +243,7 @@ public class DAO {
     /** Returns address with given address_id.
      * @param ID for address_id.
      * @return populated DB_Address object.
-     * @throws DAOExceptionHandler
+     * @throws DAOExceptionHandler if no address found or an SQL error occurs
      */
     public DB_Address getAddress(int ID) throws DAOExceptionHandler {
         try {
@@ -266,6 +263,86 @@ public class DAO {
         }
         catch (SQLException | DB_AddressExceptionHandler e) {
             throw new DAOExceptionHandler(e.getMessage());
+        }
+    }
+
+    /**
+     *
+     * @param address
+     * @return
+     * @throws DAOExceptionHandler
+     */
+    public int updateAddress(DB_Address address) throws DAOExceptionHandler{
+        try {
+            //  If address ID == 0 , create new otherwise update
+            if (address.getAddress_id() == 0) {
+                PreparedStatement ps = con.prepareStatement("INSERT INTO address VALUES(null, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+                ps.setString( Att_Address.full_address.column - 1, address.getFull_address());
+                ps.setString( Att_Address.area_code.column - 1, address.getArea_code());
+                ps.setString( Att_Address.eir_code.column - 1, address.getEir_code());
+                int lines = ps.executeUpdate();
+                ResultSet keys = ps.getGeneratedKeys();
+                if ( keys.next())
+                    address.setAddress_id( keys.getLong( 1));
+                keys.close();
+                ps.close();
+                return lines;
+            } else {    //  Else update existing address
+                //  Query address
+                Statement st = con.createStatement();
+                ResultSet rs = st.executeQuery( "SELECT * FROM address WHERE" + Att_Address.address_id.name + " = " + address.getAddress_id());
+                //  If queried address exists update
+                if ( rs.next()) {
+                    String update = "UPDATE address SET ";
+                    update += Att_Address.full_address.name + " = '" + address.getFull_address() + "', ";
+                    update += Att_Address.area_code.name + " = '" + address.getArea_code() + "', ";
+                    update += Att_Address.eir_code.name + " = '" + address.getEir_code() + "' ";
+                    //  Specify update target
+                    update += "WHERE " + Att_Address.address_id.name + " = " + address.getAddress_id();
+                    //  Create statement and execute
+                    PreparedStatement ps = con.prepareStatement(update);
+                    int lines = ps.executeUpdate();
+                    ps.close();
+                    rs.close();
+                    st.close();
+                    return lines;
+                } else {
+                    rs.close();
+                    st.close();
+                    throw new DAOExceptionHandler("There was address_id mishandling.");
+                }
+            }
+        } catch (SQLException | DB_AddressExceptionHandler e) {
+            throw new DAOExceptionHandler(e.getMessage());
+        }
+    }
+
+    /**
+     *
+     * @param address
+     * @return
+     * @throws DAOExceptionHandler
+     */
+    public int deleteAddress(DB_Address address) throws DAOExceptionHandler {
+        if (address.getAddress_id() == 0) {
+            throw new DAOExceptionHandler("Address was not inserted into the database.");
+        } else {
+            try {
+                Statement st = con.createStatement();
+                ResultSet rs = st.executeQuery("SELECT * FROM address WHERE " + Att_Address.address_id.name + " = " + address.getAddress_id());
+                if ( rs.next()) {
+                    int lines = st.executeUpdate( "DELETE FROM address WHERE " + Att_Address.address_id.name + " = " + address.getAddress_id());
+                    rs.close();
+                    st.close();
+                    return lines;
+                } else {
+                    rs.close();
+                    st.close();
+                    throw new DAOExceptionHandler( "Cannot delete address with ID = '" + address.getAddress_id() + "', does not exist in the database.");
+                }
+            } catch (SQLException e) {
+                throw new DAOExceptionHandler(e.getMessage());
+            }
         }
     }
 
@@ -297,6 +374,75 @@ public class DAO {
             }
         } catch (SQLException | DB_HolidayExceptionHandler e) {
             throw new DAOExceptionHandler(e.getMessage());
+        }
+    }
+
+    public int updateHoliday(DB_Holiday holiday) throws DAOExceptionHandler {
+        try {
+            //  if holiday ID == 0, create new
+            if (holiday.getHoliday_id() == 0) {
+                PreparedStatement ps = con.prepareStatement("INSERT INTO holiday VALUES(null, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+                ps.setDate( Att_Holiday.start_date.column - 1, (Date) holiday.getStart_date());
+                ps.setDate( Att_Holiday.end_date.column - 1, (Date) holiday.getEnd_date());
+                ps.setLong( Att_Holiday.customer.column - 1, holiday.getCustomer().getCustomer_id());
+                int lines = ps.executeUpdate();
+                ResultSet keys = ps.getGeneratedKeys();
+                if ( keys.next())
+                    holiday.setHoliday_id( keys.getLong(1));
+                keys.close();
+                ps.close();
+                return lines;
+            } else {
+                Statement st = con.createStatement();
+                ResultSet rs = st.executeQuery( "SELECT * FROM holiday WHERE " + Att_Holiday.holiday_id.name + " = " + holiday.getHoliday_id());
+                //  Check if holiday exists
+                if ( rs.next()) {
+                    //  Base update
+                    String update = "UPDATE holiday SET ";
+                    //  Concatenate strings
+                    update += Att_Holiday.start_date.name + " = '" + holiday.getStart_date() + "', ";
+                    update += Att_Holiday.end_date.name + " = '" + holiday.getEnd_date() + "', ";
+                    update += Att_Holiday.customer.name + " = " + holiday.getCustomer().getCustomer_id();
+                    //  Specify update target
+                    update += "WHERE " + Att_Holiday.holiday_id.name + " = " + holiday.getHoliday_id();
+                    //  Execute update
+                    PreparedStatement ps = con.prepareStatement(update);
+                    int lines = ps.executeUpdate();
+                    ps.close();
+                    rs.close();
+                    st.close();
+                    return lines;
+                } else {
+                    rs.close();
+                    st.close();
+                    throw new DAOExceptionHandler("There was address_id mishandling.");
+                }
+            }
+        } catch (SQLException | DB_HolidayExceptionHandler e) {
+            throw new DAOExceptionHandler(e.getMessage());
+        }
+    }
+
+    public int deleteHoliday(DB_Holiday holiday) throws DAOExceptionHandler {
+        if (holiday.getHoliday_id() == 0) {
+            throw new DAOExceptionHandler("Holiday was not inserted into the database.");
+        } else {
+            try {
+                Statement st = con.createStatement();
+                ResultSet rs = st.executeQuery("SELECT * FROM holiday WHERE " + Att_Holiday.holiday_id.name + " = " + holiday.getHoliday_id());
+                if (rs.next()) {
+                    int lines = st.executeUpdate("DELETE FROM holiday WHERE " + Att_Holiday.holiday_id.name + " = " + holiday.getHoliday_id());
+                    rs.close();
+                    st.close();
+                    return lines;
+                } else {
+                    rs.close();
+                    st.close();
+                    throw new DAOExceptionHandler("Cannot delete, holiday with ID = '" + holiday.getHoliday_id() + "', does not exist in the database.");
+                }
+            } catch (SQLException e) {
+                throw new DAOExceptionHandler(e.getMessage());
+            }
         }
     }
 
