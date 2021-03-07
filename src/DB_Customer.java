@@ -1,5 +1,3 @@
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class DB_Customer {
@@ -78,7 +76,6 @@ public class DB_Customer {
             throw new DB_CustomerExceptionHandler("ID must be 0 or greater.");
     }
 
-
     //  AUTO GENERATED toString
     @Override
     public String toString() {
@@ -87,7 +84,8 @@ public class DB_Customer {
                 ", first_name='" + first_name + '\'' +
                 ", last_name='" + last_name + '\'' +
                 ", phone_no='" + phone_no + '\'' +
-                ", address=" + address.toString() +
+                ", address=" + address +
+                ", holidays=" + holidays +
                 '}';
     }
 

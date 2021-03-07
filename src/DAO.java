@@ -1,6 +1,5 @@
-import jdk.jshell.JShell;
-
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class DAO {
@@ -8,8 +7,6 @@ public class DAO {
     private String url, user, pass, dbName;
     //  Connection objects
     private Connection con = null;
-    //  List of loaded elements
-    //  TO BE removed ASAP
 
     /** Blank constructor */
     public DAO() { }
@@ -18,6 +15,7 @@ public class DAO {
      * @param url should default to "jdbc:mysql://localhost:3306/newsagent?useTimezone=true&serverTimezone=UTC"
      * @param user should default to "root"
      * @param pass should default to "admin"
+     * @throws DAOExceptionHandler if opening connection was unsuccessful.
      */
     public DAO(String url, String user, String pass) throws DAOExceptionHandler {
         this.url = url;
@@ -31,6 +29,7 @@ public class DAO {
      * @param user should default to "root"
      * @param pass should default to "admin"
      * @param dbName should default to "newsagent"
+     * @throws DAOExceptionHandler if opening connection was unsuccessful.
      */
     public DAO(String url, String user, String pass, String dbName) throws DAOExceptionHandler {
         this.url = url;
@@ -61,8 +60,12 @@ public class DAO {
                     do {
                         list.add( populateCustomer( rs));
                     } while ( rs.next());
+                    rs.close();
+                    st.close();
                     return list;
                 } else {
+                    rs.close();
+                    st.close();
                     throw new DAOExceptionHandler("No Customers where found in the database.");
                 }
             } else {
@@ -85,6 +88,8 @@ public class DAO {
                     DB_Customer temp = populateCustomer(rs);
                     tempList.add(temp);
                 }
+                rs.close();
+                st.close();
                 return tempList;
             }
         }
@@ -104,8 +109,12 @@ public class DAO {
             ResultSet rs = st.executeQuery("SELECT * FROM customer WHERE customer_id = " + ID);
             if ( rs.next()) {
                 DB_Customer temp = populateCustomer(rs);
+                rs.close();
+                st.close();
                 return temp;
             } else {
+                rs.close();
+                st.close();
                 //  If somehow this is reached throw an error
                 throw new DAOExceptionHandler("No customer with 'customer_id = " + ID + " not found.");
             }
@@ -142,6 +151,8 @@ public class DAO {
                     } catch (DB_CustomerExceptionHandler e){
                         throw new DAOExceptionHandler(e.getMessage());
                     }
+                keys.close();
+                ps.close();
                 return lines;
             } else {
                 //  Get original customer data
@@ -161,8 +172,12 @@ public class DAO {
                     //  Create statement and executeUpdate. (Cannot recall why prepared statement was used)
                     PreparedStatement ps = con.prepareStatement(update);
                     int lines = ps.executeUpdate();
+                    rs.close();
+                    st.close();
                     return lines;
                 } else {
+                    rs.close();
+                    st.close();
                     throw new DAOExceptionHandler("There was customer_id mishandling.");
                 }
             }
@@ -172,7 +187,11 @@ public class DAO {
         }
     }
 
-
+    /** Deletes given customer object if it exists in the database.
+     * @param customer to be deleted
+     * @return # lines affected by the deletion.
+     * @throws DAOExceptionHandler if the customer was not inserted or does not exist in the database.
+     */
     public int deleteCustomer(DB_Customer customer) throws DAOExceptionHandler {
         if (customer.getCustomer_id() == 0) {
             throw new DAOExceptionHandler("Customer was not inserted into the database.");
@@ -181,8 +200,13 @@ public class DAO {
                 Statement st = con.createStatement();
                 ResultSet rs = st.executeQuery("SELECT * FROM customer WHERE customer_id = " + customer.getCustomer_id());
                 if ( rs.next()) {
-                    return st.executeUpdate("DELETE FROM customer WHERE " + Att_Customer.customer_id.name + " = " + customer.getCustomer_id() );
+                    int lines = st.executeUpdate("DELETE FROM customer WHERE " + Att_Customer.customer_id.name + " = " + customer.getCustomer_id() );
+                    rs.close();
+                    st.close();
+                    return lines;
                 } else {
+                    rs.close();
+                    st.close();
                     throw new DAOExceptionHandler("Cannot delete, customer_id = '" + customer.getCustomer_id() + "' does not exist in the database.");
                 }
             } catch (SQLException e) {
@@ -199,13 +223,16 @@ public class DAO {
     private DB_Customer populateCustomer(ResultSet rs) throws DAOExceptionHandler {
         try {
             //  Create customer with given result set
-            return new DB_Customer(
+            DB_Customer customer = new DB_Customer(
                     rs.getInt( Att_Customer.customer_id.column),
                     rs.getString( Att_Customer.first_name.column),
                     rs.getString( Att_Customer.last_name.column),
                     rs.getString( Att_Customer.phone_no.column),
                     getAddress( rs.getInt(Att_Customer.address.column))
             );
+            //  Request and set customer Holidays.
+            customer.setHolidays( getHolidays(customer));
+            return customer;
         }
         catch (SQLException | DB_CustomerExceptionHandler e) {
             throw new DAOExceptionHandler(e.getMessage());
@@ -238,6 +265,37 @@ public class DAO {
             }
         }
         catch (SQLException | DB_AddressExceptionHandler e) {
+            throw new DAOExceptionHandler(e.getMessage());
+        }
+    }
+
+
+    //  ====================================================================================================
+    // HOLIDAY
+
+    public ArrayList<DB_Holiday> getHolidays(DB_Customer customer) throws DAOExceptionHandler {
+        try {
+            ArrayList<DB_Holiday> list = new ArrayList<>();
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM holiday WHERE " + Att_Customer.customer_id.name + " = " + customer.getCustomer_id());
+            if ( rs.next()) {
+                do {
+                    list.add( new DB_Holiday(
+                            rs.getLong( Att_Holiday.holiday_id.column),
+                            rs.getDate( Att_Holiday.start_date.column),
+                            rs.getDate( Att_Holiday.end_date.column),
+                            customer
+                    ));
+                } while ( rs.next());
+                rs.close();
+                st.close();
+                return list;
+            } else {
+                rs.close();
+                st.close();
+                throw new DAOExceptionHandler("No holiday for '" + Att_Customer.customer_id.name + "' = " + customer.getCustomer_id() + " found.");
+            }
+        } catch (SQLException | DB_HolidayExceptionHandler e) {
             throw new DAOExceptionHandler(e.getMessage());
         }
     }

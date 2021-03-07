@@ -1,6 +1,3 @@
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 public class DB_Address {
     //  Base address attributes
     private long address_id = 0;

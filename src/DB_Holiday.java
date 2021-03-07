@@ -1,4 +1,3 @@
-import java.text.DateFormat;
 import java.util.Date;
 
 public class DB_Holiday {
@@ -59,9 +58,8 @@ public class DB_Holiday {
     public String toString() {
         return "DB_Holiday{" +
                 "holiday_id=" + holiday_id +
-                ", start_date=" + start_date +
-                ", end_date=" + end_date +
-                ", customer=" + customer +
+                ", start_date=" + start_date.toString() +
+                ", end_date=" + end_date.toString() +
                 '}';
     }
 
