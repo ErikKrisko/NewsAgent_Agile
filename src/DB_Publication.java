@@ -28,9 +28,9 @@ public class DB_Publication {
      */
     public DB_Publication(long prod_id, String prod_name, String type, Double prod_price) throws DB_PublicationExceptionHandler {
         this.prod_id = validateID(prod_id);
-        this.prod_name = validateEntry(Att_Publication.prod_name, prod_name);
-        this.prod_type = validateEntry(Att_Publication.prod_type, prod_type);
-        this.prod_price = validateEntry(Att_Publication.prod_price, prod_price);
+//        this.prod_name = validateEntry(Att_Publication.prod_name, prod_name);
+//        this.prod_type = validateEntry(Att_Publication.prod_type, prod_type);
+//        this.prod_price = validateEntry(Att_Publication.prod_price, prod_price);
         //this.frequency = validateEntry(Att_Frequency.frequency, frequency);
     }
 
@@ -42,18 +42,19 @@ public class DB_Publication {
     }
 
     public String validateEntry(String name) throws DB_PublicationExceptionHandler{
-        if(name)
-            return name;
-        else
-            throw new DB_PublicationExceptionHandler("Name must be zero or greater");
+//        if(name)
+//            return name;
+//        else
+//            throw new DB_PublicationExceptionHandler("Name must be zero or greater");
+        throw new DB_PublicationExceptionHandler("Method not implemented");
     }
 
     public String ValidateEntry(String type) throws DB_PublicationExceptionHandler {
-
+        throw new DB_PublicationExceptionHandler("Method not implemented");
     }
 
     public Double validateEntry(Double price) throws DB_PublicationExceptionHandler {
-
+        throw new DB_PublicationExceptionHandler("Method not implemented");
     }
 
     //public String validateEntry(frequency)
@@ -95,15 +96,18 @@ public class DB_Publication {
     }
 
     public void setProd_name(String prod_name) throws DB_PublicationExceptionHandler {
-        this.prod_name = validateEntry(Att_Publication.prod_name, prod_name);
+//        this.prod_name = validateEntry(Att_Publication.prod_name, prod_name);
+        throw new DB_PublicationExceptionHandler("Method not implemented");
     }
 
     public void setProd_type(String prod_type) throws DB_PublicationExceptionHandler {
-        this.prod_type = validateEntry(Att_Publication.prod_type, prod_type);
+//        this.prod_type = validateEntry(Att_Publication.prod_type, prod_type);
+        throw new DB_PublicationExceptionHandler("Method not implemented");
     }
 
     public void setProd_price(Double prod_price) throws DB_PublicationExceptionHandler {
-        this.prod_price = validateEntry(Att_Publication.prod_price, prod_price);
+//        this.prod_price = validateEntry(Att_Publication.prod_price, prod_price);
+        throw new DB_PublicationExceptionHandler("Method not implemented");
     }
 
 }

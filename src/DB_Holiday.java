@@ -1,3 +1,4 @@
+import java.text.DateFormat;
 import java.util.Date;
 
 public class DB_Holiday {
@@ -16,8 +17,10 @@ public class DB_Holiday {
     }
 
     public Date validateStartDate (Date start_date) throws DB_HolidayExceptionHandler {
-        throw new DB_HolidayExceptionHandler("No product code.");
-
+        if (start_date.after( new Date()))
+            return start_date;
+        else
+            throw new DB_HolidayExceptionHandler("Date cannot be before the year 2000.");
     }
 
     public Date validateEndDate (Date end_date) throws DB_HolidayExceptionHandler {

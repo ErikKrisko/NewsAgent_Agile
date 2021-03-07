@@ -2,8 +2,6 @@ import junit.framework.TestCase;
 
 import java.sql.Date;
 
-import static org.junit.Assert.*;
-
 public class DB_InvoiceTest extends TestCase {
     DB_Invoice invoice = new DB_Invoice();
 
