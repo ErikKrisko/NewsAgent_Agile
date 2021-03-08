@@ -37,6 +37,27 @@ public class DAOTestCustomer extends TestCase {
      *
      */
     public void testGetCustomer002() {
+        int ID = 1;
+        try {
+            DB_Customer test_customer = dao.getCustomer(ID);
+            assertEquals( 1, test_customer.getCustomer_id());
+            assertEquals( "Bill", test_customer.getFirst_name());
+            assertEquals( "Birr", test_customer.getLast_name());
+            assertEquals( "0951078281", test_customer.getPhone_no());
+            assertEquals( 1, test_customer.getAddress().getAddress_id());
+        } catch (DAOExceptionHandler e) {
+            e.printStackTrace();
+            fail("Exception not expected.");
+        }
+    }
+
+
+
+
+
+/*
+    public void testGetCustomers() {
+
     }
 
     public void testUpdateCustomer() {
@@ -44,4 +65,5 @@ public class DAOTestCustomer extends TestCase {
 
     public void testDeleteCustomer() {
     }
+*/
 }
