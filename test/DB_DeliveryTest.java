@@ -199,10 +199,33 @@ public class DB_DeliveryTest extends TestCase
      */
     public void testDB_Customer013() {
         try {
-            DB_Delivery testDelivery = new DB_Delivery(0, delivery.validateDevDate(new Date(System.currentTimeMillis())), true, new DB_Customer(), new DB_Invoice());
+            Date now = new Date(System.currentTimeMillis());
+            DB_Delivery testDelivery = new DB_Delivery(0, delivery.validateDevDate(now), true, new DB_Customer(), new DB_Invoice());
             assertEquals( 0, testDelivery.getDelivery_id());
-            assertEquals( delivery.validateDevDate(new Date(System.currentTimeMillis())), testDelivery.getDelivery_date());
-            assertEquals( true, testDelivery.getDelivery_status());
+            assertEquals( delivery.validateDevDate(now), testDelivery.getDelivery_date());
+            assertEquals( true, testDelivery.isDelivery_status());
+        } catch (DB_DeliveryExceptionHandler e) {
+            e.printStackTrace();
+            fail("Exception not expected.");
+        }
+    }
+
+    /**DAO METHOD TESTS*/
+    /** Test 014
+     *  Test for delivery constructor (and getters) and delivery_id in bounds
+     *  ==========
+     *  Inputs: new DB_Delivery( 0, delivery.validateDevDate(new Date(System.currentTimeMillis())), true, new DB_Customer(), new DB_Invoice())
+     *  ==========
+     *  Expected Outputs:   getDelivery_date() = 2021-03-04
+     *                      getDelivery_status() = true
+     */
+    public void testDB_Customer014() {
+        try {
+            Date now = new Date(System.currentTimeMillis());
+            DB_Delivery testDelivery = new DB_Delivery(0, delivery.validateDevDate(now), true, new DB_Customer(), new DB_Invoice());
+            assertEquals( 0, testDelivery.getDelivery_id());
+            assertEquals( delivery.validateDevDate(now), testDelivery.getDelivery_date());
+            assertEquals( true, testDelivery.isDelivery_status());
         } catch (DB_DeliveryExceptionHandler e) {
             e.printStackTrace();
             fail("Exception not expected.");
