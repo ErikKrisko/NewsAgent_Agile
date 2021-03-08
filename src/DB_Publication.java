@@ -1,16 +1,13 @@
+import javax.swing.*;
+import java.lang.reflect.Type;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class DB_Publication {
     //  Base Publication attributes
-    //Changed prod_id from equal to zero to just prod_id;
     private long prod_id;
     private String prod_name, prod_type, frequency;
     private Double prod_price;
-    //  External customer attributes
-    //Leave line 11 commented out for now until DB_Frequency is done. Donny
-    //private DB_Frequency Frequency[];
-    //Maybe have frequency as an array?
 
     /**
      * Blank constructor for DB_Publication
@@ -22,16 +19,16 @@ public class DB_Publication {
      * All variables are validated
      * @param prod_id
      * @param prod_name
-     * @param type
+     * @param prod_type
      * @param prod_price
      * @throws DB_PublicationExceptionHandler
      */
-    public DB_Publication(long prod_id, String prod_name, String type, Double prod_price) throws DB_PublicationExceptionHandler {
+    public DB_Publication(long prod_id, String prod_name, String prod_type, Double prod_price) throws DB_PublicationExceptionHandler {
         this.prod_id = validateID(prod_id);
-//        this.prod_name = validateEntry(Att_Publication.prod_name, prod_name);
-//        this.prod_type = validateEntry(Att_Publication.prod_type, prod_type);
-//        this.prod_price = validateEntry(Att_Publication.prod_price, prod_price);
-        //this.frequency = validateEntry(Att_Frequency.frequency, frequency);
+        this.prod_name = validateName( prod_name);
+        this.prod_type = validateType(prod_type);
+        this.prod_price = validatePrice(prod_price);
+        this.frequency = validateFrequency(frequency);
     }
 
     public long validateID(long id) throws DB_PublicationExceptionHandler {
@@ -41,23 +38,40 @@ public class DB_Publication {
             throw new DB_PublicationExceptionHandler("ID can be 0 or more than");
     }
 
-    public String validateEntry(String name) throws DB_PublicationExceptionHandler{
-//        if(name)
-//            return name;
-//        else
-//            throw new DB_PublicationExceptionHandler("Name must be zero or greater");
-        throw new DB_PublicationExceptionHandler("Method not implemented");
+    //Length of the name not empty string fits into database 20 max
+    public String validateName(String name) throws DB_PublicationExceptionHandler{
+        if(name.length() <=25)
+            return name;
+        else if(name.length() >0)
+            throw new DB_PublicationExceptionHandler("Name = \"" + name + "\", is too short.");
+        else
+            throw new DB_PublicationExceptionHandler("Name = \"" + name + "\", is too long.");
     }
 
-    public String ValidateEntry(String type) throws DB_PublicationExceptionHandler {
-        throw new DB_PublicationExceptionHandler("Method not implemented");
+    //Test for two type anything else throw an error
+    public String validateType(String type) throws DB_PublicationExceptionHandler {
+    if(type.length() <=25)
+        return type;
+    else if(type.length() >0)
+        throw new DB_PublicationExceptionHandler("Type = \"" + type + "\", is too short.");
     }
 
-    public Double validateEntry(Double price) throws DB_PublicationExceptionHandler {
-        throw new DB_PublicationExceptionHandler("Method not implemented");
+    //greater than zero less than 10.00
+    public Double validatePrice(Double price) throws DB_PublicationExceptionHandler {
+        if(price <= 10.00)
+            return price;
+        else if(price >0)
+        throw new DB_PublicationExceptionHandler("Price = \"" + price + "\", is too short.");
     }
 
-    //public String validateEntry(frequency)
+
+    public String validateFrequency(String frequency) throws DB_PublicationExceptionHandler{
+        if(frequency.length() <=25)
+            return frequency;
+        else if(frequency >0)
+        throw new DB_PublicationExceptionHandler("Frequency = \"" + frequency + "\", is too short");
+    }
+
 
 
     //ToString not auto generated Donny
@@ -68,7 +82,7 @@ public class DB_Publication {
                 ", prod_name =" + prod_name + '\'' +
                 "prod_type =" + prod_type + '\'' +
                 "prod_price =" + prod_price + '\'' +
-                //"frequency =" + frequency +
+                "frequency =" + frequency +  '\'' +
                 '}';
     }
 
@@ -89,31 +103,30 @@ public class DB_Publication {
         return prod_price;
     }
 
-    //public int getFrequency() { return frequency; }
+    public String getFrequency() {
+        return frequency;
+    }
 
+    //Auto generated Setters
     public void setProd_id(long prod_id) throws DB_PublicationExceptionHandler {
         this.prod_id = validateID(prod_id);
     }
 
     public void setProd_name(String prod_name) throws DB_PublicationExceptionHandler {
-//        this.prod_name = validateEntry(Att_Publication.prod_name, prod_name);
-        throw new DB_PublicationExceptionHandler("Method not implemented");
+        this.prod_name = validateName(prod_name);
     }
 
     public void setProd_type(String prod_type) throws DB_PublicationExceptionHandler {
-//        this.prod_type = validateEntry(Att_Publication.prod_type, prod_type);
-        throw new DB_PublicationExceptionHandler("Method not implemented");
+        this.prod_type = validateType(prod_type);
     }
 
     public void setProd_price(Double prod_price) throws DB_PublicationExceptionHandler {
-//        this.prod_price = validateEntry(Att_Publication.prod_price, prod_price);
-        throw new DB_PublicationExceptionHandler("Method not implemented");
+        this.prod_price = validatePrice(prod_price);
     }
 
-}
-
-enum Att_Publication {
-
+    public void setFrequency(String frequency) throws DB_PublicationExceptionHandler {
+        this.frequency = validateFrequency(frequency);
+    }
 }
 
 class DB_PublicationExceptionHandler extends Exception {
