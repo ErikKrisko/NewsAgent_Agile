@@ -116,7 +116,7 @@ public class DAO {
                 rs.close();
                 st.close();
                 //  If somehow this is reached throw an error
-                throw new DAOExceptionHandler("No customer with 'customer_id = " + ID + " not found.");
+                throw new DAOExceptionHandler("No customer with customer_id = " + ID + " not found.");
             }
         }
         catch (SQLException e) {
