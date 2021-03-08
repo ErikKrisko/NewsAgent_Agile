@@ -5,6 +5,7 @@ public class DB_DeliveryTest extends TestCase
 {
     DB_Delivery delivery = new DB_Delivery();
 
+
     //Test Delivery Date
     /** TEST 001
      *  Test delivery_date for null
@@ -62,6 +63,7 @@ public class DB_DeliveryTest extends TestCase
         try {
             assertEquals(new Date(System.currentTimeMillis()),delivery.validateDevDate(new Date(System.currentTimeMillis())));
         } catch (DB_DeliveryExceptionHandler e){
+            e.printStackTrace();
             fail("Exception not expected.");
         }
     }
@@ -76,6 +78,7 @@ public class DB_DeliveryTest extends TestCase
         try {
             assertEquals(new Date(System.currentTimeMillis() - 24*60*60*999),delivery.validateDevDate(new Date(System.currentTimeMillis() - 24*60*60*999)));
         } catch (DB_DeliveryExceptionHandler e){
+            e.printStackTrace();
             fail("Exception not expected.");
         }
     }
@@ -90,6 +93,7 @@ public class DB_DeliveryTest extends TestCase
         try {
             assertEquals(new Date(System.currentTimeMillis() + 24*60*60*999),delivery.validateDevDate(new Date(System.currentTimeMillis() + 24*60*60*999)));
         } catch (DB_DeliveryExceptionHandler e){
+            e.printStackTrace();
             fail("Exception not expected.");
         }
     }
@@ -106,6 +110,7 @@ public class DB_DeliveryTest extends TestCase
         try {
             assertEquals(0, delivery.validateDevID(0));
         } catch (DB_DeliveryExceptionHandler e){
+            e.printStackTrace();
             fail("Exception not expected.");
         }
     }
@@ -120,6 +125,7 @@ public class DB_DeliveryTest extends TestCase
         try {
             assertEquals(6, delivery.validateDevID(6));
         } catch (DB_DeliveryExceptionHandler e){
+            e.printStackTrace();
             fail("Exception not expected.");
         }
     }
@@ -195,7 +201,7 @@ public class DB_DeliveryTest extends TestCase
      *  Expected Outputs:   getDelivery_date() = 2021-03-04
      *                      getDelivery_status() = true
      */
-    public void testDB_Customer013() {
+    public void testDB_Delivery013() {
         try {
             Date now = new Date(System.currentTimeMillis());
             DB_Delivery testDelivery = new DB_Delivery(0, delivery.validateDevDate(now), true, new DB_Customer(), new DB_Invoice());
@@ -208,7 +214,7 @@ public class DB_DeliveryTest extends TestCase
         }
     }
 
-    /**DAO METHOD TESTS*/
+
     /** Test 014
      *  Test for delivery constructor (and getters) and delivery_id in bounds
      *  ==========
@@ -217,7 +223,7 @@ public class DB_DeliveryTest extends TestCase
      *  Expected Outputs:   getDelivery_date() = 2021-03-04
      *                      getDelivery_status() = true
      */
-    public void testDB_Customer014() {
+    public void testDB_Delivery014() {
         try {
             Date now = new Date(System.currentTimeMillis());
             DB_Delivery testDelivery = new DB_Delivery(0, delivery.validateDevDate(now), true, new DB_Customer(), new DB_Invoice());
@@ -231,3 +237,4 @@ public class DB_DeliveryTest extends TestCase
     }
 
 }
+
