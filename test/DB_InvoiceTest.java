@@ -153,7 +153,7 @@ public class DB_InvoiceTest extends TestCase {
         }
     }
 
-    /** TEST 0010
+    /** TEST 010
      *  Test invoice total for value below 0
      *  ==========
      *  Inputs: Att_Invoice.invoice_total
@@ -170,7 +170,7 @@ public class DB_InvoiceTest extends TestCase {
         }
     }
 
-    /** TEST 006
+    /** TEST 011
      *  Test invoice total for random value below 0
      *  ==========
      *  Inputs: Att_Invoice.invoice_total
