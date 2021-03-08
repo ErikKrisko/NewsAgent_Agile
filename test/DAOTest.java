@@ -1,7 +1,3 @@
-import java.awt.*;
-import java.sql.SQLException;
-
-import static org.junit.Assert.*;
 import junit.framework.TestCase;
 
 public class DAOTest extends TestCase {

@@ -1,5 +1,4 @@
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class DB_Customer {
     //  Base customer attributes
@@ -8,7 +7,7 @@ public class DB_Customer {
     //  External customer attributes
     private DB_Address address;
     //  List of customer holidays
-    //! Holidays WIP
+    ArrayList<DB_Holiday> holidays;
 
     /** Blank Constructor for DB_Customer.
      */
@@ -21,7 +20,7 @@ public class DB_Customer {
      * @param last_name of the customer. Cannot contain number and has to be <= 20 in length.
      * @param phone_no of the customer. May only contain digits and has to be 10 in length.
      * @param address address object for customer.
-     * @throws DB_CustomerExceptionHandler
+     * @throws DB_CustomerExceptionHandler if any entry is invalid.
      */
     public DB_Customer(long customer_id,String first_name, String last_name, String phone_no, DB_Address address) throws DB_CustomerExceptionHandler {
         this.customer_id = validateID( customer_id);
@@ -77,7 +76,6 @@ public class DB_Customer {
             throw new DB_CustomerExceptionHandler("ID must be 0 or greater.");
     }
 
-
     //  AUTO GENERATED toString
     @Override
     public String toString() {
@@ -86,7 +84,8 @@ public class DB_Customer {
                 ", first_name='" + first_name + '\'' +
                 ", last_name='" + last_name + '\'' +
                 ", phone_no='" + phone_no + '\'' +
-                ", address=" + address.toString() +
+                ", address=" + address +
+                ", holidays=" + holidays +
                 '}';
     }
 
@@ -96,11 +95,13 @@ public class DB_Customer {
     public String getLast_name() {  return last_name; }
     public String getPhone_no() {   return phone_no; }
     public DB_Address getAddress() {    return address; }
+    public ArrayList<DB_Holiday> getHolidays() { return holidays; }
     public void setCustomer_id(long customer_id) throws DB_CustomerExceptionHandler { this.customer_id = validateID( customer_id); }
     public void setFirst_name(String first_name) throws DB_CustomerExceptionHandler {  this.first_name = validateEntry( Att_Customer.first_name, first_name); }
     public void setLast_name(String last_name) throws DB_CustomerExceptionHandler {    this.last_name = validateEntry( Att_Customer.last_name, last_name); }
     public void setPhone_no(String phone_no) throws DB_CustomerExceptionHandler {  this.phone_no = validateEntry( Att_Customer.phone_no, phone_no); }
     public void setAddress(DB_Address address) {    this.address = address; }
+    public void setHolidays(ArrayList<DB_Holiday> holidays) { this.holidays = holidays; }
 }
 
 /** This is the SQL table layout reference in java code.

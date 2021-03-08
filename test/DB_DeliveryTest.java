@@ -1,8 +1,6 @@
 import junit.framework.TestCase;
 import java.sql.Date;
 
-import java.sql.Date;
-
 public class DB_DeliveryTest extends TestCase
 {
     DB_Delivery delivery = new DB_Delivery();
