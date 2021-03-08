@@ -1,4 +1,4 @@
-import java.util.Date;
+import java.sql.Date;
 
 public class DB_Holiday {
     //  Base holiday attributes
@@ -23,7 +23,7 @@ public class DB_Holiday {
      * @throws DB_HolidayExceptionHandler if start_date is invalid
      */
     public Date validateStartDate (Date start_date) throws DB_HolidayExceptionHandler {
-        if (start_date.after( new Date(946684799000L)))
+        if (start_date.after( Date.valueOf("2000-01-01")) || start_date.equals( Date.valueOf("2000-01-01")))
             return start_date;
         else
             throw new DB_HolidayExceptionHandler("Date cannot be before the year 2000.");
