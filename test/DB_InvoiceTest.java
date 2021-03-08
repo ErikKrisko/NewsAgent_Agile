@@ -15,7 +15,7 @@ public class DB_InvoiceTest extends TestCase {
      */
     public void testDB_invoice001() {
         try {
-            invoice.validateDate(Date.valueOf(""));
+            invoice.validateDate(Date.valueOf("2021/02/05"));
         } catch (DB_InvoiceExceptionHandler e) {
             assertEquals("Invalid issue date.", e.getMessage());
         }
@@ -153,7 +153,7 @@ public class DB_InvoiceTest extends TestCase {
         }
     }
 
-    /** TEST 0010
+    /** TEST 010
      *  Test invoice total for value below 0
      *  ==========
      *  Inputs: Att_Invoice.invoice_total
@@ -170,7 +170,7 @@ public class DB_InvoiceTest extends TestCase {
         }
     }
 
-    /** TEST 006
+    /** TEST 011
      *  Test invoice total for random value below 0
      *  ==========
      *  Inputs: Att_Invoice.invoice_total

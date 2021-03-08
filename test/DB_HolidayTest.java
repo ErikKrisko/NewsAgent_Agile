@@ -1,20 +1,18 @@
 import junit.framework.TestCase;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.sql.Date;
 
 public class DB_HolidayTest extends TestCase {
     DB_Holiday holiday = new DB_Holiday();
-    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
     /** TEST 001
      *  Testing for invalid holiday start date
      */
     public void testDB_Holiday001() {
         try {
-            holiday.validateStartDate( sdf.parse("1999-12-31"));
+            holiday.validateStartDate( Date.valueOf("1999-12-31"));
             fail("Exception expected.");
-        } catch (DB_HolidayExceptionHandler | ParseException e) {
+        } catch (DB_HolidayExceptionHandler e) {
             assertEquals("Date cannot be before the year 2000.", e.getMessage());
         }
     }
@@ -24,8 +22,8 @@ public class DB_HolidayTest extends TestCase {
      */
     public void testDB_Holiday002() {
         try {
-            assertEquals( sdf.parse("2000-01-01"), holiday.validateStartDate( sdf.parse("2000-01-01")));
-        } catch (DB_HolidayExceptionHandler | ParseException e) {
+            assertEquals( Date.valueOf("2000-01-01"), holiday.validateStartDate( Date.valueOf("2000-01-01")));
+        } catch (DB_HolidayExceptionHandler e) {
             fail("Exception not expected.");
         }
     }
@@ -35,10 +33,10 @@ public class DB_HolidayTest extends TestCase {
      */
     public void testDB_Holiday003() {
         try {
-            holiday.setStart_date( sdf.parse("2000-01-10"));
-            holiday.validateEndDate( sdf.parse("2000-01-01"));
+            holiday.setStart_date( Date.valueOf("2000-01-10"));
+            holiday.validateEndDate( Date.valueOf("2000-01-01"));
             fail("Exception expected");
-        } catch (DB_HolidayExceptionHandler | ParseException e) {
+        } catch (DB_HolidayExceptionHandler e) {
             assertEquals("End date has to come after Start date.", e.getMessage());
         }
     }
@@ -48,9 +46,9 @@ public class DB_HolidayTest extends TestCase {
      */
     public void testDB_Holiday004() {
         try {
-            holiday.setStart_date( sdf.parse("2000-01-01"));
-            assertEquals( sdf.parse("2000-01-10"), holiday.validateEndDate( sdf.parse("2000-01-10")));
-        } catch (DB_HolidayExceptionHandler | ParseException e) {
+            holiday.setStart_date( Date.valueOf("2000-01-01"));
+            assertEquals( Date.valueOf("2000-01-10"), holiday.validateEndDate( Date.valueOf("2000-01-10")));
+        } catch (DB_HolidayExceptionHandler e) {
             fail("Exception not expected");
         }
     }
@@ -71,9 +69,9 @@ public class DB_HolidayTest extends TestCase {
      */
     public void testDB_Holiday006() {
         try {
-            new DB_Holiday( -1, sdf.parse("2000-01-01"), sdf.parse("2000-01-10"), new DB_Customer());
+            new DB_Holiday( -1, Date.valueOf("2000-01-01"), Date.valueOf("2000-01-10"), new DB_Customer());
             fail("Exception expected");
-        } catch (DB_HolidayExceptionHandler | ParseException e) {
+        } catch (DB_HolidayExceptionHandler e) {
             assertEquals( "ID must be 0 or greater.", e.getMessage());
         }
     }
@@ -83,11 +81,11 @@ public class DB_HolidayTest extends TestCase {
      */
     public void testDB_Holiday007() {
         try {
-            DB_Holiday test = new DB_Holiday( 0, sdf.parse("2000-01-01"), sdf.parse("2000-01-10"), new DB_Customer());
+            DB_Holiday test = new DB_Holiday( 0, Date.valueOf("2000-01-01"), Date.valueOf("2000-01-10"), new DB_Customer());
             assertEquals( 0, test.getHoliday_id());
-            assertEquals( sdf.parse("2000-01-01"), test.getStart_date());
-            assertEquals( sdf.parse("2000-01-10"), test.getEnd_date());
-        } catch (DB_HolidayExceptionHandler | ParseException e) {
+            assertEquals( Date.valueOf("2000-01-01"), test.getStart_date());
+            assertEquals( Date.valueOf("2000-01-10"), test.getEnd_date());
+        } catch (DB_HolidayExceptionHandler e) {
             fail("Exception not expected");
         }
     }

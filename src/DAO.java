@@ -116,7 +116,7 @@ public class DAO {
                 rs.close();
                 st.close();
                 //  If somehow this is reached throw an error
-                throw new DAOExceptionHandler("No customer with 'customer_id = " + ID + " not found.");
+                throw new DAOExceptionHandler("No customer with customer_id = " + ID + " not found.");
             }
         }
         catch (SQLException e) {
@@ -266,11 +266,10 @@ public class DAO {
         }
     }
 
-    /**
-     *
-     * @param address
-     * @return
-     * @throws DAOExceptionHandler
+    /** Issues update for address. Creates if ID is = 0 or updates an existing entry.
+     * @param address object which to update / create.
+     * @return int number of lines changed.
+     * @throws DAOExceptionHandler if an SQL error occurred or there was customer_id mishandling.
      */
     public int updateAddress(DB_Address address) throws DAOExceptionHandler{
         try {
@@ -317,11 +316,10 @@ public class DAO {
         }
     }
 
-    /**
-     *
-     * @param address
-     * @return
-     * @throws DAOExceptionHandler
+    /** Deletes given address from the database if it exists.
+     * @param address to delete
+     * @return int of lines changed
+     * @throws DAOExceptionHandler if the address was not inserted or does not exist in the database.
      */
     public int deleteAddress(DB_Address address) throws DAOExceptionHandler {
         if (address.getAddress_id() == 0) {
@@ -350,6 +348,11 @@ public class DAO {
     //  ====================================================================================================
     // HOLIDAY
 
+    /** Returns array list of holidays for given customer object
+     * @param customer to have holidays assigned for
+     * @return ArrayList of holiday objects
+     * @throws DAOExceptionHandler if there was an error or no holidays were found
+     */
     public ArrayList<DB_Holiday> getHolidays(DB_Customer customer) throws DAOExceptionHandler {
         try {
             ArrayList<DB_Holiday> list = new ArrayList<>();
@@ -377,13 +380,18 @@ public class DAO {
         }
     }
 
+    /** Updates DB_Holiday object or creates a new one.
+     * @param holiday to be updated / inserted
+     * @return int of lines changed
+     * @throws DAOExceptionHandler if an SQL error occurred or there was holiday_id mishandling.
+     */
     public int updateHoliday(DB_Holiday holiday) throws DAOExceptionHandler {
         try {
             //  if holiday ID == 0, create new
             if (holiday.getHoliday_id() == 0) {
                 PreparedStatement ps = con.prepareStatement("INSERT INTO holiday VALUES(null, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
-                ps.setDate( Att_Holiday.start_date.column - 1, (Date) holiday.getStart_date());
-                ps.setDate( Att_Holiday.end_date.column - 1, (Date) holiday.getEnd_date());
+                ps.setDate( Att_Holiday.start_date.column - 1, holiday.getStart_date());
+                ps.setDate( Att_Holiday.end_date.column - 1, holiday.getEnd_date());
                 ps.setLong( Att_Holiday.customer.column - 1, holiday.getCustomer().getCustomer_id());
                 int lines = ps.executeUpdate();
                 ResultSet keys = ps.getGeneratedKeys();
@@ -423,6 +431,11 @@ public class DAO {
         }
     }
 
+    /** Deletes given holiday from the database if it exists.
+     * @param holiday to be deleted
+     * @return int of lines changed
+     * @throws DAOExceptionHandler if the holiday was not inserted or does not exist in the database.
+     */
     public int deleteHoliday(DB_Holiday holiday) throws DAOExceptionHandler {
         if (holiday.getHoliday_id() == 0) {
             throw new DAOExceptionHandler("Holiday was not inserted into the database.");
