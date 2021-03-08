@@ -31,6 +31,7 @@ public class DB_Publication {
         this.frequency = validateFrequency(frequency);
     }
 
+
     public long validateID(long id) throws DB_PublicationExceptionHandler {
         if (id >= 0)
             return id;
@@ -50,10 +51,14 @@ public class DB_Publication {
 
     //Test for two type anything else throw an error
     public String validateType(String type) throws DB_PublicationExceptionHandler {
-    if(type.length() <=25)
+    if(type == "Tabloid")
         return type;
-    else if(type.length() >0)
-        throw new DB_PublicationExceptionHandler("Type = \"" + type + "\", is too short.");
+        else if (type == "Broadsheet")
+            return type;
+        else if(type == "Magazine")
+            return type;
+        else
+        throw new DB_PublicationExceptionHandler("Type = \"" + type + "\", must be either Tabloid, Broadsheet, or Magazine");
     }
 
     //greater than zero less than 10.00
@@ -61,14 +66,18 @@ public class DB_Publication {
         if(price <= 10.00)
             return price;
         else if(price >0)
-        throw new DB_PublicationExceptionHandler("Price = \"" + price + "\", is too short.");
+            return price;
+        else
+        throw new DB_PublicationExceptionHandler("Price = \"" + price + "\", must be greater than zero and less than ten.");
     }
 
 
     public String validateFrequency(String frequency) throws DB_PublicationExceptionHandler{
         if(frequency.length() <=25)
             return frequency;
-        else if(frequency >0)
+        else if(frequency.length() >0)
+            return frequency;
+        else
         throw new DB_PublicationExceptionHandler("Frequency = \"" + frequency + "\", is too short");
     }
 
