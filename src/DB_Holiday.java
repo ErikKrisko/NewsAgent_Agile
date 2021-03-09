@@ -53,6 +53,29 @@ public class DB_Holiday {
             throw new DB_HolidayExceptionHandler("ID must be 0 or greater.");
     }
 
+    //  New equals method. Overrides original one for easier use with ArrayLists.
+    @Override
+    public boolean equals(Object obj) {
+        //  Check if object is DB_Holiday if not dont even compare
+        if (obj instanceof DB_Holiday) {
+            //  Cast to DB_Holiday
+            DB_Holiday holiday = (DB_Holiday) obj;
+            //  Regular comparison list
+            boolean equals = true;
+            //  Compare ID
+            if (this.getHoliday_id() != holiday.getHoliday_id())
+                equals = false;
+            //  Compare Start Date
+            if (equals && !this.start_date.equals(holiday.start_date))
+                equals = false;
+            //  Compare End Date
+            if (equals && !this.end_date.equals(holiday.end_date))
+                equals = false;
+            return equals;
+        } else
+            return false;
+    }
+
     //  AUTO GENERATED toString
     @Override
     public String toString() {
