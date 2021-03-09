@@ -289,7 +289,7 @@ public class DAO {
             } else {    //  Else update existing address
                 //  Query address
                 Statement st = con.createStatement();
-                ResultSet rs = st.executeQuery( "SELECT * FROM address WHERE" + Att_Address.address_id.name + " = " + address.getAddress_id());
+                ResultSet rs = st.executeQuery( "SELECT * FROM address WHERE " + Att_Address.address_id.name + " = " + address.getAddress_id());
                 //  If queried address exists update
                 if ( rs.next()) {
                     String update = "UPDATE address SET ";
@@ -327,6 +327,7 @@ public class DAO {
         } else {
             try {
                 Statement st = con.createStatement();
+                System.out.println("SELECT * FROM address WHERE " + Att_Address.address_id.name + " = " + address.getAddress_id());
                 ResultSet rs = st.executeQuery("SELECT * FROM address WHERE " + Att_Address.address_id.name + " = " + address.getAddress_id());
                 if ( rs.next()) {
                     int lines = st.executeUpdate( "DELETE FROM address WHERE " + Att_Address.address_id.name + " = " + address.getAddress_id());

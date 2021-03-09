@@ -68,6 +68,23 @@ public class DB_Address {
             throw new DB_AddressExceptionHandler("ID must be 0 or greater.");
     }
 
+    public boolean equals(DB_Address address) {
+        boolean equals = true;
+        //  Compare ID
+        if (this.getAddress_id() != address.getAddress_id())
+            equals = false;
+        //  Compare full address
+        if (equals && !this.getFull_address().equals( address.getFull_address()))
+            equals = false;
+        //  Compare Area_code
+        if (equals && !this.getArea_code().equals( address.getArea_code()))
+            equals = false;
+        //  Compare Eir_code
+        if (equals && !this.getEir_code().equals( address.getEir_code()))
+            equals = false;
+        return equals;
+    }
+
     //  AUTO GENERATED toString
     @Override
     public String toString() {
