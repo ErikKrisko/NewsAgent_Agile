@@ -8,7 +8,7 @@ INSERT INTO address VALUES (null, '123 clover lane Tullamore Co.Offaly', 'A3', '
 /*Customer Table*/
 INSERT INTO customer VALUES (null, 'Bill', 'Birr', '0951078281', 1);
 INSERT INTO customer VALUES (null, 'Lib', 'Tard', '0541073261', 2);
-INSERT INTO customer VALUES (null, 'Joe', 'Joyce', '0951078281', 3);
+INSERT INTO customer VALUES (null, 'Joe', 'Joyce', '0911078281', 3);
 INSERT INTO customer VALUES (null, 'Mimi', 'Goloba', '0591078341', 4);
 INSERT INTO customer VALUES (null, 'Conor', 'Demain', '0725014729', 5);
 
@@ -21,7 +21,7 @@ INSERT INTO invoice VALUES (null, '2021-09-10', 1, 50.40, 5);
 
 /*holiday Table*/
 INSERT INTO holiday VALUES (null, '2021-02-10', '2021-02-15', 1);
-INSERT INTO holiday VALUES (null, '2021-04-01', '2021-02-15', 2);
+INSERT INTO holiday VALUES (null, '2021-01-01', '2021-02-16', 2);
 INSERT INTO holiday VALUES (null, '2021-03-02', '2021-05-15', 3);
 INSERT INTO holiday VALUES (null, '2021-01-10', '2021-06-01', 4);
 INSERT INTO holiday VALUES (null, '2021-12-15', '2021-12-20', 5);

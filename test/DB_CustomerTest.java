@@ -1,15 +1,12 @@
 import junit.framework.TestCase;
 
-import static org.junit.Assert.*;
-
 public class DB_CustomerTest extends TestCase {
     DB_Customer customer = new DB_Customer();
 
     /** TEST 001
      *  Test first_name, last_name, phone_no for an empty string / too short entry
      *  ==========
-     *  Inputs: Att_Customer.first_name
-     *          ""
+     *  Inputs: customer.validateEntry( Att_Customer.first_name, "");
      *  ==========
      *  Expected Outputs:   DB_CustomerExceptionHandler = "Entry = "", cannot be an empty String."
      */
@@ -25,8 +22,7 @@ public class DB_CustomerTest extends TestCase {
     /** TEST 002
      *  Test first_name, last_name for too long entry.
      *  ==========
-     *  Inputs: Att_Customer.first_name
-     *          "Joebilljollyrobbertson"
+     *  Inputs: customer.validateEntry( Att_Customer.first_name, "Joebilljollyrobbertson");
      *  ==========
      *  Expected Outputs:   DB_CustomerExceptionHandler = "Entry = "Joebilljollyrobbertson", is too long."
      */
@@ -42,8 +38,7 @@ public class DB_CustomerTest extends TestCase {
     /** TEST 004
      *  Test first_name, last_name for contained numbers
      *  ==========
-     *  Inputs: Att_Customer.first_name
-     *          "B1ll"
+     *  Inputs: customer.validateEntry( Att_Customer.first_name, "B1ll");
      *  ==========
      *  Expected Outputs:   DB_CustomerExceptionHandler = "Entry = "B1ll", cannot contain numbers."
      */
@@ -59,8 +54,7 @@ public class DB_CustomerTest extends TestCase {
     /** TEST 004
      *  Test first_name, last_name for shortest possible entry
      *  ==========
-     *  Inputs: Att_Customer.first_name
-     *          "J"
+     *  Inputs: customer.validateEntry( Att_Customer.first_name, "J")
      *  ==========
      *  Expected Outputs:   "J"
      */
