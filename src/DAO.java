@@ -484,7 +484,7 @@ public class DAO {
         try{
             if(delivery.getDelivery_id() == 0)
             {
-                PreparedStatement pstmt = con.prepareStatement("INSERT INTO customer VALUES(null, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+                PreparedStatement pstmt = con.prepareStatement("INSERT INTO delivery VALUES(null, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
                 pstmt.setDate(att_delivery.delivery_date.column - 1, delivery.getDelivery_date());
                 pstmt.setBoolean(att_delivery.delivery_status.column - 1, delivery.isDelivery_status());
                 pstmt.setLong( att_delivery.customer.column - 1, delivery.getCustomer().getCustomer_id());
@@ -517,7 +517,7 @@ public class DAO {
                 }
             }
         }
-        catch(SQLException e)
+        catch(SQLException | DB_DeliveryExceptionHandler e)
         {
             throw new DAOExceptionHandler( e.getMessage());
         }
@@ -555,6 +555,97 @@ public class DAO {
     }
 
 // =========================================================================================================
+    // EMPLOYEE
+
+    public DB_Employee getEmployee(int ID) throws DAOExceptionHandler{
+        try{
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM employee WHERE employee_id = " + ID);
+            if(rs.next()){
+                DB_Employee temp = populateEmployee(rs);
+                return temp;
+            }else{
+                throw new DAOExceptionHandler("No employee with 'employee_id = " + ID + " found.");
+            }
+        } catch (SQLException e) {
+            throw new DAOExceptionHandler(e.getMessage());
+        }
+    }
+
+    public int updateEmployee(DB_Employee employee) throws DAOExceptionHandler {
+        try{
+            if(employee.getEmployee_id() == 0)
+            {
+                PreparedStatement pstmt = con.prepareStatement("INSERT INTO employee VALUES(null, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+                pstmt.setString(att_employee.first_name.column - 1, employee.getFirst_name());
+                pstmt.setString(att_employee.last_name.column - 1, employee.getLast_name());
+
+                int lines = pstmt.executeUpdate();
+                ResultSet keys = pstmt.getGeneratedKeys();
+                if(keys.next()){
+                    employee.setEmployee_id(keys.getLong(1));
+                }
+                return lines;
+            }
+            else{
+                Statement st = con.createStatement();
+                ResultSet rs = st.executeQuery("SELECT * FROM employee WHERE employee_id = " + employee.getEmployee_id());
+                if(rs.next()){
+
+                    String update = "UPDATE employee SET ";
+                    update += att_employee.first_name.columnName + " = '" + employee.getFirst_name() + "', ";
+                    update += att_employee.last_name.columnName + " = " + employee.getLast_name() + ", ";
+                    update += "WHERE " + att_employee.employee_id.columnName + " = " + employee.getEmployee_id();
+
+                    PreparedStatement pstmt = con.prepareStatement(update);
+                    int lines = pstmt.executeUpdate();
+                    return lines;
+                }else{
+                    throw new DAOExceptionHandler("There was employee_id mishandling.");
+                }
+            }
+        }
+        catch(SQLException | DB_EmployeeExceptionHandler e)
+        {
+            throw new DAOExceptionHandler( e.getMessage());
+        }
+    }
+
+    public int deleteEmployee(DB_Employee employee) throws DAOExceptionHandler {
+        try{
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM employee WHERE employee_id = " + employee.getEmployee_id()); //Check if resultset exists instead of deleting something that doesnt exist
+            if(rs.next()){
+                PreparedStatement pstmt = con.prepareStatement("DELETE FROM employee where employee_id = " + employee.getEmployee_id());
+                int lines = pstmt.executeUpdate();
+                return lines;
+            }
+            else
+            {
+                throw new DAOExceptionHandler("No employee with 'employee_id = " + employee.getEmployee_id() + " found.");
+            }
+        }
+        catch(SQLException e) {
+            throw new DAOExceptionHandler(e.getMessage());
+        }
+    }
+
+    private DB_Employee populateEmployee(ResultSet rs) throws DAOExceptionHandler {
+        try {
+            DB_Employee temp = new DB_Employee(
+                    rs.getInt(att_employee.employee_id.column),
+                    rs.getString(att_employee.first_name.column),
+                    rs.getString(att_employee.last_name.column)
+            );
+            return temp;
+        }
+        catch(SQLException e) {
+            throw new DAOExceptionHandler(e.getMessage());
+        }
+    }
+
+
+    //  ====================================================================================================
     //Publication needs to go in here
 
     //  ====================================================================================================

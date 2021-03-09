@@ -98,7 +98,7 @@ public class DB_Delivery
         }
     }
 
-    public void setDelivery_id(long delivery_id) { this.delivery_id = delivery_id; }
+    public void setDelivery_id(long delivery_id) throws DB_DeliveryExceptionHandler { this.delivery_id = validateDevID(delivery_id); }
     public void setDelivery_date(Date delivery_date) throws DB_DeliveryExceptionHandler { this.delivery_date = validateDevDate(delivery_date); }
     public void setDelivery_status(boolean delivery_status) { this.delivery_status = delivery_status; }
     public void setCustomer(DB_Customer customer) { this.customer = customer; }

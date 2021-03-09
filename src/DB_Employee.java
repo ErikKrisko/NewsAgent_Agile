@@ -1,3 +1,4 @@
+import java.sql.ResultSet;
 
 public class DB_Employee
 {
@@ -13,6 +14,7 @@ public class DB_Employee
         this.first_name = first_name;
         this.last_name = last_name;
     }
+
 
     /** Validate Attributes */
     public long validateEmpID(long entry) throws DB_EmployeeExceptionHandler {
@@ -71,11 +73,11 @@ public class DB_Employee
 
     /** Auto Generated Getters and Setters  */
     public long getEmployee_id() { return employee_id; }
-    public void setEmployee_id(long employee_id) { this.employee_id = employee_id; }
+    public void setEmployee_id(long employee_id) throws DB_EmployeeExceptionHandler { this.employee_id = validateEmpID(employee_id); }
     public String getFirst_name() { return first_name; }
-    public void setFirst_name(String first_name) { this.first_name = first_name; }
+    public void setFirst_name(String first_name) throws DB_EmployeeExceptionHandler { this.first_name = validateFName(first_name); }
     public String getLast_name() { return last_name; }
-    public void setLast_name(String last_name) { this.last_name = last_name; }
+    public void setLast_name(String last_name) throws DB_EmployeeExceptionHandler { this.last_name = validateLName(last_name); }
 
 }
 
