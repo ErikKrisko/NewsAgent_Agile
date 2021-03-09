@@ -120,7 +120,7 @@ CREATE TABLE delivers (
     delivery_id INTEGER NOT NULL,
     employee_id INTEGER NOT NULL,
 	FOREIGN KEY (delivery_id) REFERENCES delivery(delivery_id) ON DELETE CASCADE,
-	FOREIGN KEY (employee_id) REFERENCES employee(employee_id),
+	FOREIGN KEY (employee_id) REFERENCES employee(employee_id) ON DELETE CASCADE,
 	PRIMARY KEY (delivery_id,employee_id)
 );
 

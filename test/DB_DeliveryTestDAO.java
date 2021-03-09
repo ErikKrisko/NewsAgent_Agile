@@ -6,7 +6,7 @@ public class DB_DeliveryTestDAO extends TestCase {
     DB_Delivery delivery = new DB_Delivery();
     private DAO dao;
 
-    public DB_DeliveryTestDAO() throws DAOExceptionHandler, JDBCExceptionHandler {
+    public DB_DeliveryTestDAO() {
         try {
             //  Initialize DAO
             dao = new DAO("jdbc:mysql://localhost:3306/newsagent?useTimezone=true&serverTimezone=UTC", "root", "admin");
@@ -167,7 +167,7 @@ public class DB_DeliveryTestDAO extends TestCase {
             dao.deleteDelivery(delivery);
 
             fail("Exception expected.");
-        } catch (DAOExceptionHandler e) {
+        } catch (DAOExceptionHandler | DB_DeliveryExceptionHandler e) {
             assertEquals("No delivery with 'delivery_id = " + delivery.getDelivery_id() + " found.",e.getMessage());
         }
     }
@@ -178,21 +178,17 @@ public class DB_DeliveryTestDAO extends TestCase {
      * ==========
      * Inputs: Delivery object of id = 5
      * ==========
-     * Expected Outputs: "No delivery with 'delivery_id = " + delivery.getDelivery_id() + " found."
+     * Expected Outputs: Object deleted
      */
     //
     public void testDB_Delivery021() {
-        int ID = 5;
         try {
-            delivery.setDelivery_id(ID);
+            delivery.setDelivery_id(5);
             dao.deleteDelivery(delivery);
 
-            dao.getDelivery(ID);
+        } catch (DAOExceptionHandler | DB_DeliveryExceptionHandler e) {
+            fail("Exception not expected.");
 
-            fail("Exception expected.");
-        } catch (DAOExceptionHandler e) {
-
-            assertEquals("No delivery with 'delivery_id = " + ID + " found.",e.getMessage());
         }
     }
 
