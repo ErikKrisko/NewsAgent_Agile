@@ -44,7 +44,7 @@ public class DAOTestAddress extends TestCase {
             //  Compare address
             assertEquals( 2, test_address.getAddress_id());
             assertEquals( "103 Lana Road Clara Co.Offaly", test_address.getFull_address());
-            assertEquals( "B1", test_address.getArea_code());;
+            assertEquals( "B1", test_address.getArea_code());
             assertEquals( "R45YW41", test_address.getEir_code());
         } catch (DAOExceptionHandler e) {
             e.printStackTrace();
