@@ -29,7 +29,8 @@ public class DAOTestCustomer extends TestCase {
         }
     }
 
-    /** Test for customer not found.
+    /** TEST 001 getCustomer()
+     *  Test for customer not found.
      *  ==========
      *  Inputs: int ID = 0
      *          dao.getCustomer(ID);
@@ -46,7 +47,8 @@ public class DAOTestCustomer extends TestCase {
         }
     }
 
-    /** Test for customer id = 1
+    /** TEST 002 getCustomer()
+     *  Test for customer id = 1
      *  ==========
      *  Inputs: int ID = 1
      *          DB_Customer test_customer = dao.getCustomer(ID);
@@ -72,7 +74,8 @@ public class DAOTestCustomer extends TestCase {
         }
     }
 
-    /** Test to get all customers
+    /** TEST 003 getCustomers()
+     *  Test to get all customers
      *  ==========
      *  Inputs: LinkedList<DB_Customer> test_list = dao.getCustomers(null);
      *  ==========
@@ -114,7 +117,8 @@ public class DAOTestCustomer extends TestCase {
         }
     }
 
-    /** Test weak search functionality
+    /** TEST 004 getCustomers()
+     *  Test weak search functionality
      *  ==========
      *  Inputs: Search_Customer[] search_criteria = {
      *                     new Search_Customer( Att_Customer.first_name, "%i%", false),
@@ -153,7 +157,8 @@ public class DAOTestCustomer extends TestCase {
         }
     }
 
-    /** Test strong search criteria first_name
+    /** TEST 005 getCustomers()
+     *  Test strong search criteria first_name
      *  ==========
      *  Inputs: Search_Customer[] search_criteria = {
      *                     new Search_Customer( Att_Customer.first_name, "Bill", true)
@@ -188,7 +193,8 @@ public class DAOTestCustomer extends TestCase {
         }
     }
 
-    /** Test strong search criteria last_name
+    /** TEST 006 getCustomers()
+     *  Test strong search criteria last_name
      *  ==========
      *  Inputs: Search_Customer[] search_criteria = {
      *                     new Search_Customer( Att_Customer.last_name, "Tard", true)
@@ -223,7 +229,8 @@ public class DAOTestCustomer extends TestCase {
         }
     }
 
-    /** Test strong search criteria phone_no
+    /** TEST 007 getCustomers()
+     *  Test strong search criteria phone_no
      *  ==========
      *  Inputs:     Search_Customer[] search_criteria = {
      *                      new Search_Customer( Att_Customer.phone_no, "0911078281", true)
@@ -258,7 +265,8 @@ public class DAOTestCustomer extends TestCase {
         }
     }
 
-    /** Test strong search criteria customer_id
+    /** TEST 008 getCustomers()
+     *  Test strong search criteria customer_id
      *  ==========
      *  Inputs:     Search_Customer[] search_criteria = {
      *                      new Search_Customer( Att_Customer.customer_id, "0", true)
@@ -281,14 +289,12 @@ public class DAOTestCustomer extends TestCase {
         }
     }
 
-    /** Test new customer insertion
+    /** TEST 009 updateCustomer()
+     *  Test new customer insertion
      *  ==========
-     *  Inputs:     Search_Customer[] search_criteria = {
-     *                      new Search_Customer( Att_Customer.customer_id, "0", true)
-     *              };
-     *              LinkedList<DB_Customer> test_list = dao.getCustomers(search_criteria);
+     *  Inputs:     DB_Customer test_customer = new DB_Customer(0, "Ben", "Dover", "0123456789", dao.getAddress(3));
      *  ==========
-     *  Expected Outputs:   test_list.size() = 0
+     *  Expected Outputs:   test_customer.equals( dao.getCustomer(6)) = true
      */
     public void testUpdateCustomer001() {
         try {
@@ -298,22 +304,111 @@ public class DAOTestCustomer extends TestCase {
             dao.updateCustomer(test_customer);
             //  Asses the new ID
             assertEquals( 6, test_customer.getCustomer_id());
-            //  Get customer from database
-            //  WIP
+            //  Compare customer
+            assertTrue(test_customer.equals( dao.getCustomer(6)));
         } catch (DAOExceptionHandler | DB_CustomerExceptionHandler e) {
             e.printStackTrace();
             fail("Exception not expected.");
         }
-
     }
 
-
-
-/*
-    public void testUpdateCustomer() {
+    /** TEST 010 updateCustomer()
+     *  Test customer update
+     *  ==========
+     *  Inputs:     DB_Customer test_customer = dao.getCustomer(6);
+     *              test_customer.setFirst_name("Bean");
+     *              test_customer.setLast_name("Dever");
+     *              test_customer.setPhone_no("0987654321");
+     *              test_customer.setAddress( dao.getAddress(2));
+     *  ==========
+     *  Expected Outputs:   test_customer.equals( dao.getCustomer(6)) = true
+     */
+    public void testUpdateCustomer002() {
+        try {
+            //  Create new customer
+            DB_Customer test_customer = dao.getCustomer(6);
+            //  Make changes
+            test_customer.setFirst_name("Bean");
+            test_customer.setLast_name("Dever");
+            test_customer.setPhone_no("0987654321");
+            test_customer.setAddress( dao.getAddress(2));
+            //  Issue update
+            dao.updateCustomer(test_customer);
+            //  Compare customer
+            assertTrue(test_customer.equals( dao.getCustomer(6)));
+        } catch (DAOExceptionHandler | DB_CustomerExceptionHandler e) {
+            e.printStackTrace();
+            fail("Exception not expected.");
+        }
     }
 
-    public void testDeleteCustomer() {
+    /** TEST 011 updateCustomer()
+     *  Test update for non-existing customer
+     *  ==========
+     *  Inputs:     DB_Customer test_customer = new DB_Customer();
+     *              test_customer.setCustomer_id( 7);
+     *  ==========
+     *  Expected Outputs:   DAOExceptionHandler = "There was customer_id mishandling."
+     */
+    public void testUpdateCustomer003() {
+        try {
+            //  Create new customer
+            DB_Customer test_customer = new DB_Customer();
+            test_customer.setCustomer_id( 7);
+            //  Issue update
+            dao.updateCustomer(test_customer);
+            fail("Exception not expected.");
+        } catch (DAOExceptionHandler | DB_CustomerExceptionHandler e) {
+            assertEquals( "There was customer_id mishandling.", e.getMessage());
+        }
     }
-*/
+
+    /** TEST 012 deleteCustomer()
+     *  Test customer deletion
+     *  ==========
+     *  Inputs:    DB_Customer test_customer = new DB_Customer();
+     *             test_customer.setCustomer_id( 6);
+     *             dao.deleteCustomer( test_customer);
+     *             dao.getCustomer( 6);
+     *  ==========
+     *  Expected Outputs:   DAOExceptionHandler = "No customer with customer_id = 6 not found."
+     */
+    public void testDeleteCustomer001() {
+        try {
+            DB_Customer test_customer = new DB_Customer();
+            test_customer.setCustomer_id( 6);
+            dao.deleteCustomer( test_customer);
+            dao.getCustomer( 6);
+            fail("Exception expected.");
+        } catch (DAOExceptionHandler e) {
+            assertEquals( "No customer with customer_id = 6 not found.", e.getMessage());
+        } catch (DB_CustomerExceptionHandler e) {
+            e.printStackTrace();
+            fail("DB_CustomerExceptionHandler Exception not expected.");
+        }
+    }
+
+    /** TEST 012 deleteCustomer()
+     *  Test customer deletion failure for no customer found
+     *  ==========
+     *  Inputs:    DB_Customer test_customer = new DB_Customer();
+     *             test_customer.setCustomer_id( 6);
+     *             dao.deleteCustomer( test_customer);
+     *             dao.getCustomer( 6);
+     *  ==========
+     *  Expected Outputs:   DAOExceptionHandler = "Cannot delete, customer with ID = '6', does not exist in the database."
+     */
+    public void testDeleteCustomer002() {
+        try {
+            DB_Customer test_customer = new DB_Customer();
+            test_customer.setCustomer_id( 6);
+            dao.deleteCustomer( test_customer);
+            fail("Exception expected.");
+        } catch (DAOExceptionHandler e) {
+            assertEquals( "Cannot delete, customer with ID = '6', does not exist in the database.", e.getMessage());
+        } catch (DB_CustomerExceptionHandler e) {
+            e.printStackTrace();
+            fail("DB_CustomerExceptionHandler Exception not expected.");
+        }
+    }
 }

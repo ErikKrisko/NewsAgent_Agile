@@ -351,7 +351,7 @@ public class DAO {
     /** Returns array list of holidays for given customer object
      * @param customer to have holidays assigned for
      * @return ArrayList of holiday objects
-     * @throws DAOExceptionHandler if there was an error or no holidays were found
+     * @throws DAOExceptionHandler if there was an error
      */
     public ArrayList<DB_Holiday> getHolidays(DB_Customer customer) throws DAOExceptionHandler {
         try {
@@ -360,20 +360,20 @@ public class DAO {
             ResultSet rs = st.executeQuery("SELECT * FROM holiday WHERE " + Att_Customer.customer_id.name + " = " + customer.getCustomer_id());
             if ( rs.next()) {
                 do {
-                    list.add( new DB_Holiday(
-                            rs.getLong( Att_Holiday.holiday_id.column),
-                            rs.getDate( Att_Holiday.start_date.column),
-                            rs.getDate( Att_Holiday.end_date.column),
+                    list.add(new DB_Holiday(
+                            rs.getLong(Att_Holiday.holiday_id.column),
+                            rs.getDate(Att_Holiday.start_date.column),
+                            rs.getDate(Att_Holiday.end_date.column),
                             customer
                     ));
-                } while ( rs.next());
+                } while (rs.next());
                 rs.close();
                 st.close();
                 return list;
             } else {
                 rs.close();
                 st.close();
-                throw new DAOExceptionHandler("No holiday for '" + Att_Customer.customer_id.name + "' = " + customer.getCustomer_id() + " found.");
+                return null;
             }
         } catch (SQLException | DB_HolidayExceptionHandler e) {
             throw new DAOExceptionHandler(e.getMessage());

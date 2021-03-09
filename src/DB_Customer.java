@@ -6,7 +6,8 @@ public class DB_Customer {
     private String first_name, last_name, phone_no;
     //  External customer attributes
     private DB_Address address;
-    //  List of customer holidays
+    //  List of customer holidays (initialized for comparison reasons)
+    //! Could be avoided and used as null but requires reconstruction of getHoliday method
     ArrayList<DB_Holiday> holidays;
 
     /** Blank Constructor for DB_Customer.
@@ -74,6 +75,30 @@ public class DB_Customer {
             return id;
         else
             throw new DB_CustomerExceptionHandler("ID must be 0 or greater.");
+    }
+
+    //  New Equals method
+    public boolean equals(DB_Customer customer) {
+        boolean equals = true;
+        //  Compare ID
+        if (this.getCustomer_id() != customer.getCustomer_id())
+            equals = false;
+        //  Compare first_name
+        if (equals && !this.getFirst_name().equals( customer.getFirst_name()))
+            equals = false;
+        //  Compare last_name
+        if (equals && !this.getLast_name().equals( customer.getLast_name()))
+            equals = false;
+        //  Compare phone_no
+        if (equals && !this.getPhone_no().equals( customer.getPhone_no()))
+            equals = false;
+        //  Compare address
+//        if (equals && !this.getAddress().equals( customer.getAddress()))
+//            equals = false;
+        //  Compare holiday list and ensure neither is null.
+        if (equals && this.holidays != null && customer.holidays != null && !this.holidays.equals( customer.holidays))
+            equals = false;
+        return equals;
     }
 
     //  AUTO GENERATED toString
