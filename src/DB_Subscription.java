@@ -4,7 +4,6 @@ import java.sql.SQLException;
 public class DB_Subscription {
     //Private count that's an integer
     private int count = 0;
-    private int size;
     private DB_Customer customer;
     private DB_Publication publication;
     //private DB_Product product[];
@@ -28,9 +27,7 @@ public class DB_Subscription {
             throw new DB_SubscriptionExceptionHandler(e.getMessage());
         }
     }
-    //Validate Attributes
-    //Customer_ID
-    //Prod_ID
+    //Validate Attribute
     //Count
     public int validateCount(int count) throws DB_SubscriptionExceptionHandler{
         if(count > 0 && count < 99)
@@ -52,22 +49,6 @@ public class DB_Subscription {
     }
 
 
-    /**
-     * A list of columnIndexes for resultSet
-     */
-    public enum attributes {
-        customer(1),
-        product(2),
-        count(3);
-
-        public final int index;
-
-        attributes(int i) {
-            this.index = i;
-        }
-   }
-
-
     public int getCount() {
         return count;
     }
@@ -76,16 +57,16 @@ public class DB_Subscription {
         this.count = count;
     }
 
-    public int getSize() {
-        return size;
-    }
-
-    public void setSize(int size) {
-        this.size = size;
-    }
-
     public DB_Customer getCustomer() {
         return customer;
+    }
+
+    public DB_Publication getPublication() {
+        return publication;
+    }
+
+    public void setPublication(DB_Publication publication) {
+        this.publication = publication;
     }
 
     public void setCustomer(DB_Customer customer) {

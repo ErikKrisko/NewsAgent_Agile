@@ -3,6 +3,7 @@ import junit.framework.TestCase;
 public class DAOTestSubscription extends TestCase {
     //Global DAO object reference
     private DAO dao;
+    DB_Subscription subscription = new DB_Subscription();
 
     public DAOTestSubscription() {
         try{
@@ -43,7 +44,8 @@ public class DAOTestSubscription extends TestCase {
     /** Test 002 for subscription by customer id which is equal to 1
      *  Test subscription by customer for ID = 1
      *  =========================================
-     *  Input(s):int ID = 1
+     *  Input(s):
+     *  int ID = 1
      *  DB_Subscription test_subscription = dao.getSubscriptionByCustomer(ID);
      *  ==========================================
      *  Expected Output(s):
@@ -60,6 +62,16 @@ public class DAOTestSubscription extends TestCase {
         }
     }
 
+    /** Test 003 for subscription by customer id which is equal to 2
+     * Test subscription by customer for ID = 2
+     * =======================================
+     * Input(s):
+     * int ID =2
+     * DB_Subscription test_subscription = dao.getSubscriptionByCustomer(ID);
+     * =======================================
+     * Expected Output(s):
+     * test_subscription.getCustomer().getCustomer_id());
+     */
     public void testGetSubscriptionByCustomer003(){
         int ID = 2;
         try{
@@ -71,6 +83,16 @@ public class DAOTestSubscription extends TestCase {
         }
     }
 
+    /** Test 004 for subscription by customer id which is equal to 3
+     * Test subscription by customer for ID = 3
+     * ========================================
+     * Input(s):
+     * int ID = 3
+     * DB_Subscription test_subscription = dao.getSubscriptionByCustomer(ID);
+     * =========================================
+     * Expected Output(s):
+     * test_subscription.getCustomer().getCustomer_id());
+     */
     public void testGetSubscriptionByCustomer004(){
         int ID= 3;
         try {
@@ -82,6 +104,16 @@ public class DAOTestSubscription extends TestCase {
         }
     }
 
+    /** Test 005 for subscription by customer id which is equal to 4
+     * Test subscription by customer for ID = 4
+     * ========================================
+     * Input(s):
+     * int ID = 4
+     * DB_Subscription test_subscription = dao.getSubscriptionByCustomer(ID);
+     * ========================================
+     * Expected Output(s):
+     * test_subscription.getCustomer().getCustomer_id());
+     */
     public void testGetSubscriptionByCustomer005(){
         int ID= 4;
         try{
@@ -93,6 +125,16 @@ public class DAOTestSubscription extends TestCase {
         }
     }
 
+    /** Test 006 for subscription by customer id which is equal to 5
+     * Test subscription by customer for ID = 5
+     * ========================================
+     * Input(s):
+     * int ID = 5
+     * DB_Subscription test_subscription = dao.getSubscriptionByCustomer(ID);
+     * ========================================
+     * Expected Output(s):
+     * test_subscription.getCustomer().getCustomer_id());
+     */
     public void testGetSubscriptionByCustomer006(){
         int ID = 5;
         try{
@@ -103,6 +145,16 @@ public class DAOTestSubscription extends TestCase {
         }
     }
 
+    /** Test 007 for subscription by count  which is equal to -1
+     * Test subscription by count = -1
+     * ===============================
+     * Input(s):
+     * int count -1
+     * DB_Subscription test_subscription = dao.getSubscriptionByCount(count);
+     * ================================
+     * Expected Output(s):
+     * test_subscription.getCount());
+     */
     public void testGetSubscriptionByCount001(){
         int count = -1;
         try{
@@ -113,6 +165,16 @@ public class DAOTestSubscription extends TestCase {
         }
     }
 
+    /** Test 008 for subscription by count  which is equal to 2
+     * Test subscription by count = 2
+     * ===============================
+     * Input(s):
+     * int count 2
+     * DB_Subscription test_subscription = dao.getSubscriptionByCount(count);
+     * ================================
+     * Expected Output(s):
+     * test_subscription.getCount());
+     */
     public void testGetSubscriptionByCount002(){
         int count = 2;
         try{
@@ -123,6 +185,16 @@ public class DAOTestSubscription extends TestCase {
         }
     }
 
+    /** Test 009 for subscription by count  which is equal to 4
+     * Test subscription by count = 4
+     * ===============================
+     * Input(s):
+     * int count 4
+     * DB_Subscription test_subscription = dao.getSubscriptionByCount(count);
+     * ================================
+     * Expected Output(s):
+     * test_subscription.getCount());
+     */
     public void testGetSubscriptionByCount003(){
         int count = 4;
         try{
@@ -133,6 +205,16 @@ public class DAOTestSubscription extends TestCase {
         }
     }
 
+    /** Test 010 for subscription by count  which is equal to 5
+     * Test subscription by count = 5
+     * ===============================
+     * Input(s):
+     * int count 5
+     * DB_Subscription test_subscription = dao.getSubscriptionByCount(count);
+     * ================================
+     * Expected Output(s):
+     * test_subscription.getCount());
+     */
     public void testGetSubscriptionByCount004(){
         int count = 5;
         try{
@@ -142,6 +224,16 @@ public class DAOTestSubscription extends TestCase {
         }
     }
 
+    /** Test 011 for subscription by count  which is equal to 1
+     * Test subscription by count = 1
+     * ===============================
+     * Input(s):
+     * int count 1
+     * DB_Subscription test_subscription = dao.getSubscriptionByCount(count);
+     * ================================
+     * Expected Output(s):
+     * test_subscription.getCount());
+     */
     public void  testGetSubscriptionByCount005(){
         int count = 1;
         try{
@@ -151,127 +243,227 @@ public class DAOTestSubscription extends TestCase {
         }
     }
 
-    /** Test 003 GetSubscriptionByCustomer()
-     *  Test to get all customers ID
-     *  ====================================
-     *  Input(s):
-     *  LinkedList<DB_customer> test_subscription = dao.getSubscription(null);
-     *  ====================================
-     *  Excepted Output(s):
-     *  test_subscription1.getSubscriptionByCustomer() = 1
-     *  --------------------------------------------------
-     *  test_subscription1.getSubscriptionByCustomer() = 2
-     *  --------------------------------------------------
-     *  test_subscription1.getSubscriptionByCustomer() = 3
-     *  --------------------------------------------------
-     *  test_subscription1.getSubscriptionByCustomer() = 4
-     *  --------------------------------------------------
-     *  test_subscription1.getSubscriptionByCustomer() = 5
+    /** Test 012 for subscription by publication which is equal to -1
+     * Test subscription by publication = -1
+     * ===============================
+     * Input(s):
+     * int count -1
+     * DB_Subscription test_subscription = dao.getSubscriptionByPublication(prod_id);
+     * ================================
+     * Expected Output(s):
+     * test_subscription.getPublication());
      */
-
     public void testGetSubscriptionByPublication001() {
         int prod_ID = -1;
         try {
             DB_Subscription test_subscription = dao.getSubscriptionByPublication(prod_ID);
-            assertEquals(-1,test_subscription.getPublication().getPublication_id());
+            assertEquals(-1,test_subscription.getPublication().getProd_id());
         }catch(DAOExceptionHandler e){
-            assertEquals("No subscription with this publication ID =" + prod_ID + e.getMessage());
+            fail("Exception not excepted");
         }
     }
 
+//    public void testGetSubscriptionByCustomer006(){
+//        int ID = 5;
+//        try{
+//            DB_Subscription test_subscription = dao.getSubscriptionByCustomer(ID);
+//            assertEquals(5,test_subscription.getCustomer().getCustomer_id());
+//        }catch (DAOExceptionHandler e){
+//            fail("Exception not excepted");
+//        }
+//    }
+
+    /** Test 013 for subscription by publication which is equal to 1
+     * Test subscription by publication = 1
+     * ===============================
+     * Input(s):
+     * int count 1
+     * DB_Subscription test_subscription = dao.getSubscriptionByPublication(prod_id);
+     * ================================
+     * Expected Output(s):
+     * test_subscription.getPublication());
+     */
     public void testGetSubscriptionByPublication002(){
         int prod_ID = 1;
         try {
             DB_Subscription test_subscription = dao.getSubscriptionByPublication(prod_ID);
-            assertEquals(1,test_subscription.getPublication().getPublication_id());
+            assertEquals(1,test_subscription.getPublication().getProd_id());
         }catch(DAOExceptionHandler e){
-            assertEquals("No subscription with this publication ID =" + prod_ID + e.getMessage());
-        }
+            fail("Exception not excepted");}
     }
 
+    /** Test 014 for subscription by publication which is equal to 1
+     * Test subscription by count = 1
+     * ===============================
+     * Input(s):
+     * int count 1
+     * DB_Subscription test_subscription = dao.getSubscriptionByPublication(prod_ID);
+     * ================================
+     * Expected Output(s):
+     * test_subscription.getPublication());
+     */
     public void testGetSubscriptionByPublication003(){
         int prod_ID = 1;
         try {
             DB_Subscription test_subscription = dao.getSubscriptionByPublication(prod_ID);
-            assertEquals(1,test_subscription.getPublication().getPublication_id());
+            assertEquals(1,test_subscription.getPublication().getProd_id());
         }catch(DAOExceptionHandler e){
-            assertEquals("No subscription with this publication ID =" + prod_ID + e.getMessage());
+            fail("Exception not excepted");
         }
     }
 
+    /** Test 015 for subscription by count  which is equal to 1
+     * Test subscription by count = 1
+     * ===============================
+     * Input(s):
+     * int count 1
+     * DB_Subscription test_subscription = dao.getSubscriptionByPublication(prod_ID);
+     * ================================
+     * Expected Output(s):
+     * test_subscription.getPublication());
+     */
     public void testGetSubscriptionByPublication004(){
         int prod_ID = 1;
         try {
             DB_Subscription test_subscription = dao.getSubscriptionByPublication(prod_ID);
-            assertEquals(1,test_subscription.getPublication().getPublication_id());
+            assertEquals(1,test_subscription.getPublication().getProd_id());
         }catch(DAOExceptionHandler e){
-            assertEquals("No subscription with this publication ID =" + prod_ID + e.getMessage());
+            assertEquals("No subscription with this publication ID =" + prod_ID, e.getMessage());
         }
     }
 
-    public void testGetSubscriptionByPublication005(){
+    /** Test 016 for subscription by count  which is equal to 1
+     * Test subscription by count = 1
+     * ===============================
+     * Input(s):
+     * int count 1
+     * DB_Subscription test_subscription = dao.getSubscriptionByPublication(prod_ID);
+     * ================================
+     * Expected Output(s):
+     * test_subscription.getPublication());
+     */
+
+    public void testGetSubscriptionByPublication005() {
         int prod_ID = 1;
         try{
             DB_Subscription test_subscription = dao.getSubscriptionByPublication(prod_ID);
-            assertEquals(1,test_subscription.get);
+            assertEquals(1,test_subscription.getPublication().getProd_id());
         }catch(DAOExceptionHandler e){
-            DB_Subscription test_subscription = dao.getSubscriptionByPublication(prod_ID);
-            assertEquals();
+            //DB_Subscription test_subscription = dao.getSubscriptionByPublication(prod_ID);
+            assertEquals("No subscription with this publication ID=" + prod_ID, e.getMessage());
 
         }
     }
+
+    /** Test 017 for updateSubscription()
+     * Test a new insert into subscription
+     * ===================================
+     * Input(s):
+     *  subscription = dao.getSubscription(1, 1);
+     *   subscription.setCount(3);
+     * ===================================
+     * Expected Output(s):
+     * subscription2.getCount(), subscription.getCount()
+     */
     public void testUpdateSubscription001() {
         try{
-            DB_Subscription test_subscription = new DB_Subscription(-1,-1,-1);
-            dao.updateSubscription(test_subscription);
-            assertEquals(1,test_subscription.getSubscription());
-            assertTrue(test_subscription.equals(dao.getSubscription(-1,-1)));
-        }catch (DAOExceptionHandler | DB_SubscriptionExceptionHandler e){
+           subscription = dao.getSubscription(1,1);
+           subscription.setCount(3);
+           dao.updateSubscription(subscription);
+
+           DB_Subscription subscription2 = new DB_Subscription();
+           subscription2 = dao.getSubscription(1,1);
+           assertEquals(subscription2.getCount(), subscription.getCount());
+        }catch (DAOExceptionHandler e ){
             e.printStackTrace();
             fail("Exception not expected");
         }
     }
 
+    /** Test 017 for updateSubscription()
+     * Test a new insert into subscription
+     * ===================================
+     * Input(s):
+     * subscription = dao.getSubscription(2, 1)
+     * subscription.setCount(2);
+     * ===================================
+     * Expected Output(s):
+     * subscription2.getCount(), subscription.getCount()
+     */
     public void testUpdateSubscription002() {
-        try{
-            DB_Subscription test_subscription = new DB_Subscription(1,1,1);
-            dao.updateSubscription(test_subscription);
-            assertEquals(1,test_subscription.getSubscription());
-            assertTrue(test_subscription.equals(dao.getSubscription(1,1)));
-        }catch (DAOExceptionHandler | DB_SubscriptionExceptionHandler e){
+        try {
+            subscription = dao.getSubscription(2, 1);
+            subscription.setCount(2);
+            dao.updateSubscription(subscription);
+
+            DB_Subscription subscription2 = new DB_Subscription();
+            subscription2 = dao.getSubscription(2, 1);
+            assertEquals(subscription2.getCount(), subscription.getCount());
+        } catch (DAOExceptionHandler e) {
             e.printStackTrace();
             fail("Exception not expected");
         }
     }
 
-    public void testUpdateSubscription003() {
-        try{
-            DB_Subscription test_subscription = new DB_Subscription(2,2,2);
-            dao.updateSubscription(test_subscription);
-            assertEquals(1,test_subscription.getSubscription());
-            assertTrue(test_subscription.equals(dao.getSubscription(2,2)));
-        }catch (DAOExceptionHandler | DB_SubscriptionExceptionHandler e){
-            e.printStackTrace();
-            fail("Exception not expected");
+    /** Test 017 for updateSubscription()
+     * Test a new insert into subscription
+     * ===================================
+     * Input(s):
+     * subscription = dao.getSubscription(3, 1)
+     * subscription.setCount(4);
+     * ===================================
+     * Expected Output(s):
+     * subscription2.getCount(), subscription.getCount()
+     */
+
+        public void testUpdateSubscription003() {
+            try {
+                subscription = dao.getSubscription(3, 1);
+                subscription.setCount(4);
+                dao.updateSubscription(subscription);
+
+                DB_Subscription subscription2 = new DB_Subscription();
+                subscription2 = dao.getSubscription(3, 1);
+                assertEquals(subscription2.getCount(), subscription.getCount());
+            } catch (DAOExceptionHandler e) {
+                e.printStackTrace();
+                fail("Exception not expected");
+            }
         }
-    }
-    public void testUpdateSubscription004() {
+
+    /** Test 017 for updateSubscription()
+     * Test a new insert into subscription
+     * ===================================
+     * Input(s):
+     * subscription = dao.getSubscription(4,1);
+     * subscription.setCount(5);
+     * dao.updateSubscription(subscription);
+     * ===================================
+     * Expected Output(s):
+     * subscription2.getCount(), subscription.getCount()
+     */
+
+    public void testUpdateSubscription004(){
         try{
-            DB_Subscription test_subscription = new DB_Subscription(3,3,3);
-            dao.updateSubscription(test_subscription);
-            assertEquals(1,test_subscription.getSubscription());
-            assertTrue(test_subscription.equals(dao.getSubscription(1,1)));
-        }catch (DAOExceptionHandler | DB_SubscriptionExceptionHandler e){
+            subscription = dao.getSubscription(4,1);
+            subscription.setCount(5);
+            dao.updateSubscription(subscription);
+
+            DB_Subscription subscription2 = new DB_Subscription();
+            subscription2 = dao.getSubscription(4,1);
+            assertEquals(subscription2.getCount(), subscription.getCount());
+        }catch (DAOExceptionHandler e){
             e.printStackTrace();
             fail("Exception not expected");
         }
     }
 
-    /** Test UpdateSubscription()
+    /** Test 018 UpdateSubscription()
      * Test update for subscription that does not exist
      * ================================================
      * Input(s):
-     *  DB_Subscription test_subscription = new DB_Subscription();
+     *  subscription = dao.getSubscription(5,1);
+     *   subscription.setCount(1);
      *  dao.updateSubscription(test_subscription)
      * =================================================
      * Expected Output(s):
@@ -279,137 +471,125 @@ public class DAOTestSubscription extends TestCase {
      */
     public void testUpdateSubscription005() {
         try{
-            DB_Subscription test_subscription = new DB_Subscription();
-            test_subscription.setCustomer(4);
-            dao.updateSubscription(test_subscription);
-            assertEquals(1,test_subscription.getSubscription());
-            assertTrue(test_subscription.equals(dao.getSubscription(1,1)));
-        }catch (DAOExceptionHandler | DB_SubscriptionExceptionHandler e){
+            subscription = dao.getSubscription(5,1);
+            subscription.setCount(1);
+            dao.updateSubscription(subscription);
+
+            DB_Subscription subscription2 = new DB_Subscription();
+            subscription2 = dao.getSubscription(5,1);
+            assertEquals(subscription2.getCount(), subscription.getCount());
+        }catch (DAOExceptionHandler e){
             e.printStackTrace();
             fail("Exception not expected");
         }
     }
 
-    /**Test deleteSubscription()
+    /**Test 019 deleteSubscription()
      * Test subscription deleting failing for no count found
      * =====================================================
      * Input(s):
-     * DB_Subscription test_subscription = new DB_Subscription();
-     *             test_subscription.setCount(-1);
-     *             dao.deleteSubscription(test_subscription);
+     * subscription.setCount(-1);
      * =====================================================
      * Expected Output(s):
-     * DAOExceptionHandler = "Can't delete count with number = '-1', does not exist in database"
+     * "No subscription with 'count=" + subscription.getCount() + "found"
      */
 
     public void testDeleteSubscription001(){
         try{
-            DB_Subscription test_subscription = new DB_Subscription();
-            test_subscription.setCount(-1);
-            dao.deleteSubscription(test_subscription);
+            subscription.setCount(-1);
+            dao.deleteSubscription(subscription);
             fail("Exception expected");
         }catch (DAOExceptionHandler e){
-            assertEquals("Can't delete count with number = '-1', does not exist in database", e.getMessage());
-            e.printStackTrace();
-            fail("DB_SubscriptionExceptionHandler Exception not expected");
+            assertEquals("No subscription with 'count=" + subscription.getCount() + "found", e.getMessage());
         }
     }
 
-    /**Test deleteSubscription()
+    /**Test 020 deleteSubscription()
      * Test subscription deleting failing for no count found
      * =====================================================
      * Input(s):
-     * DB_Subscription test_subscription = new DB_Subscription();
-     *             test_subscription.setCount(1);
-     *             dao.deleteSubscription(test_subscription);
+     * subscription.setCount(3);
      * =====================================================
      * Expected Output(s):
-     * DAOExceptionHandler = "Can't delete count with number = '1', does not exist in database"
+     * "No subscription with 'count=" + subscription.getCount() + "found"
      */
 
     public void testDeleteSubscription002(){
         try{
-            DB_Subscription test_subscription = new DB_Subscription();
-            test_subscription.setCount(1);
-            dao.deleteSubscription(test_subscription);
+            subscription.setCount(3);
+            dao.deleteSubscription(subscription);
             fail("Exception expected");
         }catch (DAOExceptionHandler e){
-            assertEquals("Can't delete count with number = '1', does not exist in database", e.getMessage());
-            e.printStackTrace();
-            fail("DB_SubscriptionExceptionHandler Exception not expected");
+            assertEquals("No subscription with 'count=" + subscription.getCount() + "found", e.getMessage());
         }
     }
 
-    /**Test deleteSubscription()
+    /**Test 021 deleteSubscription()
      * Test subscription deleting failing for no count found
      * =====================================================
      * Input(s):
-     * DB_Subscription test_subscription = new DB_Subscription();
-     *             test_subscription.setCount(2);
-     *             dao.deleteSubscription(test_subscription);
+     *  subscription.setCount(2);
      * =====================================================
      * Expected Output(s):
-     * DAOExceptionHandler = "Can't delete count with number = '2', does not exist in database"
+     * "No subscription with 'count=" + subscription.getCount() + "found"
      */
 
     public void testDeleteSubscription003(){
         try{
-            DB_Subscription test_subscription = new DB_Subscription();
-            test_subscription.setCount(2);
-            dao.deleteSubscription(test_subscription);
+            subscription.setCount(2);
+            dao.deleteSubscription(subscription);
             fail("Exception expected");
         }catch (DAOExceptionHandler e){
-            assertEquals("Can't delete count with number = '2', does not exist in database", e.getMessage());
-            e.printStackTrace();
-            fail("DB_SubscriptionExceptionHandler Exception not expected");
+            assertEquals("No subscription with 'count=" + subscription.getCount() + "found", e.getMessage());
         }
     }
-    /**Test deleteSubscription()
+    /**Test 022 deleteSubscription()
      * Test subscription deleting failing for no count found
      * =====================================================
      * Input(s):
-     * DB_Subscription test_subscription = new DB_Subscription();
-     *             test_subscription.setCount(3);
-     *             dao.deleteSubscription(test_subscription);
+     *  subscription.setCount(4);
      * =====================================================
      * Expected Output(s):
-     * DAOExceptionHandler = "Can't delete count with number = '3', does not exist in database"
+     *"No subscription with 'count=" + subscription.getCount() + "found"
      */
 
     public void testDeleteSubscription004(){
         try{
-            DB_Subscription test_subscription = new DB_Subscription();
-            test_subscription.setCount(3);
-            dao.deleteSubscription(test_subscription);
+            subscription.setCount(4);
+            dao.deleteSubscription(subscription);
             fail("Exception expected");
         }catch (DAOExceptionHandler e){
-            assertEquals("Can't delete count with number = '3', does not exist in database", e.getMessage());
-            e.printStackTrace();
-            fail("DB_SubscriptionExceptionHandler Exception not expected");
+            assertEquals("No subscription with 'count=" + subscription.getCount() + "found", e.getMessage());
         }
     }
 
-    /**Test deleteSubscription()
+
+    /**Test 023 deleteSubscription()
      * Test subscription deleting failing for no count found
      * =====================================================
      * Input(s):
-     * DB_Subscription test_subscription = new DB_Subscription();
-     *             test_subscription.setCount(4);
-     *             dao.deleteSubscription(test_subscription);
+     *  subscription.setCount(5);
      * =====================================================
      * Expected Output(s):
-     * DAOExceptionHandler = "Can't delete count with number = '4', does not exist in database"
+     * "No subscription with 'count=" + subscription.getCount() + "found"
      */
     public void testDeleteSubscription005(){
         try{
-            DB_Subscription test_subscription = new DB_Subscription();
-            test_subscription.setCount(4);
-            dao.deleteSubscription(test_subscription);
+            subscription.setCount(5);
+            dao.deleteSubscription(subscription);
             fail("Exception expected");
         }catch (DAOExceptionHandler e){
-            assertEquals("Can't delete count with number = '4', does not exist in database", e.getMessage());
-            e.printStackTrace();
-            fail("DB_SubscriptionExceptionHandler Exception not expected");
+            assertEquals("No subscription with 'count=" + subscription.getCount() + "found", e.getMessage());
+        }
+    }
+
+    public void testDeleteSubscription006(){
+        try{
+            subscription.setCount(1);
+            dao.deleteSubscription(subscription);
+            fail("Exception expected");
+        }catch (DAOExceptionHandler e){
+            assertEquals("No subscription with 'count=" + subscription.getCount() + "found", e.getMessage());
         }
     }
 }
