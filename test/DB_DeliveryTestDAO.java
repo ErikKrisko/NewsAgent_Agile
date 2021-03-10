@@ -39,8 +39,8 @@ public class DB_DeliveryTestDAO extends TestCase {
             assertEquals(1, delivery.getDelivery_id());
             assertEquals(Date.valueOf("2022-01-05"), delivery.getDelivery_date());
             assertEquals(true, delivery.isDelivery_status());
-            assertEquals(1, delivery.getCustomer().getCustomer_id());
-            assertEquals(1, delivery.getInvoice().getInvoice_id());
+            assertEquals(1, delivery.getCustomer_id());
+            assertEquals(1, delivery.getInvoice_id());
         } catch (DAOExceptionHandler e) {
             e.printStackTrace();
             fail("Exception not expected.");
@@ -79,8 +79,8 @@ public class DB_DeliveryTestDAO extends TestCase {
             delivery.setDelivery_id(0);
             delivery.setDelivery_date(Date.valueOf("2021-04-05"));
             delivery.setDelivery_status(true);
-            delivery.setCustomer(dao.getCustomer(1));
-            delivery.setInvoice(dao.getInvoice(3));
+            delivery.setCustomer_id((1));
+            delivery.setInvoice_id((3));
             dao.updateDelivery(delivery);
             assertEquals(6, delivery.getDelivery_id());
             assertEquals(Date.valueOf("2021-04-05"), delivery.getDelivery_date());
@@ -105,8 +105,8 @@ public class DB_DeliveryTestDAO extends TestCase {
             delivery = dao.getDelivery(1);
             delivery.setDelivery_date(Date.valueOf("2022-08-24"));
             delivery.setDelivery_status(false);
-            delivery.setCustomer(dao.getCustomer(3));
-            delivery.setInvoice(dao.getInvoice(3));
+            delivery.setCustomer_id(3);
+            delivery.setInvoice_id(3);
             dao.updateDelivery(delivery);
             DB_Delivery delivery2 = dao.getDelivery(1);
 
@@ -116,8 +116,8 @@ public class DB_DeliveryTestDAO extends TestCase {
             assertEquals(delivery2.getDelivery_id(), delivery.getDelivery_id());
             assertEquals(delivery2.getDelivery_date(), delivery.getDelivery_date());
             assertEquals(delivery2.getDelivery_status(), delivery.getDelivery_status());
-            assertEquals(delivery2.getCustomer().getCustomer_id(), delivery.getCustomer().getCustomer_id());
-            assertEquals(delivery2.getInvoice().getInvoice_id(), delivery.getInvoice().getInvoice_id());
+            assertEquals(delivery2.getCustomer_id(), delivery.getCustomer_id());
+            assertEquals(delivery2.getInvoice_id(), delivery.getInvoice_id());
 
         } catch (DAOExceptionHandler | DB_DeliveryExceptionHandler e) {
             e.printStackTrace();
@@ -139,8 +139,8 @@ public class DB_DeliveryTestDAO extends TestCase {
             delivery.setDelivery_id(9);
             delivery.setDelivery_date(Date.valueOf("2022-08-24"));
             delivery.setDelivery_status(false);
-            delivery.setCustomer(dao.getCustomer(3));
-            delivery.setInvoice(dao.getInvoice(3));
+            delivery.setCustomer_id((3));
+            delivery.setInvoice_id((3));
 
             dao.updateDelivery(delivery);
 
