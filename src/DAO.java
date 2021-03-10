@@ -592,7 +592,7 @@ public class DAO {
 
                     String update = "UPDATE employee SET ";
                     update += att_employee.first_name.columnName + " = '" + employee.getFirst_name() + "', ";
-                    update += att_employee.last_name.columnName + " = " + employee.getLast_name() + ", ";
+                    update += att_employee.last_name.columnName + " = '" + employee.getLast_name() + "' ";
                     update += "WHERE " + att_employee.employee_id.columnName + " = " + employee.getEmployee_id();
 
                     PreparedStatement pstmt = con.prepareStatement(update);

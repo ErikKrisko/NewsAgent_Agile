@@ -92,7 +92,7 @@ public class DB_EmployeeTestDAO extends TestCase
      */
     public void testDB_updateEmployeeTestDAO001(){
         try {
-            employee = dao.getEmployee(2);
+            employee = dao.getEmployee(1);
             employee.setFirst_name("Benjamin");
             employee.setLast_name("Sire");
             dao.updateEmployee(employee);
