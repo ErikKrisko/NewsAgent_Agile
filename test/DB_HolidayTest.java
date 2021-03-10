@@ -95,7 +95,7 @@ public class DB_HolidayTest extends TestCase {
      */
     public void testDB_Holiday006() {
         try {
-            new DB_Holiday( -1, Date.valueOf("2000-01-01"), Date.valueOf("2000-01-10"), new DB_Customer());
+            new DB_Holiday( -1, Date.valueOf("2000-01-01"), Date.valueOf("2000-01-10"), 1);
             fail("Exception expected");
         } catch (DB_HolidayExceptionHandler e) {
             assertEquals( "ID must be 0 or greater.", e.getMessage());
@@ -113,7 +113,7 @@ public class DB_HolidayTest extends TestCase {
      */
     public void testDB_Holiday007() {
         try {
-            DB_Holiday test = new DB_Holiday( 0, Date.valueOf("2000-01-01"), Date.valueOf("2000-01-10"), new DB_Customer());
+            DB_Holiday test = new DB_Holiday( 0, Date.valueOf("2000-01-01"), Date.valueOf("2000-01-10"), 1);
             assertEquals( 0, test.getHoliday_id());
             assertEquals( Date.valueOf("2000-01-01"), test.getStart_date());
             assertEquals( Date.valueOf("2000-01-10"), test.getEnd_date());

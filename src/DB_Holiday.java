@@ -2,19 +2,18 @@ import java.sql.Date;
 
 public class DB_Holiday {
     //  Base holiday attributes
-    private long holiday_id;
+    private long holiday_id, customer_id;
     private Date start_date, end_date;
-    private DB_Customer customer;
 
     /** Blank Constructor for DB_Holiday.
      */
     public DB_Holiday() { }
 
-    public DB_Holiday (long holiday_id, Date start_date, Date end_date, DB_Customer customer) throws DB_HolidayExceptionHandler {
+    public DB_Holiday (long holiday_id, Date start_date, Date end_date, long customer_id) throws DB_HolidayExceptionHandler {
         this.holiday_id = validateID( holiday_id);
         this.start_date = validateStartDate( start_date);
         this.end_date = validateEndDate( end_date);
-        this.customer = customer;
+        this.customer_id = customer_id;
     }
 
     /** Validates the starting holiday date to be after the year 2000
@@ -53,7 +52,7 @@ public class DB_Holiday {
             throw new DB_HolidayExceptionHandler("ID must be 0 or greater.");
     }
 
-    //  New equals method. Overrides original one for easier use with ArrayLists.
+    //  OLD equals method. Overrides original one for easier use with ArrayLists.
     @Override
     public boolean equals(Object obj) {
         //  Check if object is DB_Holiday if not dont even compare
@@ -76,6 +75,21 @@ public class DB_Holiday {
             return false;
     }
 
+    //  Nes equals method for direct comparison to be used in code
+    public boolean equals (DB_Holiday holiday) {
+        boolean equals = true;
+        //  Compare ID
+        if (this.getHoliday_id() != holiday.getHoliday_id())
+            equals = false;
+        //  Compare Start Date
+        if (equals && !this.start_date.equals(holiday.start_date))
+            equals = false;
+        //  Compare End Date
+        if (equals && !this.end_date.equals(holiday.end_date))
+            equals = false;
+        return equals;
+    }
+
     //  AUTO GENERATED toString
     @Override
     public String toString() {
@@ -93,8 +107,8 @@ public class DB_Holiday {
     public void setStart_date(Date start_date) throws DB_HolidayExceptionHandler { this.start_date = validateStartDate( start_date); }
     public Date getEnd_date() { return end_date; }
     public void setEnd_date(Date end_date) throws DB_HolidayExceptionHandler { this.end_date = validateEndDate( end_date); }
-    public DB_Customer getCustomer() { return customer; }
-    public void setCustomer(DB_Customer customer) { this.customer = customer; }
+    public long getCustomer_id() { return customer_id; }
+    public void setCustomer_id(long customer_id) { this.customer_id = customer_id; }
 }
 
 /** This is the SQL table layout reference in java code.

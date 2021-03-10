@@ -61,7 +61,7 @@ public class DAOTestHoliday extends TestCase {
             assertEquals( 1, test_holiday.getHoliday_id());
             assertEquals( Date.valueOf("2021-02-10"), test_holiday.getStart_date());
             assertEquals( Date.valueOf("2021-02-15"), test_holiday.getEnd_date());
-            assertTrue( dao.getCustomer( 1).equals( test_holiday.getCustomer()));
+            assertEquals( 1, test_holiday.getCustomer_id());
         } catch (DAOExceptionHandler e) {
             e.printStackTrace();
             fail("Exception not expected.");
@@ -74,9 +74,9 @@ public class DAOTestHoliday extends TestCase {
      */
     public void testUpdateHolidays002() {
         try {
-            DB_Holiday test_holiday = new DB_Holiday(0, Date.valueOf("2021-03-01"), Date.valueOf("2021-03-08"), dao.getCustomer( 1));
+            DB_Holiday test_holiday = new DB_Holiday(0, Date.valueOf("2021-03-01"), Date.valueOf("2021-03-08"), 1);
 
-        } catch (DAOExceptionHandler | DB_HolidayExceptionHandler e) {
+        } catch (DB_HolidayExceptionHandler e) {
             e.printStackTrace();
             fail("Exception not expected.");
         }

@@ -227,8 +227,6 @@ public class DAO {
                     rs.getString( Att_Customer.phone_no.column),
                     getAddress( rs.getInt(Att_Customer.address.column))
             );
-            //  Request and set customer Holidays.
-            customer.setHolidays( getHolidays(customer));
             return customer;
         }
         catch (SQLException | DB_CustomerExceptionHandler e) {
@@ -365,7 +363,7 @@ public class DAO {
                             rs.getLong(Att_Holiday.holiday_id.column),
                             rs.getDate(Att_Holiday.start_date.column),
                             rs.getDate(Att_Holiday.end_date.column),
-                            customer
+                            rs.getLong(Att_Holiday.customer.column)
                     ));
                 } while (rs.next());
                 rs.close();
@@ -393,7 +391,7 @@ public class DAO {
                 PreparedStatement ps = con.prepareStatement("INSERT INTO holiday VALUES(null, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
                 ps.setDate( Att_Holiday.start_date.column - 1, holiday.getStart_date());
                 ps.setDate( Att_Holiday.end_date.column - 1, holiday.getEnd_date());
-                ps.setLong( Att_Holiday.customer.column - 1, holiday.getCustomer().getCustomer_id());
+                ps.setLong( Att_Holiday.customer.column - 1, holiday.getCustomer_id());
                 int lines = ps.executeUpdate();
                 ResultSet keys = ps.getGeneratedKeys();
                 if ( keys.next())
@@ -411,7 +409,7 @@ public class DAO {
                     //  Concatenate strings
                     update += Att_Holiday.start_date.name + " = '" + holiday.getStart_date() + "', ";
                     update += Att_Holiday.end_date.name + " = '" + holiday.getEnd_date() + "', ";
-                    update += Att_Holiday.customer.name + " = " + holiday.getCustomer().getCustomer_id();
+                    update += Att_Holiday.customer.name + " = " + holiday.getCustomer_id();
                     //  Specify update target
                     update += "WHERE " + Att_Holiday.holiday_id.name + " = " + holiday.getHoliday_id();
                     //  Execute update
