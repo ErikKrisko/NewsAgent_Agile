@@ -11,6 +11,7 @@ public class newsagent_interface {
     static DB_Customer customer = null;
     static DB_Delivery delivery = null;
     static DB_Invoice invoice = null;
+    static DB_Employee employee = null;
 
     public static void main(String[] args){
         try {
@@ -26,7 +27,7 @@ public class newsagent_interface {
 
             //  Main menu controller values
             int menuChoice = 0;
-            final int MENU_EXIT = 6;
+            final int MENU_EXIT = 7;
 
             //  Main menu loop
             while (menuChoice != MENU_EXIT) {
@@ -43,9 +44,11 @@ public class newsagent_interface {
                         //  Delivery menu selected
                         case 4 -> deliveryMenu();
 
+                        //  Employee menu selected
+                        case 6 -> employeeMenu();
 
                         //  Close
-                        case 6 -> System.out.println("Exiting...");
+                        case 7 -> System.out.println("Exiting...");
                         //  Error for unused menus / inputs
                         default -> System.out.println("Invalid Choice.");
                     }
@@ -197,9 +200,9 @@ public class newsagent_interface {
                             System.out.println("Enter delivery status (true or false): ");
                             delivery.setDelivery_status(Boolean.valueOf(sc.next()));
                             System.out.println("Enter the customer id: ");
-                            delivery.setCustomer(dao.getCustomer(sc.nextInt()));
+                            delivery.setCustomer_id((sc.nextLong()));
                             System.out.println("Enter the invoice id: ");
-                            delivery.setInvoice(dao.getInvoice(sc.nextInt()));
+                            delivery.setInvoice_id((sc.nextLong()));
                             System.out.println(delivery);
                         }
                         //Load existing delivery
@@ -223,13 +226,13 @@ public class newsagent_interface {
                                 if(sc.hasNextLine() && sc.hasNext()){
                                     delivery.setDelivery_status(Boolean.valueOf(sc.next()));
                                 }
-                                System.out.println("Customer id: " + delivery.getCustomer().getCustomer_id());
+                                System.out.println("Customer id: " + delivery.getCustomer_id());
                                 if(sc.hasNextLine() && sc.hasNext()){
-                                    delivery.setCustomer(dao.getCustomer(sc.nextInt()));
+                                    delivery.setCustomer_id(sc.nextLong());
                                 }
-                                System.out.println("Invoice id: " + delivery.getInvoice().getInvoice_id());
+                                System.out.println("Invoice id: " + delivery.getInvoice_id());
                                 if(sc.hasNextLine() && sc.hasNext()){
-                                    delivery.setInvoice(dao.getInvoice(sc.nextInt()));
+                                    delivery.setInvoice_id(sc.nextInt());
                                 }
                                 System.out.println("Changed delivery: " + delivery);
                             }
@@ -393,6 +396,103 @@ public class newsagent_interface {
         }
     }
 
+    public static void employeeMenu()
+    {
+        try {
+            //Controller values
+            int menuChoice = 0;
+            final int menuExit = 7;
+
+            while(menuChoice != menuExit) {
+                printMenu(4); //Display Menu
+                if(sc.hasNextInt()) {
+                    menuChoice = sc.nextInt();
+                    switch (menuChoice){
+                        //Create new Employee
+                        case 1 -> {
+                            employee = new DB_Employee();
+                            System.out.println("Enter Employee first name: ");
+                            employee.setFirst_name(sc.next());
+                            System.out.println("Enter Employee last name: ");
+                            employee.setLast_name(sc.next());
+
+                            System.out.println(employee);
+                        }
+                        //Load existing Employee
+                        case 2 -> {
+                            System.out.println("Enter Employee id: ");
+                            int devID = sc.nextInt();
+                            employee = dao.getEmployee(devID);
+                            System.out.println(employee);
+                        }
+                        //Edit Employee
+                        case 3 -> {
+                            if(employee == null){
+                                System.out.println("Need to load Employee first.");
+                            }else{
+                                System.out.println("Editing: " + employee);
+                                System.out.println("Employee First Name: " + employee.getFirst_name() + " -> ");
+                                if(sc.hasNextLine() && sc.hasNext()){
+                                    employee.setFirst_name(sc.next());
+                                }
+                                System.out.println("Employee Last Name: " + employee.getLast_name() + " -> ");
+                                if(sc.hasNextLine() && sc.hasNext()){
+                                    employee.setLast_name(sc.next());
+                                }
+                                System.out.println("Changed Employee: " + employee);
+                            }
+                        }
+                        //Insert/Update Employee
+                        case 4 -> {
+                            if(employee == null){
+                                System.out.println("Need to load or create Employee first.");
+                            }else{
+                                System.out.println("Updating Employee: " + employee);
+                                boolean idChange = employee.getEmployee_id() == 0;
+                                dao.updateEmployee(employee);
+                                if(idChange){
+                                    System.out.println("Id changed: " + employee);
+                                }
+                            }
+                        }
+                        //View selected Employee
+                        case 5 -> {
+
+                            if(employee == null){
+                                System.out.println("Need to load or create Employee first.");
+                            }else{
+                                System.out.println(employee);
+                            }
+                        }
+                        //Delete Employee
+                        case 6 -> {
+                            if(employee == null){
+                                System.out.println("Need to load Employee first.");
+                            }
+                            else if(employee.getEmployee_id() == 0){
+                                System.out.println("Employee must be loaded from database.");
+                            }
+                            else{
+                                System.out.println("Deleting: " + employee);
+                                dao.deleteEmployee(employee);
+                                employee = null;
+                            }
+                        }
+                        //Exit
+                        case 7 -> {
+                            System.out.println("Returning to Main Menu.....");
+                            employee = null;
+                        }
+                        default -> System.out.println("Invalid Choice.");
+                    }
+                }
+            }
+            employee = null;
+        }catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void printMenu(int menu) {
         switch (menu) {
             //  Main Menu
@@ -403,7 +503,8 @@ public class newsagent_interface {
                 System.out.println("3. Invoice");
                 System.out.println("4. Delivery");
                 System.out.println("5. Subscription (unimplemented)");
-                System.out.println("6. Exit");
+                System.out.println("6. Employees (unimplemented)");
+                System.out.println("7. Exit");
             }
             //  Customer menu
             case 1 -> {
@@ -417,6 +518,17 @@ public class newsagent_interface {
                 System.out.println("7. Delete");
                 System.out.println("8. To Main Menu");
             }
+            //  Invoice menu
+            case 3 -> {
+                System.out.println("\n=====Invoice Menu=====");
+                System.out.println("1. Create new invoice");
+                System.out.println("2. Load existing ID");
+                System.out.println("3. Edit");
+                System.out.println("4. Update database");
+                System.out.println("5. Check");
+                System.out.println("6. Delete");
+                System.out.println("7. To Main Menu");
+            }
             //  Delivery menu
             case 4 -> {
                 System.out.println("\n=====Delivery Menu=====");
@@ -429,10 +541,10 @@ public class newsagent_interface {
                 System.out.println("7. To Main Menu");
             }
 
-            //  Invoice menu
-            case 3 -> {
-                System.out.println("\n=====Invoice Menu=====");
-                System.out.println("1. Create new invoice");
+            //  Employee menu
+            case 6 -> {
+                System.out.println("\n=====Employee Menu=====");
+                System.out.println("1. Create new employee");
                 System.out.println("2. Load existing ID");
                 System.out.println("3. Edit");
                 System.out.println("4. Update database");
@@ -440,6 +552,7 @@ public class newsagent_interface {
                 System.out.println("6. Delete");
                 System.out.println("7. To Main Menu");
             }
+
             default -> {
                 System.out.println("Invalid menu");
             }

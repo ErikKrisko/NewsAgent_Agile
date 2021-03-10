@@ -485,8 +485,8 @@ public class DAO {
                 PreparedStatement pstmt = con.prepareStatement("INSERT INTO delivery VALUES(null, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
                 pstmt.setDate(att_delivery.delivery_date.column - 1, delivery.getDelivery_date());
                 pstmt.setBoolean(att_delivery.delivery_status.column - 1, delivery.isDelivery_status());
-                pstmt.setLong( att_delivery.customer.column - 1, delivery.getCustomer().getCustomer_id());
-                pstmt.setLong( att_delivery.invoice.column - 1, delivery.getInvoice().getInvoice_id());
+                pstmt.setLong( att_delivery.customer.column - 1, delivery.getCustomer_id());
+                pstmt.setLong( att_delivery.invoice.column - 1, delivery.getInvoice_id());
 
                 int lines = pstmt.executeUpdate();
                 ResultSet keys = pstmt.getGeneratedKeys();
@@ -503,8 +503,8 @@ public class DAO {
                     String update = "UPDATE delivery SET ";
                     update += att_delivery.delivery_date.columnName + " = '" + delivery.getDelivery_date() + "', ";
                     update += att_delivery.delivery_status.columnName + " = " + delivery.getDelivery_status() + ", ";
-                    update += att_delivery.customer.columnName + " = " + delivery.getCustomer().getCustomer_id() + ", ";
-                    update += att_delivery.invoice.columnName + " = " + delivery.getInvoice().getInvoice_id() + " ";
+                    update += att_delivery.customer.columnName + " = " + delivery.getCustomer_id() + ", ";
+                    update += att_delivery.invoice.columnName + " = " + delivery.getInvoice_id() + " ";
                     update += "WHERE " + att_delivery.delivery_id.columnName + " = " + delivery.getDelivery_id();
 
                     PreparedStatement pstmt = con.prepareStatement(update);
@@ -543,8 +543,8 @@ public class DAO {
     private DB_Delivery populateDelivery(ResultSet rs) throws DAOExceptionHandler {
         try {
             DB_Delivery temp = new DB_Delivery(rs);
-            temp.setCustomer(getCustomer(rs.getInt(att_delivery.customer.column)));
-            temp.setInvoice(getInvoice(rs.getInt(att_delivery.invoice.column)));
+            temp.setCustomer_id((rs.getInt(att_delivery.customer.column)));
+            temp.setInvoice_id((rs.getInt(att_delivery.invoice.column)));
             return temp;
         }
         catch(SQLException | DB_DeliveryExceptionHandler e) {
@@ -592,7 +592,7 @@ public class DAO {
 
                     String update = "UPDATE employee SET ";
                     update += att_employee.first_name.columnName + " = '" + employee.getFirst_name() + "', ";
-                    update += att_employee.last_name.columnName + " = " + employee.getLast_name() + ", ";
+                    update += att_employee.last_name.columnName + " = '" + employee.getLast_name() + "' ";
                     update += "WHERE " + att_employee.employee_id.columnName + " = " + employee.getEmployee_id();
 
                     PreparedStatement pstmt = con.prepareStatement(update);

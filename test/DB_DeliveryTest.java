@@ -169,7 +169,7 @@ public class DB_DeliveryTest extends TestCase
      */
     public void testDB_Delivery011() {
         try {
-            new DB_Delivery(delivery.validateDevID(-1),delivery.validateDevDate(new Date(System.currentTimeMillis())),true, new DB_Customer(), new DB_Invoice());
+            new DB_Delivery(delivery.validateDevID(-1),delivery.validateDevDate(new Date(System.currentTimeMillis())),true, 0, 0);
             fail("Exception expected.");
         } catch (DB_DeliveryExceptionHandler e) {
             assertEquals("delivery_id has to be greater than or equal to 0", e.getMessage());
@@ -185,7 +185,7 @@ public class DB_DeliveryTest extends TestCase
      */
     public void testDB_Delivery012() {
         try {
-            new DB_Delivery(delivery.validateDevID(0),delivery.validateDevDate(new Date(System.currentTimeMillis() - 2*24*60*60*1000)), false, new DB_Customer(), new DB_Invoice());
+            new DB_Delivery(delivery.validateDevID(0),delivery.validateDevDate(new Date(System.currentTimeMillis() - 2*24*60*60*1000)), false, 0, 0);
             fail("Exception expected.");
         } catch (DB_DeliveryExceptionHandler e) {
             assertEquals("delivery_date is older than a day", e.getMessage());
@@ -204,7 +204,7 @@ public class DB_DeliveryTest extends TestCase
     public void testDB_Delivery013() {
         try {
             Date now = new Date(System.currentTimeMillis());
-            DB_Delivery testDelivery = new DB_Delivery(0, delivery.validateDevDate(now), true, new DB_Customer(), new DB_Invoice());
+            DB_Delivery testDelivery = new DB_Delivery(0, delivery.validateDevDate(now), true, 0, 0);
             assertEquals( 0, testDelivery.getDelivery_id());
             assertEquals( delivery.validateDevDate(now), testDelivery.getDelivery_date());
             assertEquals( true, testDelivery.isDelivery_status());

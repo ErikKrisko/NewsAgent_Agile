@@ -56,14 +56,14 @@ public class DaoTestInvoice extends DB_InvoiceTest {
     public void testUpdateInvoice001() {
         try {
             //  Create new invoice
-            DB_Invoice test_invoice = new DB_Invoice(1);
+            DB_Invoice test_invoice = new DB_Invoice();
             //  Issue update
             dao.updateInvoice(test_invoice);
             //  Asses the new ID
             assertEquals( 3, test_invoice.getInvoice_id());
-            //  Compare customer
+            //  Compare invoice
             assertTrue(test_invoice.equals( dao.getInvoice(3)));
-        } catch (DAOExceptionHandler | DB_InvoiceExceptionHandler e) {
+        } catch (DAOExceptionHandler e) {
             e.printStackTrace();
             fail("Exception not expected.");
         }
