@@ -49,7 +49,7 @@ public class DaoTestInvoice extends DB_InvoiceTest {
     /** TEST 002 updateInvoice()
      *  Test new Invoice insertion
      *  ==========
-     *  Inputs:     DB_Customer test_invoice = new DB_Invoice(1);
+     *  Inputs:     DB_Invoice test_invoice = new DB_Invoice(1);
      *  ==========
      *  Expected Outputs:   test_invoice.equals( dao.getInvoice(3)) = true
      */
@@ -71,14 +71,14 @@ public class DaoTestInvoice extends DB_InvoiceTest {
     /** TEST 03 deleteInvoice()
      *  Test invoice deletion
      *  ==========
-     *  Inputs:    DB_Customer test_invoice = new DB_Invoice();
+     *  Inputs:    DB_Invoice test_invoice = new DB_Invoice();
      *             test_invoice.setInvoice_id( 6);
      *             dao.deleteInvoice( test_invoice);
      *             dao.getInvoice( 6);
      *  ==========
-     *  Expected Outputs:   DAOExceptionHandler = "No customer with Invoice_id = 3 not found."
+     *  Expected Outputs:   DAOExceptionHandler = "No invoice with Invoice_id = 3 not found."
      */
-    public void testDeleteCustomer001() {
+    public void testDeleteInvoice001() {
         try {
             DB_Invoice test_invoice = new DB_Invoice();
             test_invoice.setInvoice_id( 3);
