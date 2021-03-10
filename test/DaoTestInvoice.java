@@ -61,7 +61,7 @@ public class DaoTestInvoice extends DB_InvoiceTest {
             dao.updateInvoice(test_invoice);
             //  Asses the new ID
             assertEquals( 3, test_invoice.getInvoice_id());
-            //  Compare customer
+            //  Compare invoice
             assertTrue(test_invoice.equals( dao.getInvoice(3)));
         } catch (DAOExceptionHandler e) {
             e.printStackTrace();
