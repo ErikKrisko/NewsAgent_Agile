@@ -57,7 +57,7 @@ CREATE TABLE delivery (
     customer_id INTEGER NOT NULL,
     invoice_id INTEGER NOT NULL,
     FOREIGN KEY (customer_id) REFERENCES customer(customer_id) ON DELETE CASCADE,
-    FOREIGN KEY (invoice_id) REFERENCES invoice(invoice_id),
+    FOREIGN KEY (invoice_id) REFERENCES invoice(invoice_id) ON DELETE CASCADE,
 	PRIMARY KEY (delivery_id)
 );
 
