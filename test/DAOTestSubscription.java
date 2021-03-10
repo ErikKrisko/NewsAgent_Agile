@@ -543,6 +543,7 @@ public class DAOTestSubscription extends TestCase {
             assertEquals("No subscription with 'count=" + subscription.getCount() + "found", e.getMessage());
         }
     }
+
     /**Test 022 deleteSubscription()
      * Test subscription deleting failing for no count found
      * =====================================================

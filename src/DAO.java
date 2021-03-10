@@ -812,6 +812,22 @@ public class DAO {
         }
     }
 
+    public DB_Subscription getSubscriptionByCount(int count) throws DAOExceptionHandler{
+        try{
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM subscription WHERE count=" +count);
+            if(rs.next()){
+                DB_Subscription temp = populateSubscription(rs);
+                return temp;
+            }
+            else{
+                throw new DAOExceptionHandler("No subscription with count=" + count + "found");
+            }
+        }catch (SQLException e){
+            throw new DAOExceptionHandler(e.getMessage());
+        }
+    }
+
     //---------------------------------------------------
     //Update Subscription
 
@@ -852,7 +868,7 @@ public class DAO {
     //-----------------------------------------------------
     //Delete Subscription
 
-    private int deleteSubscription(DB_Subscription subscription) throws DAOExceptionHandler
+    public int deleteSubscription(DB_Subscription subscription) throws DAOExceptionHandler
     {
         try {
             Statement st = con.createStatement();
@@ -873,7 +889,7 @@ public class DAO {
     //------------------------------------------------------
     //Populate
 
-    private DB_Subscription populateSubscription(ResultSet rs) throws DAOExceptionHandler
+    public DB_Subscription populateSubscription(ResultSet rs) throws DAOExceptionHandler
     {
         try {
             DB_Subscription temp = new DB_Subscription(rs);
