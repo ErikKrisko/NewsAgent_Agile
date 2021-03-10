@@ -4,8 +4,8 @@ import java.sql.SQLException;
 public class DB_Subscription {
     //Private count that's an integer
     private int count = 0;
-    private DB_Customer customer;
-    private DB_Publication publication;
+    private long customer_id;
+    private long publication_id;
     //private DB_Product product[];
 
 
@@ -14,10 +14,10 @@ public class DB_Subscription {
     }
 
 
-    public DB_Subscription(int count, DB_Customer customer, DB_Publication prod_id) throws DB_SubscriptionExceptionHandler {
-        this.customer = customer;
+    public DB_Subscription(int count, long customer_id, long publication_id) throws DB_SubscriptionExceptionHandler {
+        this.customer_id = customer_id;
         this.count = count;
-        this.publication = prod_id;
+        this.publication_id = publication_id;
     }
 
     public DB_Subscription(ResultSet rs) throws DB_SubscriptionExceptionHandler {
@@ -43,9 +43,9 @@ public class DB_Subscription {
     @Override
     public String toString() {
         return "DB_Subscription{" +
-                "customer=" + customer.toString() +
+                "customer=" + customer_id +
                 "count=" + count +
-        "publication=" + publication.toString();
+        "publication=" + publication_id;
     }
 
 
@@ -57,20 +57,20 @@ public class DB_Subscription {
         this.count = count;
     }
 
-    public DB_Customer getCustomer() {
-        return customer;
+    public long getCustomer_id() {
+        return customer_id;
     }
 
-    public DB_Publication getPublication() {
-        return publication;
+    public long getPublication_id() {
+        return publication_id;
     }
 
-    public void setPublication(DB_Publication publication) {
-        this.publication = publication;
+    public void setPublication_id(long publication_id) {
+        this.publication_id = publication_id;
     }
 
-    public void setCustomer(DB_Customer customer) {
-        this.customer = customer;
+    public void setCustomer_id(long customer_id) {
+        this.customer_id = customer_id;
     }
 }
 
