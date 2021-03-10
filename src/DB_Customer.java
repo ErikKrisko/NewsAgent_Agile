@@ -95,9 +95,6 @@ public class DB_Customer {
         //  Compare address
         if (equals && !this.getAddress().equals( customer.getAddress()))
             equals = false;
-        //  Compare holiday list and ensure neither is null.
-        if (equals && this.holidays != null && customer.holidays != null && !this.holidays.equals( customer.holidays))
-            equals = false;
         return equals;
     }
 
