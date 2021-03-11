@@ -44,9 +44,9 @@ public class DB_Publication {
         if(name.length() <=25)
             return name;
         else if(name.length() >0)
-            throw new DB_PublicationExceptionHandler("Name = \"" + name + "\", is too short.");
+            throw new DB_PublicationExceptionHandler("Name = " + name + ", is too short.");
         else
-            throw new DB_PublicationExceptionHandler("Name = \"" + name + "\", is too long.");
+            throw new DB_PublicationExceptionHandler("Name = " + name + ", is too long.");
     }
 
     //Test for two type anything else throw an error
@@ -58,7 +58,7 @@ public class DB_Publication {
         else if(type == "Magazine")
             return type;
         else
-        throw new DB_PublicationExceptionHandler("Type = \"" + type + "\", must be either Tabloid, Broadsheet, or Magazine");
+        throw new DB_PublicationExceptionHandler("Type = " + type + ", must be either Tabloid, Broadsheet, or Magazine");
     }
 
     //greater than zero less than 10.00
@@ -68,17 +68,19 @@ public class DB_Publication {
         else if(price >0)
             return price;
         else
-        throw new DB_PublicationExceptionHandler("Price = \"" + price + "\", must be greater than zero and less than ten.");
+        throw new DB_PublicationExceptionHandler("Price = " + price + ", must be greater than zero and less than ten.");
     }
 
 
     public String validateFrequency(String frequency) throws DB_PublicationExceptionHandler{
-        if(frequency.length() <=25)
+        if(frequency.length() <=25 && frequency.length() >0){
             return frequency;
-        else if(frequency.length() >0)
-            return frequency;
-        else
-        throw new DB_PublicationExceptionHandler("Frequency = \"" + frequency + "\", is too short");
+        }
+        else if(frequency.isEmpty() || frequency.isBlank())
+            throw new DB_PublicationExceptionHandler("Frequency = " + frequency + " cannot be empty");
+        else{
+            throw new DB_PublicationExceptionHandler("Frequency " + frequency + " is too long");
+        }
     }
 
 
