@@ -37,7 +37,7 @@ public class DB_Employee
                     throw new DB_EmployeeExceptionHandler("first_name = " + entry + " cannot contain numbers.");
                 }
             }else{
-                throw new DB_EmployeeExceptionHandler("first_name = " + entry + " cannot be that longer than 20 characters.");
+                throw new DB_EmployeeExceptionHandler("first_name = " + entry + " cannot be longer than 20 characters.");
             }
         }else{
             throw new DB_EmployeeExceptionHandler("first_name = " + entry + " cannot be an empty String.");
@@ -53,7 +53,7 @@ public class DB_Employee
                     throw new DB_EmployeeExceptionHandler("last_name = " + entry + " cannot contain numbers.");
                 }
             }else{
-                throw new DB_EmployeeExceptionHandler("last_name = " + entry + " cannot be that longer than 20 characters.");
+                throw new DB_EmployeeExceptionHandler("last_name = " + entry + " cannot be longer than 20 characters.");
             }
         }else{
             throw new DB_EmployeeExceptionHandler("last_name = " + entry + " cannot be an empty String.");

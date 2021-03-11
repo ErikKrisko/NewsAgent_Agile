@@ -95,7 +95,7 @@ public class DB_EmployeeTest extends TestCase {
             employee.validateFName(entry);
             fail("Exception expected.");
         } catch (DB_EmployeeExceptionHandler e){
-            assertEquals("first_name = " + entry + " cannot be that longer than 20 characters.", e.getMessage());
+            assertEquals("first_name = " + entry + " cannot be longer than 20 characters.", e.getMessage());
         }
     }
     /** TEST 007
@@ -177,7 +177,7 @@ public class DB_EmployeeTest extends TestCase {
             employee.validateLName(entry);
             fail("Exception expected.");
         } catch (DB_EmployeeExceptionHandler e){
-            assertEquals("last_name = " + entry + " cannot be that longer than 20 characters.", e.getMessage());
+            assertEquals("last_name = " + entry + " cannot be longer than 20 characters.", e.getMessage());
         }
     }
     /** TEST 012
@@ -258,7 +258,7 @@ public class DB_EmployeeTest extends TestCase {
             new DB_Employee(employee.validateEmpID(0), employee.validateFName("Benjamin"), employee.validateLName("SireSireSireSireSireSire"));
             fail("Exception expected.");
         } catch (DB_EmployeeExceptionHandler e){
-            assertEquals("last_name = " + entry + " cannot be that longer than 20 characters.", e.getMessage());
+            assertEquals("last_name = " + entry + " cannot be longer than 20 characters.", e.getMessage());
         }
     }
     /** TEST 017
@@ -274,7 +274,7 @@ public class DB_EmployeeTest extends TestCase {
             new DB_Employee(employee.validateEmpID(0), employee.validateFName("BenjaminHappyJustToday"), employee.validateLName("Sire"));
             fail("Exception expected.");
         } catch (DB_EmployeeExceptionHandler e){
-            assertEquals("first_name = " + entry + " cannot be that longer than 20 characters.", e.getMessage());
+            assertEquals("first_name = " + entry + " cannot be longer than 20 characters.", e.getMessage());
         }
     }
     /** TEST 018
