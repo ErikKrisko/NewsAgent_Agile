@@ -878,8 +878,8 @@ public class DAO {
         try {
             DB_Subscription temp = new DB_Subscription(rs);
             temp.setCustomer_id(rs.getLong(1));
-            temp.setCount(rs.getInt(2));
-            temp.setPublication_id(rs.getLong(3));
+            temp.setCount(rs.getInt(3));
+            temp.setPublication_id(rs.getLong(2));
             return temp;
         }
         catch (SQLException | DB_SubscriptionExceptionHandler e)
