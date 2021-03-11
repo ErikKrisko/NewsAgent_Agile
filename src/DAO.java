@@ -768,7 +768,7 @@ public class DAO {
                 DB_Subscription temp = populateSubscription(rs);
                 return temp;
             } else {
-                throw new DAOExceptionHandler("No subscription with customer_id = " + customer_id + " publication_id = " + publication_id + " found. ");
+                throw new DAOExceptionHandler("No subscription with customer_id = " + customer_id + " and publication_id = " + publication_id + " found. ");
             }
         } catch (SQLException e) {
             throw new DAOExceptionHandler(e.getMessage());
@@ -803,7 +803,7 @@ public class DAO {
             }
             else
             {
-                throw new DAOExceptionHandler("No subscription with publication_id = " + publication_id + " found. ");
+                throw new DAOExceptionHandler("No subscription with this publication_id = " + publication_id + " found. ");
             }
         }
         catch (SQLException e)

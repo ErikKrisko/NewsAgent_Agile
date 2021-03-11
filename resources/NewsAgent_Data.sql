@@ -76,8 +76,8 @@ INSERT INTO delivers VALUES (2, 4);
 INSERT INTO delivers VALUES (2, 5);
 
 /*Subscription relation Table*/
-INSERT INTO subscription VALUES (1, 1, 3);
-INSERT INTO subscription VALUES (2, 1, 2);
-INSERT INTO subscription VALUES (3, 1, 4);
-INSERT INTO subscription VALUES (4, 1, 5);
+INSERT INTO subscription VALUES (1, 3, 1);
+INSERT INTO subscription VALUES (2, 2, 1);
+INSERT INTO subscription VALUES (3, 4, 1);
+INSERT INTO subscription VALUES (4, 5, 1);
 INSERT INTO subscription VALUES (5, 1, 1);
