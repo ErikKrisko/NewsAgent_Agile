@@ -43,8 +43,8 @@ public class DB_Publication {
     public String validateName(String name) throws DB_PublicationExceptionHandler{
         if(name.length() <=25)
             return name;
-        else if(name.length() >0)
-            throw new DB_PublicationExceptionHandler("Name = " + name + ", is too short.");
+        else if(name.isBlank() || name.isEmpty())
+            throw new DB_PublicationExceptionHandler("Name = " + name + ", cannot be empty.");
         else
             throw new DB_PublicationExceptionHandler("Name = " + name + ", is too long.");
     }
