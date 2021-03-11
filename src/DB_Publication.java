@@ -50,7 +50,7 @@ public class DB_Publication {
             }
         }
         else{
-            throw new DB_PublicationExceptionHandler("Name = " + name + ", is too long.");
+            throw new DB_PublicationExceptionHandler("Name = " + name + ", cannot be empty.");
         }
     }
 

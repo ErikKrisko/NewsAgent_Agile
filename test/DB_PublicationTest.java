@@ -6,12 +6,13 @@ public class DB_PublicationTest extends TestCase {
     //Test 1 - test for too long of an input//
     public void testDB_Publication001()
     {
+        String entry = "TheSundayMailMirrorExpressTimes";
         try {
-            publication.validateName("TheSundayMailMirrorExpressTimes");
+            publication.validateName(entry);
             fail("Exception Expected.");
         } catch (DB_PublicationExceptionHandler e)
         {
-            assertEquals("Entry = \"TheSundayMailMirrorExpressTimes\", is too long,", e.getMessage());
+            assertEquals("Name = " + entry + ", is too long.", e.getMessage());
 
         }
     }
@@ -19,12 +20,13 @@ public class DB_PublicationTest extends TestCase {
     //Test 2 - input of an empty string//
     public void testDB_publication002()
     {
+        String entry = "";
         try {
-            publication.validateName("");
+            publication.validateName(entry);
             fail("Exception Expected.");
         } catch (DB_PublicationExceptionHandler e)
         {
-            assertEquals("Entry = \"\", is too short,", e.getMessage());
+            assertEquals("Name = " + entry + ", cannot be empty.", e.getMessage());
 
         }
     }
@@ -100,7 +102,7 @@ public class DB_PublicationTest extends TestCase {
             fail("Exception Expected.");
         } catch (DB_PublicationExceptionHandler e)
         {
-            assertEquals("Frequency = " + entry + ", is too short",e.getMessage());
+            assertEquals("Frequency = " + entry + " cannot be empty",e.getMessage());
         }
     }
     //test 10 - entering a value within the frequency parameters
@@ -108,11 +110,23 @@ public class DB_PublicationTest extends TestCase {
     {
         String entry = "Daily";
         try {
+            assertEquals(entry, publication.validateFrequency(entry));
+        } catch (DB_PublicationExceptionHandler e)
+        {
+            e.printStackTrace();
+            fail("Exception not Expected.");
+        }
+    }
+    //Test 11 - too long input//
+    public void testDB_Publication011()
+    {
+        String entry = "Bi-WeeklyMonthlyYearlyyyyyy";
+        try {
             publication.validateFrequency(entry);
             fail("Exception Expected.");
         } catch (DB_PublicationExceptionHandler e)
         {
-            assertEquals("Frequency = " + entry + ", is too short",e.getMessage());
+            assertEquals("Frequency " + entry + " is too long",e.getMessage());
         }
     }
 }
