@@ -41,12 +41,17 @@ public class DB_Publication {
 
     //Length of the name not empty string fits into database 20 max
     public String validateName(String name) throws DB_PublicationExceptionHandler{
-        if(name.length() <=25)
-            return name;
-        else if(name.isBlank() || name.isEmpty())
-            throw new DB_PublicationExceptionHandler("Name = " + name + ", cannot be empty.");
-        else
+        if(!name.isEmpty() || !name.isBlank()){
+            if(name.length() <= 25){
+                return name;
+            }
+            else{
+                throw new DB_PublicationExceptionHandler("Name = " + name + ", is too long.");
+            }
+        }
+        else{
             throw new DB_PublicationExceptionHandler("Name = " + name + ", is too long.");
+        }
     }
 
     //Test for two type anything else throw an error
