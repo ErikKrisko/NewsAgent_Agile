@@ -7,7 +7,7 @@ public class DB_PublicationTest extends TestCase {
     public void testDB_Publication001()
     {
         try {
-            publication.validateName(DB_Publication.prod_name, "TheSundayMailMirrorExpressTimes");
+            publication.validateName("TheSundayMailMirrorExpressTimes");
             fail("Exception Expected.");
         } catch (DB_PublicationExceptionHandler e)
         {
@@ -20,7 +20,7 @@ public class DB_PublicationTest extends TestCase {
     public void testDB_publication002()
     {
         try {
-            publication.validateName(DB_Publication.prod_name, "");
+            publication.validateName("");
             fail("Exception Expected.");
         } catch (DB_PublicationExceptionHandler e)
         {
@@ -32,7 +32,7 @@ public class DB_PublicationTest extends TestCase {
     public void testDB_Publication003()
     {
         try {
-            publication.validateName(DB_Publication.prod_name, "Westmeath Examiner");
+            publication.validateName("Westmeath Examiner");
         } catch (DB_PublicationExceptionHandler e)
         {
             fail("Exception not expected.");
@@ -42,7 +42,7 @@ public class DB_PublicationTest extends TestCase {
     public void testDB_Publication004()
     {
         try {
-            publication.validateType(DB_Publication.prod_type, "Paper");
+            publication.validateType("Paper");
             fail("Exception Expected.");
         } catch (DB_PublicationExceptionHandler e)
         {
@@ -53,7 +53,7 @@ public class DB_PublicationTest extends TestCase {
     public void testDB_Publication005()
     {
         try {
-            publication.validateType(DB_Publication.prod_type, "Tabloid");
+            publication.validateType("Tabloid");
         } catch (DB_PublicationExceptionHandler e)
         {
             fail("Exception not expected");
@@ -63,7 +63,7 @@ public class DB_PublicationTest extends TestCase {
     public void testDB_Publication006()
     {
         try {
-            publication.validatePrice(DB_Publication.prod_price, "0");
+            publication.validatePrice(0.00);
             fail("Exception Expected.");
         } catch (DB_PublicationExceptionHandler e)
         {
@@ -74,7 +74,7 @@ public class DB_PublicationTest extends TestCase {
     public void testDB_Publication007()
     {
         try {
-            publication.validatePrice(DB_Publication.prod_price, "12");
+            publication.validatePrice(12.00);
             fail("Exception Expected.");
         } catch (DB_PublicationExceptionHandler e)
         {
@@ -85,7 +85,7 @@ public class DB_PublicationTest extends TestCase {
     public void testDB_Publication008()
     {
         try {
-            publication.validatePrice(DB_Publication.prod_price, "5");
+            publication.validatePrice(5.00);
         } catch (DB_PublicationExceptionHandler e)
         {
             fail("Exception Not Expected.");
@@ -94,22 +94,25 @@ public class DB_PublicationTest extends TestCase {
     //Test 9 - entering a Frequency Value greater 25 //
     public void testDB_Publication009()
     {
+        String entry = "";
         try {
-            publication.validateFrequency(DB_Publication.frequency, "29");
+            publication.validateFrequency(entry);
             fail("Exception Expected.");
         } catch (DB_PublicationExceptionHandler e)
         {
-            assertEquals("Frequency = is too short",e.getMessage());
+            assertEquals("Frequency = " + entry + ", is too short",e.getMessage());
         }
     }
     //test 10 - entering a value within the frequency parameters
     public void testDB_Publication010()
     {
+        String entry = "Daily";
         try {
-            publication.validateFrequency(DB_Publication.frequency, "29");
+            publication.validateFrequency(entry);
+            fail("Exception Expected.");
         } catch (DB_PublicationExceptionHandler e)
         {
-            fail("Exception not Expected.");
+            assertEquals("Frequency = " + entry + ", is too short",e.getMessage());
         }
     }
 }
