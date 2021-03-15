@@ -78,13 +78,19 @@ public class DB_Publication {
 
 
     public String validateFrequency(String frequency) throws DB_PublicationExceptionHandler{
-        if(frequency.length() <=25 && frequency.length() >0){
+        if(frequency == "Daily"){
+            return frequency;
+        }
+        else if(frequency == "Weekly"){
+            return frequency;
+        }
+        else if(frequency == "Monthly"){
             return frequency;
         }
         else if(frequency.isEmpty() || frequency.isBlank())
-            throw new DB_PublicationExceptionHandler("Frequency = " + frequency + " cannot be empty");
+            throw new DB_PublicationExceptionHandler("Frequency cannot be empty");
         else{
-            throw new DB_PublicationExceptionHandler("Frequency " + frequency + " is too long");
+            throw new DB_PublicationExceptionHandler("Frequency is wrong : " + frequency);
         }
     }
 
