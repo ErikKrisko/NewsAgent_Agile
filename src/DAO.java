@@ -348,15 +348,15 @@ public class DAO {
     // HOLIDAY
 
     /** Returns array list of holidays for given customer object
-     * @param customer to have holidays assigned for
+     * @param customer_id to have holidays for
      * @return ArrayList of holiday objects
      * @throws DAOExceptionHandler if there was an error
      */
-    public ArrayList<DB_Holiday> getHolidays(DB_Customer customer) throws DAOExceptionHandler {
+    public ArrayList<DB_Holiday> getHolidays(long customer_id) throws DAOExceptionHandler {
         try {
             ArrayList<DB_Holiday> list = new ArrayList<>();
             Statement st = con.createStatement();
-            ResultSet rs = st.executeQuery("SELECT * FROM holiday WHERE " + Att_Customer.customer_id.name + " = " + customer.getCustomer_id());
+            ResultSet rs = st.executeQuery("SELECT * FROM holiday WHERE " + Att_Customer.customer_id.name + " = " + customer_id);
             if ( rs.next()) {
                 do {
                     list.add(new DB_Holiday(
@@ -376,6 +376,25 @@ public class DAO {
             }
         } catch (SQLException | DB_HolidayExceptionHandler e) {
             throw new DAOExceptionHandler(e.getMessage());
+        }
+    }
+
+    public DB_Holiday getHoliday(long holiday_id) throws  DAOExceptionHandler {
+        try {
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM holiday WHERE " + Att_Holiday.holiday_id.name + " = " + holiday_id);
+            if ( rs.next()) {
+                return new DB_Holiday(
+                        rs.getLong(Att_Holiday.holiday_id.column),
+                        rs.getDate(Att_Holiday.start_date.column),
+                        rs.getDate(Att_Holiday.end_date.column),
+                        rs.getLong(Att_Holiday.customer.column)
+                );
+            } else {
+                throw new DAOExceptionHandler("No holiday found for "+ Att_Holiday.holiday_id.name +" = "+ holiday_id);
+            }
+        } catch (SQLException | DB_HolidayExceptionHandler e) {
+            throw new DAOExceptionHandler( e.getMessage());
         }
     }
 
@@ -411,7 +430,7 @@ public class DAO {
                     update += Att_Holiday.end_date.name + " = '" + holiday.getEnd_date() + "', ";
                     update += Att_Holiday.customer.name + " = " + holiday.getCustomer_id();
                     //  Specify update target
-                    update += "WHERE " + Att_Holiday.holiday_id.name + " = " + holiday.getHoliday_id();
+                    update += " WHERE " + Att_Holiday.holiday_id.name + " = " + holiday.getHoliday_id();
                     //  Execute update
                     PreparedStatement ps = con.prepareStatement(update);
                     int lines = ps.executeUpdate();
@@ -422,7 +441,7 @@ public class DAO {
                 } else {
                     rs.close();
                     st.close();
-                    throw new DAOExceptionHandler("There was address_id mishandling.");
+                    throw new DAOExceptionHandler("There was holiday_id mishandling.");
                 }
             }
         } catch (SQLException | DB_HolidayExceptionHandler e) {
