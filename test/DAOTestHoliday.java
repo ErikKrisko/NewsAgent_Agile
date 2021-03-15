@@ -36,6 +36,8 @@ public class DAOTestHoliday extends TestCase {
             ArrayList<DB_Holiday> holiday_list = dao.getHolidays( 0);
             //  Check if no holidays returned
             assertNull( holiday_list);
+            //  Close the DAO
+            dao.close();
         } catch (DAOExceptionHandler e) {
             e.printStackTrace();
             fail("Exception not expected.");
@@ -59,6 +61,8 @@ public class DAOTestHoliday extends TestCase {
             assertEquals( Date.valueOf("2021-02-10"), test_holiday.getStart_date());
             assertEquals( Date.valueOf("2021-02-15"), test_holiday.getEnd_date());
             assertEquals( 1, test_holiday.getCustomer_id());
+            //  Close the DAO
+            dao.close();
         } catch (DAOExceptionHandler e) {
             e.printStackTrace();
             fail("Exception not expected.");
@@ -86,6 +90,8 @@ public class DAOTestHoliday extends TestCase {
             assertEquals( Date.valueOf("2021-03-01"), test_holiday2.getStart_date());
             assertEquals( Date.valueOf("2021-03-08"), test_holiday2.getEnd_date());
             assertEquals( 1, test_holiday2.getCustomer_id());
+            //  Close the DAO
+            dao.close();
         } catch (DB_HolidayExceptionHandler | DAOExceptionHandler e) {
             e.printStackTrace();
             fail("Exception not expected.");
@@ -110,6 +116,8 @@ public class DAOTestHoliday extends TestCase {
             //  Get the new holiday
             DB_Holiday test_holiday2 = dao.getHoliday( 1);
             assertTrue( test_holiday2.equals( test_holiday));
+            //  Close the DAO
+            dao.close();
         } catch (DB_HolidayExceptionHandler | DAOExceptionHandler e) {
             e.printStackTrace();
             fail("Exception not expected.");
@@ -132,6 +140,13 @@ public class DAOTestHoliday extends TestCase {
             fail("Exception expected");
         } catch (DB_HolidayExceptionHandler | DAOExceptionHandler e) {
             assertEquals("There was holiday_id mishandling.", e.getMessage());
+            //  Close the DAO
+            try {
+                dao.close();
+            } catch (DAOExceptionHandler f) {
+                f.printStackTrace();
+                fail("Failed in closing dao.");
+            }
         }
     }
 
@@ -145,6 +160,13 @@ public class DAOTestHoliday extends TestCase {
             fail("Exception expected.");
         } catch (DAOExceptionHandler e) {
             assertEquals( "No holiday found for holiday_id = 6", e.getMessage());
+            //  Close the DAO
+            try {
+                dao.close();
+            } catch (DAOExceptionHandler f) {
+                f.printStackTrace();
+                fail("Failed in closing dao.");
+            }
         }
     }
 
@@ -160,6 +182,8 @@ public class DAOTestHoliday extends TestCase {
             assertEquals( Date.valueOf("2021-02-10"), test_holiday.getStart_date());
             assertEquals( Date.valueOf("2021-02-15"), test_holiday.getEnd_date());
             assertEquals( 1, test_holiday.getCustomer_id());
+            //  Close the DAO
+            dao.close();
         } catch (DAOExceptionHandler e) {
             e.printStackTrace();
             fail("Exception not expected.");
@@ -180,6 +204,13 @@ public class DAOTestHoliday extends TestCase {
             fail("Exception expected.");
         } catch (DB_HolidayExceptionHandler | DAOExceptionHandler e) {
             assertEquals( "Cannot delete, holiday with ID = '6', does not exist in the database.", e.getMessage());
+            //  Close the DAO
+            try {
+                dao.close();
+            } catch (DAOExceptionHandler f) {
+                f.printStackTrace();
+                fail("Failed in closing dao.");
+            }
         }
     }
 
@@ -197,12 +228,13 @@ public class DAOTestHoliday extends TestCase {
             fail("Exception expected.");
         } catch (DAOExceptionHandler e) {
             assertEquals( "No holiday found for holiday_id = 1", e.getMessage());
+            //  Close the DAO
+            try {
+                dao.close();
+            } catch (DAOExceptionHandler f) {
+                f.printStackTrace();
+                fail("Failed in closing dao.");
+            }
         }
     }
-
-    /*
-    public void testGetHolidays() { }
-    public void testUpdateHoliday() { }
-    public void testDeleteHoliday() { }
-     */
 }
