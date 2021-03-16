@@ -165,7 +165,7 @@ public class DB_PublicationTest extends TestCase {
         } catch (DB_PublicationExceptionHandler e)
         {
             fail("Exception Not Expected.");
-            assertEquals(Price = + Entry +);
+            assertEquals("Price = " + Entry +);
         }
     }
     /** Test 009
