@@ -56,10 +56,10 @@ public class DAOTestSubscription extends TestCase {
     public void testGetSubscriptionByCustomer002() {
         int ID = 1;
         try {
-            DB_Subscription test_subscription = dao.getSubscriptionByCustomer(ID);
-            assertEquals(1, test_subscription.getCustomer_id());
-            assertEquals(3, test_subscription.getPublication_id());
-            assertEquals(1, test_subscription.getCount());
+            DB_Subscription test_Subscription = dao.getSubscriptionByCustomer(ID);
+            assertEquals(1, test_Subscription.getCustomer_id());
+            assertEquals(3, test_Subscription.getPublication_id());
+            assertEquals(1, test_Subscription.getCount());
         } catch (DAOExceptionHandler e) {
             e.printStackTrace();
             new DAOExceptionHandler("No subscription with customer_id = " + 1 + " found.");
