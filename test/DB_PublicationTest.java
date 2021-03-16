@@ -168,7 +168,13 @@ public class DB_PublicationTest extends TestCase {
             assertEquals(Price = + Entry +);
         }
     }
-    //Test 9 - entering a Frequency Value greater 25 //
+    /** Test 009
+     *  Test for publication empty frequency
+     *  ==========
+     *  Inputs: publication.validateFrequency("");
+     *  ==========
+     *  Expected Outputs:  "Frequency = "" cannot be empty"
+     */
     public void testDB_Publication009()
     {
         String entry = "";
@@ -177,10 +183,16 @@ public class DB_PublicationTest extends TestCase {
             fail("Exception Expected.");
         } catch (DB_PublicationExceptionHandler e)
         {
-            assertEquals("Frequency = " + entry + " cannot be empty",e.getMessage());
+            assertEquals("Frequency cannot be empty",e.getMessage());
         }
     }
-    //test 10 - entering a value within the frequency parameters
+    /** Test 010
+     *  Test for publication daily frequency
+     *  ==========
+     *  Inputs: assertEquals("Daily", publication.validateFrequency("Daily"));
+     *  ==========
+     *  Expected Outputs:  "Daily"
+     */
     public void testDB_Publication010()
     {
         String entry = "Daily";
@@ -192,16 +204,78 @@ public class DB_PublicationTest extends TestCase {
             fail("Exception not Expected.");
         }
     }
-    //Test 11 - too long input//
+    /** Test 011
+     *  Test for publication weekly day1 frequency
+     *  ==========
+     *  Inputs: assertEquals("Weekly, 1", publication.validateFrequency("Weekly, 1"));
+     *  ==========
+     *  Expected Outputs:  "Weekly, 1"
+     */
     public void testDB_Publication011()
     {
-        String entry = "Bi-WeeklyMonthlyYearlyyyyyy";
+        String entry = "Weekly, 1";
         try {
-            publication.validateFrequency(entry);
+            assertEquals(entry, publication.validateFrequency(entry));
+        } catch (DB_PublicationExceptionHandler e)
+        {
+            e.printStackTrace();
+            fail("Exception not Expected.");
+        }
+    }
+    /** Test 012
+     *  Test for publication weekly day7 frequency
+     *  ==========
+     *  Inputs: assertEquals("Weekly, 7", publication.validateFrequency("Weekly, 7"));
+     *  ==========
+     *  Expected Outputs:  "Weekly, 7"
+     */
+    public void testDB_Publication012()
+    {
+        String entry = "Weekly, 7";
+        try {
+            assertEquals(entry, publication.validateFrequency(entry));
+        } catch (DB_PublicationExceptionHandler e)
+        {
+            e.printStackTrace();
+            fail("Exception not Expected.");
+        }
+    }
+    /** Test 013
+     *  Test for publication weekly frequency
+     *  ==========
+     *  Inputs: assertEquals("Weekly, 0", publication.validateFrequency("Weekly, 0"));
+     *  ==========
+     *  Expected Outputs:  "Frequency is wrong : Weekly, 0"
+     */
+    public void testDB_Publication013()
+    {
+        String entry = "Weekly, 0";
+        try {
+            publication.validateFrequency("Weekly, 0");
             fail("Exception Expected.");
         } catch (DB_PublicationExceptionHandler e)
         {
-            assertEquals("Frequency " + entry + " is too long",e.getMessage());
+            assertEquals("Frequency is wrong : " + entry, e.getMessage());
         }
     }
+    /** Test 014
+     *  Test for publication weekly frequency
+     *  ==========
+     *  Inputs: assertEquals("Weekly, 8", publication.validateFrequency("Weekly, 8"));
+     *  ==========
+     *  Expected Outputs:  "Frequency is wrong : Weekly, 8"
+     */
+    public void testDB_Publication014()
+    {
+        String entry = "Weekly, 8";
+        try {
+            publication.validateFrequency("Weekly, 8");
+            fail("Exception Expected.");
+        } catch (DB_PublicationExceptionHandler e)
+        {
+            assertEquals("Frequency is wrong : " + entry, e.getMessage());
+        }
+    }
+
+
 }
