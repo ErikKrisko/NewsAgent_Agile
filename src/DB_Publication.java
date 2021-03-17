@@ -8,6 +8,7 @@ public class DB_Publication {
     private long prod_id;
     private String prod_name, prod_type, frequency;
     private Double prod_price;
+    private int day;
 
     /**
      * Blank constructor for DB_Publication
@@ -28,7 +29,7 @@ public class DB_Publication {
         this.prod_name = validateName( prod_name);
         this.prod_type = validateType(prod_type);
         this.prod_price = validatePrice(prod_price);
-        this.frequency = validateFrequency(frequency);
+        this.frequency = validateFrequency(frequency, day);
     }
 
 
@@ -77,20 +78,32 @@ public class DB_Publication {
     }
 
 
-    public String validateFrequency(String frequency) throws DB_PublicationExceptionHandler{
+    public String validateFrequency(String frequency, int day) throws DB_PublicationExceptionHandler{
         if(frequency == "Daily"){
-            return frequency;
+            if(day == 0){
+                return frequency;
+            }else{
+                throw new DB_PublicationExceptionHandler("Set day as 0 when using Daily!");
+            }
         }
         else if(frequency == "Weekly"){
-            return frequency;
+            if(day > 0 && day < 8){
+                return frequency + ", " + day;
+            }else{
+                throw new DB_PublicationExceptionHandler("Set day between 1-7(Monday - Sunday)!");
+            }
         }
         else if(frequency == "Monthly"){
-            return frequency;
+            if(day > 0 && day < 29){
+                return frequency + ", " + day;
+            }else{
+                throw new DB_PublicationExceptionHandler("Set day between 1-28!");
+            }
         }
         else if(frequency.isEmpty() || frequency.isBlank())
             throw new DB_PublicationExceptionHandler("Frequency cannot be empty");
         else{
-            throw new DB_PublicationExceptionHandler("Frequency is wrong : " + frequency);
+            throw new DB_PublicationExceptionHandler("Frequency is invalid : " + frequency);
         }
     }
 
@@ -147,7 +160,7 @@ public class DB_Publication {
     }
 
     public void setFrequency(String frequency) throws DB_PublicationExceptionHandler {
-        this.frequency = validateFrequency(frequency);
+        this.frequency = validateFrequency(frequency, day);
     }
 }
 
