@@ -1,5 +1,7 @@
 import junit.framework.TestCase;
 
+import java.util.ArrayList;
+
 public class DAOTestSubscription extends TestCase {
     //Global DAO object reference
     private DAO dao;
@@ -22,6 +24,7 @@ public class DAOTestSubscription extends TestCase {
         }
     }
 
+    //Want it to do the catch meaning it fails?
     /** Test 001 testGetSubscriptionByCustomer
      * Test for subscription by customer not found.
      * ===============================================
@@ -33,7 +36,11 @@ public class DAOTestSubscription extends TestCase {
      * DAOExceptionHandler = "No Subscription with this customer ID =" + ID + "not found"
      */
     public void testGetSubscriptionByCustomer001() {
+        int ID = -1;
         try{
+            ArrayList<DB_Subscription> subscriptionList = dao.getSubscriptionByCustomer(ID);
+            assertEquals(-1,subscriptionList.size());
+            DB_Subscription test_subscription = subscriptionList.get(0);
             dao.getSubscriptionByCustomer(-1);
             fail("Exception Expected");
         }catch(DAOExceptionHandler e){
@@ -41,6 +48,7 @@ public class DAOTestSubscription extends TestCase {
         }
     }
 
+    //Want it to do catch fail because its supposed to fail
     /** Test 002 for subscription by customer id which is equal to 1
      *  Test subscription by customer for ID = 1
      *  =========================================
@@ -56,14 +64,16 @@ public class DAOTestSubscription extends TestCase {
     public void testGetSubscriptionByCustomer002() {
         int ID = 1;
         try {
-            DB_Subscription test_subscription = dao.getSubscriptionByCustomer(ID);
+            ArrayList<DB_Subscription> subscriptionList = dao.getSubscriptionByCustomer(ID);
+            assertEquals(1,subscriptionList.size());
+            DB_Subscription test_subscription = subscriptionList.get(0);
             assertEquals(1, test_subscription.getCustomer_id());
             assertEquals(3, test_subscription.getPublication_id());
             assertEquals(1, test_subscription.getCount());
         } catch (DAOExceptionHandler e) {
             e.printStackTrace();
-            new DAOExceptionHandler("No subscription with customer_id = " + 1 + " found.");
-            //fail("Exception not excepted");
+            //new DAOExceptionHandler("No subscription with customer_id = " + 1 + " found.");
+            fail("Exception not excepted");
         }
     }
 
@@ -82,7 +92,9 @@ public class DAOTestSubscription extends TestCase {
     public void testGetSubscriptionByCustomer003(){
         int ID = 2;
         try{
-            DB_Subscription test_subscription = dao.getSubscriptionByCustomer(ID);
+            ArrayList<DB_Subscription> subscriptionList = dao.getSubscriptionByCustomer(ID);
+            assertEquals(2,subscriptionList.size());
+            DB_Subscription test_subscription = subscriptionList.get(0);
             assertEquals(2, test_subscription.getCustomer_id());
             assertEquals(1, test_subscription.getCount());
             assertEquals(2, test_subscription.getPublication_id());
@@ -107,7 +119,9 @@ public class DAOTestSubscription extends TestCase {
     public void testGetSubscriptionByCustomer004(){
         int ID= 3;
         try {
-            DB_Subscription test_subscription = dao.getSubscriptionByCustomer(ID);
+            ArrayList<DB_Subscription> subscriptionList = dao.getSubscriptionByCustomer(ID);
+            assertEquals(3,subscriptionList.size());
+            DB_Subscription test_subscription = subscriptionList.get(0);
             assertEquals(3, test_subscription.getCustomer_id());
             assertEquals(1, test_subscription.getCount());
             assertEquals(4, test_subscription.getPublication_id());
@@ -132,7 +146,9 @@ public class DAOTestSubscription extends TestCase {
     public void testGetSubscriptionByCustomer005(){
         int ID= 4;
         try{
-            DB_Subscription test_subscription = dao.getSubscriptionByCustomer(ID);
+            ArrayList<DB_Subscription> subscriptionList = dao.getSubscriptionByCustomer(ID);
+            assertEquals(4,subscriptionList.size());
+            DB_Subscription test_subscription = subscriptionList.get(0);
             assertEquals(4,test_subscription.getCustomer_id());
             assertEquals(1, test_subscription.getCount());
             assertEquals(5, test_subscription.getPublication_id());
@@ -142,7 +158,7 @@ public class DAOTestSubscription extends TestCase {
         }
     }
 
-
+    //Wants to fail because there isn't a -1 in the database
     /** Test 006 for subscription by publication which is equal to -1
      * Test subscription by publication = -1 to
      * ===============================
@@ -156,13 +172,18 @@ public class DAOTestSubscription extends TestCase {
     public void testGetSubscriptionByPublication001() {
         int prod_ID = -1;
         try {
-            DB_Subscription test_subscription = dao.getSubscriptionByPublication(prod_ID);
+            ArrayList<DB_Subscription> subscriptionListPublication = dao.getSubscriptionByPublication(prod_ID);
+            assertEquals(-1, subscriptionListPublication.size());
+            DB_Subscription test_subscription = subscriptionListPublication.get(0);
+            dao.getSubscriptionByPublication(-1);
             assertEquals(-1,test_subscription.getPublication_id());
         }catch(DAOExceptionHandler e){
             assertEquals("No subscription with this publication_id = -1 found. ", e.getMessage());
             //fail("Exception not excepted");
         }
     }
+
+
 
     /** Test 007 for subscription by publication which is equal to 3
      * Test subscription by publication_id = 3
@@ -179,7 +200,10 @@ public class DAOTestSubscription extends TestCase {
     public void testGetSubscriptionByPublication002(){
         int prod_ID = 3;
         try {
-            DB_Subscription test_subscription = dao.getSubscriptionByPublication(prod_ID);
+            ArrayList<DB_Subscription> subscriptionListPublication = dao.getSubscriptionByPublication(prod_ID);
+            assertEquals(3, subscriptionListPublication.size());
+            DB_Subscription test_subscription = subscriptionListPublication.get(0);
+            dao.getSubscriptionByPublication(3);
             assertEquals(3,test_subscription.getPublication_id());
             assertEquals(1,test_subscription.getCount());
             assertEquals(1, test_subscription.getCustomer_id());
@@ -205,7 +229,10 @@ public class DAOTestSubscription extends TestCase {
     public void testGetSubscriptionByPublication003(){
         int prod_ID = 2;
         try {
-            DB_Subscription test_subscription = dao.getSubscriptionByPublication(prod_ID);
+            ArrayList<DB_Subscription> subscriptionListPublication = dao.getSubscriptionByPublication(prod_ID);
+            assertEquals(2, subscriptionListPublication.size());
+            DB_Subscription test_subscription = subscriptionListPublication.get(0);
+            dao.getSubscriptionByPublication(2);
             assertEquals(2,test_subscription.getPublication_id());
             assertEquals(1,test_subscription.getCount());
             assertEquals(2,test_subscription.getCustomer_id());
@@ -230,7 +257,10 @@ public class DAOTestSubscription extends TestCase {
     public void testGetSubscriptionByPublication004(){
         int prod_ID = 4;
         try {
-            DB_Subscription test_subscription = dao.getSubscriptionByPublication(prod_ID);
+            ArrayList<DB_Subscription> subscriptionListPublication = dao.getSubscriptionByPublication(prod_ID);
+            assertEquals(4, subscriptionListPublication.size());
+            DB_Subscription test_subscription = subscriptionListPublication.get(0);
+            dao.getSubscriptionByPublication(4);
             assertEquals(4,test_subscription.getPublication_id());
             assertEquals(1, test_subscription.getCount());
             assertEquals(3,test_subscription.getCustomer_id());
@@ -257,7 +287,10 @@ public class DAOTestSubscription extends TestCase {
     public void testGetSubscriptionByPublication005() {
         int prod_ID = 5;
         try{
-            DB_Subscription test_subscription = dao.getSubscriptionByPublication(prod_ID);
+            ArrayList<DB_Subscription> subscriptionListPublication = dao.getSubscriptionByPublication(prod_ID);
+            assertEquals(5, subscriptionListPublication.size());
+            DB_Subscription test_subscription = subscriptionListPublication.get(0);
+            dao.getSubscriptionByPublication(5);
             assertEquals(5,test_subscription.getPublication_id());
             assertEquals(1,test_subscription.getCount());
             assertEquals(4, test_subscription.getCustomer_id());
@@ -280,17 +313,21 @@ public class DAOTestSubscription extends TestCase {
      * update_subscription.getPublication_id(), get_subscription.getPublication_id()
      * update_subscription.getCount(), get_subscription.getCount()
      */
-    public void testUpdateSubscription001() {
-        try {
+
+    public void testUpdateSubscription001(){
+        try{
             DB_Subscription update_subscription = new DB_Subscription(1,2,3);
             dao.updateSubscription(update_subscription);
-            DB_Subscription get_subscription = dao.getSubscription(2,3);
-            assertEquals(update_subscription.getCustomer_id(), get_subscription.getCustomer_id());
-            assertEquals(update_subscription.getPublication_id(), get_subscription.getPublication_id());
-            assertEquals(update_subscription.getCount(), get_subscription.getCount());
-        } catch (DAOExceptionHandler | DB_SubscriptionExceptionHandler e) {
+            assertEquals(6, update_subscription.getCustomer_id());
+            ArrayList<DB_Subscription> subscription_update = dao.getSubscription(2,3);
+            assertEquals(2,subscription_update.size());
+            DB_Subscription subscription_update1 = subscription_update.get(subscription_update.size() -1);
+            assertEquals(2, subscription_update1.getCustomer_id());
+            assertEquals(3, subscription_update1.getPublication_id());
+            assertEquals(1, subscription_update1.getCount());
+        }catch (DB_SubscriptionExceptionHandler | DAOExceptionHandler e){
             e.printStackTrace();
-            fail("Exception not expected");
+            fail("Exception not expected.");
         }
     }
 
@@ -308,8 +345,17 @@ public class DAOTestSubscription extends TestCase {
         public void testUpdateSubscription002() {
             try {
                 DB_Subscription update_subscription = new DB_Subscription(1,6,2);
-                dao.updateSubscription(update_subscription);
-                fail("Exception expected");
+                ArrayList<DB_Subscription> updating_subscription = dao.getSubscription(6,2);
+                assertEquals(1, updating_subscription.size());
+                DB_Subscription test_updatesubscription = updating_subscription.get(0);
+                assertEquals(6, test_updatesubscription.getCustomer_id());
+                assertEquals(2, test_updatesubscription.getPublication_id());
+//                update_subscription.setCustomer_id(6);
+//                update_subscription.setPublication_id(2);
+//                dao.updateSubscription(update_subscription);
+//                DB_Subscription updateSubscription1 = dao.getSubscription(6,2);
+//                assertTrue(updateSubscription1.equals(update_subscription));
+               //fail("Exception expected");
             } catch (DAOExceptionHandler e) {
                 assertEquals("Cannot add or update a child row: a foreign key constraint fails (`newsagent`.`subscription`, CONSTRAINT `subscription_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`) ON DELETE CASCADE)", e.getMessage());
             }catch (DB_SubscriptionExceptionHandler e){
@@ -332,13 +378,17 @@ public class DAOTestSubscription extends TestCase {
     public void testUpdateSubscription003(){
         try {
             DB_Subscription update_subscription = new DB_Subscription(1,2,6);
-            dao.updateSubscription(update_subscription);
+            ArrayList<DB_Subscription> updating_subscription = dao.getSubscription(2,6);
+            assertEquals(1, updating_subscription.size());
+            DB_Subscription test_subscription = updating_subscription.get(0);
+            assertEquals(2, test_subscription.getCustomer_id());
+            assertEquals(6, test_subscription.getPublication_id());
             fail("Exception expected");
-        } catch (DAOExceptionHandler e) {
+        } catch (DAOExceptionHandler | DB_SubscriptionExceptionHandler e) {
             assertEquals("Cannot add or update a child row: a foreign key constraint fails (`newsagent`.`subscription`, CONSTRAINT `subscription_ibfk_2` FOREIGN KEY (`prod_id`) REFERENCES `publication` (`prod_id`))", e.getMessage());
-        }catch (DB_SubscriptionExceptionHandler e){
-            e.printStackTrace();
-            fail("DB_Subscription exception not expected");
+//        }catch (DB_SubscriptionExceptionHandler e){
+//            e.printStackTrace();
+//            fail("DB_Subscription exception not expected");
         }
     }
 
@@ -355,8 +405,12 @@ public class DAOTestSubscription extends TestCase {
 
     public void testDeleteSubscription001(){
         try{
-            DB_Subscription delete_subscription = new DB_Subscription(1,6,2);
-            dao.deleteSubscription(delete_subscription);
+            DB_Subscription update_subscription = new DB_Subscription(1,6,2);
+            ArrayList<DB_Subscription> updating_subscription = dao.getSubscription(6,2);
+            assertEquals(1, updating_subscription.size());
+            DB_Subscription test_subscription = updating_subscription.get(0);
+            assertEquals(6, test_subscription.getCustomer_id());
+            assertEquals(2, test_subscription.getPublication_id());
             fail("Exception expected");
         }catch (DAOExceptionHandler | DB_SubscriptionExceptionHandler e){
             assertEquals("No subscription with customer_id = " + 6 + " and publication_id = " + 2  +  " found. ", e.getMessage());
@@ -377,12 +431,12 @@ public class DAOTestSubscription extends TestCase {
 
     public void testDeleteSubscription002(){
         try{
-            DB_Subscription delete_subscription = new DB_Subscription(1,2,6);
-            delete_subscription.setCustomer_id(2);
-            delete_subscription.setPublication_id(6);
-            dao.deleteSubscription(delete_subscription);
-            dao.getSubscription(2,6);
-
+            DB_Subscription update_subscription = new DB_Subscription(1,2,6);
+            ArrayList<DB_Subscription> updating_subscription = dao.getSubscription(2,6);
+            assertEquals(1, updating_subscription.size());
+            DB_Subscription test_subscription = updating_subscription.get(0);
+            assertEquals(2, test_subscription.getCustomer_id());
+            assertEquals(6, test_subscription.getPublication_id());
             fail("Exception expected");
         }catch (DAOExceptionHandler | DB_SubscriptionExceptionHandler e){
             assertEquals("No subscription with customer_id = " + 2 +  " and publication_id = " + 6 +  " found. ", e.getMessage());
@@ -403,9 +457,12 @@ public class DAOTestSubscription extends TestCase {
 
     public void testDeleteSubscription003(){
         try{
-            subscription.setCustomer_id(6);
-            subscription.setPublication_id(1);
-            dao.deleteSubscription(subscription);
+            DB_Subscription update_subscription = new DB_Subscription(1,6,1);
+            ArrayList<DB_Subscription> updating_subscription = dao.getSubscription(6,1);
+            assertEquals(1, updating_subscription.size());
+            DB_Subscription test_subscription = updating_subscription.get(0);
+            assertEquals(6, test_subscription.getCustomer_id());
+            assertEquals(1, test_subscription.getPublication_id());
             fail("Exception expected");
         }catch (DAOExceptionHandler e){
             assertEquals("No subscription with customer_id = " + 6 + " and publication_id = " + 1 + " found. ", e.getMessage());
