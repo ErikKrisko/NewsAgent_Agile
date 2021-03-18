@@ -720,7 +720,7 @@ public class newsagent_interface {
                 System.out.println("2. Address (unimplemented)");
                 System.out.println("3. Invoice");
                 System.out.println("4. Delivery");
-                System.out.println("5. Subscription (unimplemented)");
+                System.out.println("5. Subscription");
                 System.out.println("6. Employees ");
                // System.out.println("7. Publication ");
                 System.out.println("7. Exit");
