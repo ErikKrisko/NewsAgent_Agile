@@ -929,6 +929,106 @@ public class DAO {
         }
     }
 
+
+ /*   //------------------------------------------------------
+    //  Publication Methods
+    public DB_Publication getPublication(int ID) throws DAOExceptionHandler
+    {
+        try {
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM publication WHERE prod_id = " + ID);
+            if ( rs.next()) {
+                DB_Publication temp = populatePublication(rs);
+                return temp;
+            } else {
+                throw new DAOExceptionHandler("No publication with 'prod_id = " + ID + " found.");
+            }
+        }
+        catch (SQLException e) {
+            throw new DAOExceptionHandler(e.getMessage());
+        }
+    }
+
+    public int updatePublication(DB_Publication publication) throws DAOExceptionHandler {
+        try{
+            if(publication.getProd_id() == 0)
+            {
+                PreparedStatement pstmt = con.prepareStatement("INSERT INTO publication VALUES(null, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+                pstmt.setString(1, publication.getProd_name());
+                pstmt.setString(2, publication.getProd_type());
+                pstmt.setDouble(3, publication.getProd_price());
+
+
+                int lines = pstmt.executeUpdate();
+                ResultSet keys = pstmt.getGeneratedKeys();
+                if(keys.next()){
+                    publication.setProd_id(keys.getLong(1));
+                }
+                return lines;
+            }
+            else{
+                Statement st = con.createStatement();
+                ResultSet rs = st.executeQuery("SELECT * FROM publication WHERE prod_id = " + publication.getProd_id());
+                if(rs.next()){
+
+                    String update = "UPDATE publication SET ";
+                    update += "prod_name = '" + publication.getProd_name() + "', ";
+                    update += "prod_type = '" + publication.getProd_type() + "', ";
+                    update += "prod_price = '" + publication.getProd_price() + "', ";
+                    update += "prod_freq = '" + publication.getFreq + "' ";
+                    update += "WHERE prod_id = " + publication.getProd_id();
+
+                    PreparedStatement pstmt = con.prepareStatement(update);
+                    int lines = pstmt.executeUpdate();
+                    return lines;
+                }else{
+                    throw new DAOExceptionHandler("There was prod_id mishandling.");
+                }
+            }
+        }
+        catch(SQLException | DB_PublicationExceptionHandler e)
+        {
+            throw new DAOExceptionHandler( e.getMessage());
+        }
+    }
+
+    public int deletePublication(DB_Publication publication) throws DAOExceptionHandler {
+        try{
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM publication WHERE prod_id = " + publication.getProd_id()); //Check if resultset exists instead of deleting something that doesnt exist
+            if(rs.next()){
+                PreparedStatement pstmt = con.prepareStatement("DELETE FROM publication where prod_id = " + publication.getProd_id());
+                int lines = pstmt.executeUpdate();
+                return lines;
+            }
+            else
+            {
+                throw new DAOExceptionHandler("No publication with 'prod_id = " + publication.getProd_id() + " found.");
+            }
+        }
+        catch(SQLException e) {
+            throw new DAOExceptionHandler(e.getMessage());
+        }
+    }
+
+    private DB_Publication populatePublication(ResultSet rs) throws DAOExceptionHandler {
+        try {
+            DB_Publication temp = new DB_Publication(
+                    rs.getInt(0),
+                    rs.getString(1),
+                    rs.getString(2),
+                    rs.getDouble(3),
+                    rs.getString(4),
+                    rs.getInt(5)
+            );
+            return temp;
+        }
+        catch(SQLException | DB_PublicationExceptionHandler e) {
+            throw new DAOExceptionHandler(e.getMessage());
+        }
+    }*/
+
+
     /** Connection controls */
     /** Closes the current connection.
      */

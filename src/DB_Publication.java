@@ -24,7 +24,7 @@ public class DB_Publication {
      * @param prod_price
      * @throws DB_PublicationExceptionHandler
      */
-    public DB_Publication(long prod_id, String prod_name, String prod_type, Double prod_price) throws DB_PublicationExceptionHandler {
+    public DB_Publication(long prod_id, String prod_name, String prod_type, Double prod_price, String frequency, int day) throws DB_PublicationExceptionHandler {
         this.prod_id = validateID(prod_id);
         this.prod_name = validateName( prod_name);
         this.prod_type = validateType(prod_type);

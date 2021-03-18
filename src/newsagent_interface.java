@@ -12,6 +12,7 @@ public class newsagent_interface {
     static DB_Delivery delivery = null;
     static DB_Invoice invoice = null;
     static DB_Employee employee = null;
+    static DB_Publication publication = null;
 
     public static void main(String[] args){
         try {
@@ -46,6 +47,9 @@ public class newsagent_interface {
 
                         //  Employee menu selected
                         case 6 -> employeeMenu();
+
+                        //Publication Menu Selected
+                        //case 7 -> publicationMenu();
 
                         //  Close
                         case 7 -> System.out.println("Exiting...");
@@ -307,11 +311,11 @@ public class newsagent_interface {
                             invoice.setIssue_date(Date.valueOf(sc.next()));
                             System.out.println("Enter invoice status (true or false): ");
                             invoice.setInvoice_status(Boolean.valueOf(sc.next()));
-                            System.out.println("Enter invoice total (yyyy-mm-dd): ");
+                            System.out.println("Enter invoice total (??.?): ");
                             invoice.setInvoice_total(sc.nextDouble());
-                            System.out.println("Enter the customer id: ");
+                            System.out.println("Enter a customer id: ");
                             invoice.setCustomer(dao.getCustomer(sc.nextInt()));
-                            System.out.println(customer);
+                            System.out.println(invoice);
                         }
                         //Load existing Invoice
                         case 2 -> {
@@ -493,6 +497,108 @@ public class newsagent_interface {
         }
     }
 
+/*    public static void publicationMenu()
+    {
+        try {
+            //Controller values
+            int menuChoice = 0;
+            final int menuExit = 7;
+
+            while(menuChoice != menuExit) {
+                printMenu(7); // display menu
+                if (sc.hasNextInt()) {
+                    menuChoice = sc.nextInt();
+                    switch (menuChoice){
+                        //create new publication
+                        case 1 -> {
+                            publication = new DB_Publication();
+                            System.out.println("Enter Product Name: ");
+                            publication.setProd_name(sc.next());
+                            System.out.println("Enter Product Type: (Broadsheet,Tabloid & Magazine)");
+                            publication.setProd_type(sc.next());
+                            System.out.println("Enter product Price: ");
+                            publication.setProd_price(sc.nextDouble());
+                            System.out.println(publication);
+                        }
+                        //load existing Publication
+                        case 2-> {
+                            System.out.println("Enter Product ID: ");
+                            int prodID = sc.nextInt();
+                            publication = dao.getPublication(prodID);
+                            System.out.println(publication);
+                        }
+                        //Edit publication
+                        case 3 -> {
+                            if(publication == null){
+                                System.out.println("Need to load existing publication first.");
+                            }else{
+                                System.out.println("Editing: " + publication);
+                                System.out.println("Product Name: " + publication.getProd_name() + " -> ");
+                                if (sc.hasNextLine() && sc.hasNext()) {
+                                    publication.setProd_name( sc.next());
+                                }
+                                System.out.println("Product Type: (Broadsheet,Tabloid & Magazine)" + publication.getProd_type() + " -> ");
+                                if (sc.hasNextLine() && sc.hasNext()) {
+                                    publication.setProd_type( sc.next());
+                                }
+                                System.out.println("Product Price: " + publication.getProd_price());
+                                if (sc.hasNextLine() && sc.hasNext()) {
+                                    publication.setProd_price(sc.nextDouble());
+                                }
+                                System.out.println("Changed Publication: " + publication);
+                        }
+                    }
+                        //Update Publication
+                        case 4 -> {
+                            if (publication == null){
+                                System.out.println("need to load or create publication first.");
+                            }else{
+                                System.out.println("updating publication: " + publication);
+                                boolean idChange = publication.getProd_id() == 0;
+                                dao.updatePublication(publication);
+                                if(idChange){
+                                    System.out.println("ID Changed: " + publication);
+                                }
+                            }
+                        }
+                        //view selected Publication
+                        case 5 -> {
+
+                            if(publication == null){
+                                System.out.println("Need to load or create publication first.");
+                            }else{
+                                System.out.println(publication);
+                            }
+                        }
+                        //Delete Publication
+                        case 6 -> {
+                            if (publication == null){
+                                System.out.println("Need to load Publication first.");
+                            }
+                            else if (publication.getProd_id() == 0){
+                                System.out.println("Publication must be loaded from database.");
+                            }
+                            else{
+                                System.out.println("Deleting: " + publication);
+                                dao.deletePublication(publication);
+                                publication = null;
+                            }
+                        }
+                        //Exit
+                        case 7 -> {
+                            System.out.println("Returning to main menu.....");
+                            publication = null;
+                        }
+                        default -> System.out.println("invalid Choice");
+                    }
+                }
+            }
+            publication = null;
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+    }*/
+
     public static void printMenu(int menu) {
         switch (menu) {
             //  Main Menu
@@ -503,7 +609,8 @@ public class newsagent_interface {
                 System.out.println("3. Invoice");
                 System.out.println("4. Delivery");
                 System.out.println("5. Subscription (unimplemented)");
-                System.out.println("6. Employees (unimplemented)");
+                System.out.println("6. Employees ");
+               // System.out.println("7. Publication ");
                 System.out.println("7. Exit");
             }
             //  Customer menu
@@ -564,6 +671,18 @@ public class newsagent_interface {
                 System.out.println("6. Delete");
                 System.out.println("7. To Main Menu");
             }
+
+           /* // Publication Menu
+            case 7 -> {
+                System.out.println("\n=====Publication Menu=====");
+                System.out.println("1. Create new Publication");
+                System.out.println("2. Load existing ID");
+                System.out.println("3. Edit");
+                System.out.println("4. Update database");
+                System.out.println("5. Check");
+                System.out.println("6. Delete");
+                System.out.println("7. To Main Menu");
+            }*/
 
 
             default -> {
