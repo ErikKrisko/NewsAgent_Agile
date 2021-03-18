@@ -794,43 +794,65 @@ public class DAO {
         }
     }
 
-    public DB_Subscription getSubscriptionByCustomer(long customer_id) throws DAOExceptionHandler {
+    public ArrayList<DB_Subscription> getSubscriptionByCustomer(long customer_id) throws DAOExceptionHandler {
         try {
-            //cus_id comes up wrong
+            ArrayList<DB_Subscription> customerList = new ArrayList<>();
             Statement st = con.createStatement();
-            ResultSet rs = st.executeQuery("SELECT * FROM subscription WHERE customer_id = " + customer_id);
-            if(rs.next()) {
-                DB_Subscription temp = populateSubscription(rs);
-                return temp;
+            ResultSet rs = st.executeQuery("SELECT * FROM subscription WHERE customer_id" + customer_id);
+            if ( rs.next()) {
+                do {
+                    customerList.add(new DB_Subscription(
+                            rs.getInt(0),
+                            rs.getInt(1),
+                            rs.getInt(2)
+                    ));
+
+                } while (rs.next());
+                rs.close();
+                st.close();
+                return customerList;
             } else {
-                throw new DAOExceptionHandler("No subscription with customer_id = " + customer_id + " found.");
+                rs.close();
+                st.close();
+                return null;
             }
-        } catch (SQLException e) {
+        } catch (SQLException | DB_SubscriptionExceptionHandler e) {
             throw new DAOExceptionHandler(e.getMessage());
         }
     }
 
-    public DB_Subscription getSubscriptionByPublication( long publication_id) throws DAOExceptionHandler {
+
+    public ArrayList<DB_Subscription> getSubscriptionByPublication( long publication_id) throws DAOExceptionHandler {
         try {
+            ArrayList<DB_Subscription> publicationList = new ArrayList<>();
             //cus_id comes up wrong
             Statement st = con.createStatement();
             ResultSet rs = st.executeQuery("SELECT * FROM subscription WHERE prod_id = " + publication_id);
             if(rs.next())
             {
-                DB_Subscription temp = populateSubscription(rs);
-                return temp;
-            }
-            else
+                do{
+                    publicationList.add(new DB_Subscription(
+                            rs.getInt(0),
+                            rs.getLong(1),
+                            rs.getInt(2)
+                    ));
+                } while ((rs.next()));
+                rs.close();
+                st.close();
+                return publicationList;
+            } else
             {
-                throw new DAOExceptionHandler("No subscription with this publication_id = " + publication_id + " found. ");
+                rs.close();
+                st.close();
+                return null;
+                //throw new DAOExceptionHandler("No subscription with this publication_id = " + publication_id + " found. ");
             }
         }
-        catch (SQLException e)
+        catch (SQLException | DB_SubscriptionExceptionHandler e)
         {
             throw new DAOExceptionHandler(e.getMessage());
         }
     }
-
     //---------------------------------------------------
     //Update Subscription
 

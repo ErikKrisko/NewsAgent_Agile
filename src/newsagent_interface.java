@@ -541,6 +541,18 @@ public class newsagent_interface {
                 System.out.println("7. To Main Menu");
             }
 
+            //  Subscription menu
+            case 5 -> {
+                System.out.println("\n=====Subscription Menu=====");
+                System.out.println("1. Create new subscription");
+                System.out.println("2. Load existing ID");
+                System.out.println("3. Edit");
+                System.out.println("4. Update database");
+                System.out.println("5. Check");
+                System.out.println("6. Delete");
+                System.out.println("7. To Main Menu");
+            }
+
             //  Employee menu
             case 6 -> {
                 System.out.println("\n=====Employee Menu=====");
@@ -552,6 +564,7 @@ public class newsagent_interface {
                 System.out.println("6. Delete");
                 System.out.println("7. To Main Menu");
             }
+
 
             default -> {
                 System.out.println("Invalid menu");
