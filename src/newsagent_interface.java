@@ -13,6 +13,7 @@ public class newsagent_interface {
     static DB_Invoice invoice = null;
     static DB_Employee employee = null;
     static DB_Publication publication = null;
+    static DB_Subscription subscription = null;
 
     public static void main(String[] args){
         try {
@@ -44,6 +45,9 @@ public class newsagent_interface {
 
                         //  Delivery menu selected
                         case 4 -> deliveryMenu();
+
+                        //Subscription menu selected
+                        case 5 -> subscriptionMenu();
 
                         //  Employee menu selected
                         case 6 -> employeeMenu();
@@ -496,6 +500,114 @@ public class newsagent_interface {
             e.printStackTrace();
         }
     }
+
+    public static void subscriptionMenu() {
+        try {
+            //Controller values
+            int menuChoice = 0;
+            final int menuExit = 7;
+
+            while (menuChoice != menuExit) {
+                printMenu(5);
+                if (sc.hasNextInt()) {
+                    menuChoice = sc.nextInt();
+                    switch (menuChoice) {
+                        //Create new subscription
+                        case 1 -> {
+                            subscription = new DB_Subscription();
+                            System.out.println("Enter customer_id: ");
+                            subscription.setCustomer_id(sc.nextLong());
+                            System.out.println("Enter publication_id: ");
+                            subscription.setPublication_id(sc.nextLong());
+//                            System.out.println("Enter the customer id: ");
+//                            delivery.setCustomer_id((sc.nextLong()));
+//                            System.out.println("Enter the invoice id: ");
+//                            delivery.setInvoice_id((sc.nextLong()));
+                            System.out.println(subscription);
+                        }
+
+                        //Load existing subscription
+                        case 2 -> {
+                            System.out.println("Enter customer_id: ");
+                            long customer_id = sc.nextInt();
+                            System.out.println("Enter publication_id: ");
+                            long publication_id = sc.nextInt();
+                            subscription = dao.getSubscription(customer_id, publication_id);
+                            System.out.println(delivery);
+                        }
+                        //Edit subscription
+                        case 3 -> {
+                            if (subscription == null) {
+                                System.out.println("Must load subscription first.");
+                            } else {
+                                System.out.println("Edit: " + subscription);
+                                System.out.println("Customer id: " + subscription.getCustomer_id());
+                                if (sc.hasNextLine() && sc.hasNext()) {
+                                    subscription.setCustomer_id(sc.nextLong());
+                                }
+                                System.out.println("Publication id:" + subscription.getPublication_id());
+                                if (sc.hasNextLine() && sc.hasNext()) {
+                                    subscription.setPublication_id(sc.nextLong());
+                                }
+                                System.out.println("Count: " + subscription.getCount());
+                                if (sc.hasNextLine() && sc.hasNext()) {
+                                    subscription.setCount(sc.nextInt());
+                                }
+                            }
+                        }
+                        //Inserting/Updating subscription
+                        case 4 -> {
+                            if (subscription == null) {
+                                System.out.println("Must load or create a subscription.");
+                            } else {
+                                System.out.println("Update subscription: " + subscription);
+                                boolean idChange = subscription.getCustomer_id() == 0;
+                                dao.updateSubscription(subscription);
+                                if (idChange) {
+                                    System.out.println("ID has been changed: " + subscription);
+                                }
+                            }
+                        }
+
+                        //View a selected subscription
+                        case 5 -> {
+                            if (subscription == null) {
+                                System.out.println("Must load or create a subscription first.");
+                            } else {
+                                System.out.println(subscription);
+                            }
+                        }
+                        //Deleting subscription
+                        case 6 -> {
+                            if (subscription == null) {
+                                System.out.println("Must load subscription first.");
+                            } else if (subscription.getCustomer_id() == 0) {
+                                System.out.println("Subscription must be loaded from database.");
+                            } else {
+                                System.out.println("Deleting: " + subscription);
+                                dao.deleteSubscription(subscription);
+                                subscription = null;
+                            }
+                        }
+
+                        //Exit
+                        case 7 -> {
+                            System.out.println("Return to Main Menu.");
+                            subscription = null;
+                        }
+                        default -> System.out.println("Invalid Choice.");
+                    }
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+
+        }
+    }
+//    } catch (DAOExceptionHandler daoExceptionHandler) {
+//            daoExceptionHandler.printStackTrace();
+//        }
 
 /*    public static void publicationMenu()
     {
