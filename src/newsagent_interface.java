@@ -311,11 +311,11 @@ public class newsagent_interface {
                             invoice.setIssue_date(Date.valueOf(sc.next()));
                             System.out.println("Enter invoice status (true or false): ");
                             invoice.setInvoice_status(Boolean.valueOf(sc.next()));
-                            System.out.println("Enter invoice total (yyyy-mm-dd): ");
+                            System.out.println("Enter invoice total (??.?): ");
                             invoice.setInvoice_total(sc.nextDouble());
-                            System.out.println("Enter the customer id: ");
+                            System.out.println("Enter a customer id: ");
                             invoice.setCustomer(dao.getCustomer(sc.nextInt()));
-                            System.out.println(customer);
+                            System.out.println(invoice);
                         }
                         //Load existing Invoice
                         case 2 -> {
