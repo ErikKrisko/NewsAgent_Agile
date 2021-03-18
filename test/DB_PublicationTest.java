@@ -62,9 +62,10 @@ public class DB_PublicationTest extends TestCase {
     {
         try {
             publication.validateName("Westmeath Examiner");
-            fail("Exception not expected.");
         } catch (DB_PublicationExceptionHandler e)
         {
+            e.printStackTrace();
+            fail("Exception not expected.");
             assertEquals("Westmeath Examiner", e.getMessage());
         }
     }
