@@ -28,7 +28,7 @@ public class newsagent_interface {
 
             //  Main menu controller values
             int menuChoice = 0;
-            final int MENU_EXIT = 8;
+            final int MENU_EXIT = 7;
 
             //  Main menu loop
             while (menuChoice != MENU_EXIT) {
@@ -49,10 +49,10 @@ public class newsagent_interface {
                         case 6 -> employeeMenu();
 
                         //Publication Menu Selected
-                        case 7 -> publicationMenu();
+                        //case 7 -> publicationMenu();
 
                         //  Close
-                        case 8 -> System.out.println("Exiting...");
+                        case 7 -> System.out.println("Exiting...");
                         //  Error for unused menus / inputs
                         default -> System.out.println("Invalid Choice.");
                     }
@@ -497,7 +497,7 @@ public class newsagent_interface {
         }
     }
 
-    public static void publicationMenu()
+/*    public static void publicationMenu()
     {
         try {
             //Controller values
@@ -597,7 +597,7 @@ public class newsagent_interface {
         }catch (Exception e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
     public static void printMenu(int menu) {
         switch (menu) {
@@ -610,8 +610,8 @@ public class newsagent_interface {
                 System.out.println("4. Delivery");
                 System.out.println("5. Subscription (unimplemented)");
                 System.out.println("6. Employees ");
-                System.out.println("7. Publication ");
-                System.out.println("8. Exit");
+               // System.out.println("7. Publication ");
+                System.out.println("7. Exit");
             }
             //  Customer menu
             case 1 -> {
@@ -660,7 +660,7 @@ public class newsagent_interface {
                 System.out.println("7. To Main Menu");
             }
 
-            // Publication Menu
+           /* // Publication Menu
             case 7 -> {
                 System.out.println("\n=====Publication Menu=====");
                 System.out.println("1. Create new Publication");
@@ -670,7 +670,7 @@ public class newsagent_interface {
                 System.out.println("5. Check");
                 System.out.println("6. Delete");
                 System.out.println("7. To Main Menu");
-            }
+            }*/
 
             default -> {
                 System.out.println("Invalid menu");
