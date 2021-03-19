@@ -51,22 +51,21 @@ public class DAOTestSubscription extends TestCase {
      *  =========================================
      *  Input(s):
      *  int ID = 1
-     *  DB_Subscription test_subscription = dao.getSubscriptionByCustomer(ID);
+     *  ArrayList<DB_Subscription> getSubscriptionByCustomer = dao.getSubscriptionByCustomer(1);
      *  ==========================================
      *  Expected Output(s):
-     *  test_subscription.getCustomer().getCustomer_id());
-     *  test_subscription.getCount());
-     *  test_subscription.getPublication_id());
+     * subscriptionCustomer.getCustomer_id());
+     * subscriptionCustomer.getPublication_id());
      */
     public void testGetSubscriptionByCustomer002() {
         int ID = 1;
         try {
-            ArrayList<DB_Subscription> getSubscriptionByCustomer = dao.getSubscriptionByCustomer(-1);
-            assertEquals(-1, getSubscriptionByCustomer.size());
+            ArrayList<DB_Subscription> getSubscriptionByCustomer = dao.getSubscriptionByCustomer(1);
+            assertEquals(1, getSubscriptionByCustomer.size());
             DB_Subscription subscriptionCustomer = getSubscriptionByCustomer.get(0);
-            assertEquals(-1, subscriptionCustomer.getCustomer_id());
-            assertEquals(2, subscriptionCustomer.getPublication_id());
-            dao.getSubscriptionByCustomer(-1);
+            assertEquals(1, subscriptionCustomer.getCustomer_id());
+            assertEquals(3, subscriptionCustomer.getPublication_id());
+            dao.getSubscriptionByCustomer(1);
         } catch (DAOExceptionHandler e) {
             e.printStackTrace();
             new DAOExceptionHandler("No subscription with customer_id = " + 1 + " found.");
@@ -79,12 +78,11 @@ public class DAOTestSubscription extends TestCase {
      * =======================================
      * Input(s):
      * int ID = 2
-     * DB_Subscription test_subscription = dao.getSubscriptionByCustomer(ID);
+     * ArrayList<DB_Subscription> getSubscriptionByCustomer = dao.getSubscriptionByCustomer(2);
      * =======================================
      * Expected Output(s):
-     * test_subscription.getCustomer().getCustomer_id());
-     * test_subscription.getCount());
-     * test_subscription.getPublication_id());
+     * subscriptionCustomer.getCustomer_id());
+     * subscriptionCustomer.getPublication_id());
      */
     public void testGetSubscriptionByCustomer003(){
         int ID = 2;
@@ -106,12 +104,11 @@ public class DAOTestSubscription extends TestCase {
      * ========================================
      * Input(s):
      * int ID = 3
-     * DB_Subscription test_subscription = dao.getSubscriptionByCustomer(ID);
+     * ArrayList<DB_Subscription> getSubscriptionByCustomer = dao.getSubscriptionByCustomer(3);
      * =========================================
      * Expected Output(s):
-     * test_subscription.getCustomer().getCustomer_id());
-     * test_subscription.getCount());
-     * test_subscription.getPublication_id());
+     * subscriptionCustomer.getCustomer_id());
+     * subscriptionCustomer.getPublication_id());
      */
     public void testGetSubscriptionByCustomer004(){
         int ID= 3;
@@ -133,12 +130,11 @@ public class DAOTestSubscription extends TestCase {
      * ========================================
      * Input(s):
      * int ID = 4
-     * DB_Subscription test_subscription = dao.getSubscriptionByCustomer(ID);
+     * ArrayList<DB_Subscription> getSubscriptionByCustomer = dao.getSubscriptionByCustomer(4);
      * ========================================
      * Expected Output(s):
-     * test_subscription.getCustomer();
-     * test_subscription.getCount());
-     * test_subscription.getPublication_id());
+     * subscriptionCustomer.getCustomer_id());
+     * subscriptionCustomer.getPublication_id());
      */
     public void testGetSubscriptionByCustomer005(){
         int ID= 4;
@@ -161,7 +157,7 @@ public class DAOTestSubscription extends TestCase {
      * ===============================
      * Input(s):
      * int prod_id = -1
-     * DB_Subscription test_subscription = dao.getSubscriptionByPublication(prod_id);
+     * ArrayList<DB_Subscription> getSubscriptionByCustomer = dao.getSubscriptionByCustomer(-1);
      * ================================
      * Expected Output(s):
      * No subscription with this publication_id = -1 found.
@@ -187,12 +183,11 @@ public class DAOTestSubscription extends TestCase {
      * ===============================
      * Input(s):
      * int prod_id 3
-     * DB_Subscription test_subscription = dao.getSubscriptionByPublication(prod_id);
+     * ArrayList<DB_Subscription> getSubscriptionByCustomer = dao.getSubscriptionByCustomer(3);
      * ================================
      * Expected Output(s):
-     * 1,test_subscription.getPublication_id()
-     * 1,test_subscription.getPublication_id()
-     * test_subscription.getCustomer_id()
+     * subscriptionCustomer.getCustomer_id());
+     * subscriptionCustomer.getPublication_id());
      */
     public void testGetSubscriptionByPublication002(){
         int prod_ID = 3;
@@ -215,12 +210,11 @@ public class DAOTestSubscription extends TestCase {
      * ===============================
      * Input(s):
      * int prod_id 2
-     * DB_Subscription test_subscription = dao.getSubscriptionByPublication(prod_ID);
+     * ArrayList<DB_Subscription> getSubscriptionByCustomer = dao.getSubscriptionByCustomer(2);
      * ================================
      * Expected Output(s):
-     * test_subscription.getPublication());
-     * test_subscription.getCount());
-     * test_subscription.getCustomer_id());
+     * subscriptionCustomer.getCustomer_id());
+     * subscriptionCustomer.getPublication_id());
      */
     public void testGetSubscriptionByPublication003(){
         int prod_ID = 2;
@@ -237,17 +231,16 @@ public class DAOTestSubscription extends TestCase {
         }
     }
 
-    /** Test 009 for subscription by count  which is equal to 3
-     * Test subscription by publication_id = 3
+    /** Test 009 for subscription by publication which is equal to 4
+     * Test subscription by publication_id = 4
      * ===============================
      * Input(s):
-     * int prod_id 3
-     * DB_Subscription test_subscription = dao.getSubscriptionByPublication(prod_ID);
+     * int prod_id 4
+     * ArrayList<DB_Subscription> getSubscriptionByCustomer = dao.getSubscriptionByCustomer(4);
      * ================================
      * Expected Output(s):
-     * test_subscription.getPublication());
-     * test_subscription.getCount());
-     * test_subscription.getCustomer_id());
+     * subscriptionCustomer.getCustomer_id()
+     * subscriptionCustomer.getPublication_id()
      */
     public void testGetSubscriptionByPublication004(){
         int prod_ID = 4;
@@ -257,6 +250,7 @@ public class DAOTestSubscription extends TestCase {
             DB_Subscription subscriptionCustomer = getSubscriptionByPublication.get(0);
             assertEquals(3, subscriptionCustomer.getCustomer_id());
             assertEquals(4, subscriptionCustomer.getPublication_id());
+            dao.getSubscriptionByPublication(4);
         }catch(DAOExceptionHandler e){
             e.printStackTrace();
             fail("Exception not excepted");
@@ -264,17 +258,16 @@ public class DAOTestSubscription extends TestCase {
         }
     }
 
-    /** Test 010 for subscription by count  which is equal to 5
-     * Test subscription by count = 5
+    /** Test 010 subscription by publication which is equal to 5
+     * Test subscription by publication = 5
      * ===============================
      * Input(s):
-     * int count 5
-     * DB_Subscription test_subscription = dao.getSubscriptionByPublication(prod_ID);
+     * int prod_ID = 5
+     * ArrayList<DB_Subscription> getSubscriptionByCustomer = dao.getSubscriptionByCustomer(5);
      * ================================
      * Expected Output(s):
-     * test_subscription.getPublication());
-     * test_subscription.getCount());
-     * test_subscription.getCustomer_id());
+     * subscriptionCustomer.getCustomer_id()
+     * subscriptionCustomer.getPublication_id()
      */
 
     public void testGetSubscriptionByPublication005() {
@@ -285,6 +278,7 @@ public class DAOTestSubscription extends TestCase {
             DB_Subscription subscriptionCustomer = getSubscriptionByPublication.get(0);
             assertEquals(1, subscriptionCustomer.getCustomer_id());
             assertEquals(5, subscriptionCustomer.getPublication_id());
+            dao.getSubscriptionByPublication(5);
         }catch(DAOExceptionHandler e){
             e.printStackTrace();
             fail("Exception not excepted");
