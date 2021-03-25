@@ -798,7 +798,7 @@ public class DAO {
         try {
             ArrayList<DB_Subscription> customerList = new ArrayList<>();
             Statement st = con.createStatement();
-            ResultSet rs = st.executeQuery("SELECT * FROM subscription WHERE customer_id" + customer_id);
+            ResultSet rs = st.executeQuery("SELECT * FROM subscription WHERE customer_id = " + customer_id);
             if ( rs.next()) {
                 do {
                     customerList.add(new DB_Subscription(

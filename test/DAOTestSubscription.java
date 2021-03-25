@@ -37,7 +37,7 @@ public class DAOTestSubscription extends TestCase {
     public void testGetSubscriptionByCustomer001() {
         int ID = -1;
         try{
-            DB_Subscription getSubscriptionByCustomer = dao.getSubscription(-1,3);
+            ArrayList<DB_Subscription> getSubscriptionByCustomer = dao.getSubscriptionByCustomer(-1);
             assertNull(getSubscriptionByCustomer);
             dao.getSubscriptionByCustomer(-1);
             fail("Exception Expected");
@@ -165,18 +165,34 @@ public class DAOTestSubscription extends TestCase {
     public void testGetSubscriptionByPublication001() {
         int prod_ID = -1;
         try {
+
             ArrayList<DB_Subscription> getSubscriptionByPublication = dao.getSubscriptionByPublication(-1);
-            assertEquals(1, getSubscriptionByPublication.size());
-            DB_Subscription subscriptionCustomer = getSubscriptionByPublication.get(0);
-            assertEquals(0, subscriptionCustomer.getCustomer_id());
-            assertEquals(-1, subscriptionCustomer.getPublication_id());
-            dao.getSubscriptionByPublication(-1);
-            fail("Exception expected");
+
+            assertNull(getSubscriptionByPublication);
+//            assertEquals(1, getSubscriptionByPublication.size());
+//            DB_Subscription subscriptionCustomer = getSubscriptionByPublication.get(0);
+//            assertEquals(0, subscriptionCustomer.getCustomer_id());
+//            assertEquals(-1, subscriptionCustomer.getPublication_id());
+//            dao.getSubscriptionByPublication(-1);
+//            fail("Exception expected");
         }catch(DAOExceptionHandler e){
-            assertEquals("No subscription with this publication_id = -1 found. ", e.getMessage());
-            //fail("Exception not excepted");
+            //assertEquals("No subscription with this publication_id = -1 found. ", e.getMessage());
+            e.printStackTrace();
+            fail("Exception not excepted");
         }
     }
+
+    /** public void testGetSubscriptionByCustomer001() {
+     int ID = -1;
+     try{
+     ArrayList<DB_Subscription> getSubscriptionByCustomer = dao.getSubscriptionByCustomer(-1);
+     assertNull(getSubscriptionByCustomer);
+     dao.getSubscriptionByCustomer(-1);
+     fail("Exception Expected");
+     }catch(DAOExceptionHandler e){
+     assertEquals("No subscription with customer_id = " + -1 + " found.", e.getMessage());
+     }
+     **/
 
     /** Test 007 for subscription by publication which is equal to 3
      * Test subscription by publication_id = 3
