@@ -40,12 +40,19 @@ INSERT INTO employee VALUES (null, 'Joey', 'Soul');
 INSERT INTO employee VALUES (null, 'Johnny', 'Sins');
 INSERT INTO employee VALUES (null, 'Kerum', 'Asul');
 
+/*frequency Table*/
+INSERT INTO frequency VALUES (null, '2021-05-21', 'SDGBWE');
+INSERT INTO frequency VALUES (null, '2021-07-01', 'JWDNUJW');
+INSERT INTO frequency VALUES (null, '2021-03-06', 'DWDDKWI');
+INSERT INTO frequency VALUES (null, '2021-06-04', 'DIJWDIW');
+INSERT INTO frequency VALUES (null, '2021-05-25', 'DOKWODK');
+
 /*publication Table*/
-INSERT INTO publication VALUES (null, 'Offaly independent', 'BroadSheet', '2.50', 'WEEKLY 4');
-INSERT INTO publication VALUES (null, 'Westmeath independent', 'Broadsheet', '1.50', 'WEEKLY 3');
-INSERT INTO publication VALUES (null, 'Gamer essential', 'Magazine', '9.50 ', 'MONTHLY 14');
-INSERT INTO publication VALUES (null, 'The Sun', 'Tabloid', '2.50', 'DAILY');
-INSERT INTO publication VALUES (null, 'PlayBunny', 'Magazine', '10', 'MONTHLY 5');
+INSERT INTO publication VALUES (null, 'Offaly independent', 'BroadSheet', '2.50', 1);
+INSERT INTO publication VALUES (null, 'Westmeath independent', 'Broadsheet', '1.50', 2);
+INSERT INTO publication VALUES (null, 'Gamer essential', 'Magazine', '9.50 ', 3);
+INSERT INTO publication VALUES (null, 'The Sun', 'Tabloid', '2.50', 4);
+INSERT INTO publication VALUES (null, 'PlayBunny', 'Magazine', '10', 5);
 
 /*Stock Table*/
 INSERT INTO stock VALUES (null, '2021-07-10', '200', '1-B', 1, 200);
