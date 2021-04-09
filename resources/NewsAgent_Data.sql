@@ -1,9 +1,9 @@
 /*Address Table*/
-INSERT INTO address VALUES (null, '123 black clover lane rhode Co.Offaly', 'B1', 'R45YW71');
-INSERT INTO address VALUES (null, '103 Lana Road Clara Co.Offaly', 'B1', 'R45YW41');
-INSERT INTO address VALUES (null, '105 Johnny Sin lane Killbeggan Co.Westmeath', 'B2', 'R42YW52');
-INSERT INTO address VALUES (null, '13 Downing Street Blancherdstown Co.Dublin', 'A1', 'D45YW81');
-INSERT INTO address VALUES (null, '123 clover lane Tullamore Co.Offaly', 'A3', 'R45YW31');
+INSERT INTO address VALUES (null, '123 black clover lane rhode Co.Offaly', 0, 'R45YW71');
+INSERT INTO address VALUES (null, '103 Lana Road Clara Co.Offaly', 0, 'R45YW41');
+INSERT INTO address VALUES (null, '105 Johnny Sin lane Killbeggan Co.Westmeath', 1, 'R42YW52');
+INSERT INTO address VALUES (null, '13 Downing Street Blancherdstown Co.Dublin', 2, 'D45YW81');
+INSERT INTO address VALUES (null, '123 clover lane Tullamore Co.Offaly', 3, 'R45YW31');
 
 /*Customer Table*/
 INSERT INTO customer VALUES (null, 'Bill', 'Birr', '0951078281', 1);

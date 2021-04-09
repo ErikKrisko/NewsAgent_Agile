@@ -8,7 +8,7 @@ DROP TABLE IF EXISTS address;
 CREATE TABLE address (
      address_id INTEGER AUTO_INCREMENT,
      full_address VARCHAR(50) NOT NULL DEFAULT '',
-     area_code VARCHAR(10) NOT NULL DEFAULT '',
+     area_code INTEGER NOT NULL DEFAULT 0,
      eir_code VARCHAR(8) NOT NULL DEFAULT '',
      PRIMARY KEY (address_id)
 );
