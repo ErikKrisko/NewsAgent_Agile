@@ -1,7 +1,8 @@
 public class DB_Address {
     //  Base address attributes
     private long address_id = 0;
-    private String full_address, area_code, eir_code;
+    private int area_code;
+    private String full_address, eir_code;
 
     /** Blank Constructor for DB_Address.
      */
@@ -15,10 +16,10 @@ public class DB_Address {
      * @param eir_code Has to be 7 characters in length.
      * @throws DB_AddressExceptionHandler
      */
-    public DB_Address(long address_id, String full_address, String area_code, String eir_code) throws DB_AddressExceptionHandler {
+    public DB_Address(long address_id, String full_address, int area_code, String eir_code) throws DB_AddressExceptionHandler {
         this.address_id = validateID( address_id);
         this.full_address = validateEntry( Att_Address.full_address, full_address);
-        this.area_code = validateEntry( Att_Address.area_code, area_code);
+        this.area_code = validateArea(area_code);
         this.eir_code = validateEntry( Att_Address.eir_code, eir_code);
     }
 
@@ -37,12 +38,6 @@ public class DB_Address {
                     else
                         throw new DB_AddressExceptionHandler("full_address too long.");
                 }
-                case area_code -> {
-                    if (entry.length() <= 10)
-                        return entry;
-                    else
-                        throw new DB_AddressExceptionHandler("area_code too long.");
-                }
                 case eir_code -> {
                     if (entry.length() == 7)
                         return entry;
@@ -53,6 +48,14 @@ public class DB_Address {
             }
         } else {
             throw new DB_AddressExceptionHandler( "Entry = \"" + entry + "\", cannot be an empty String.");
+        }
+    }
+
+    public int validateArea(int area_code) throws DB_AddressExceptionHandler {
+        if (area_code >= 0) {
+            return area_code;
+        } else {
+            throw new DB_AddressExceptionHandler("Area code cannot be negative.");
         }
     }
 
@@ -77,7 +80,7 @@ public class DB_Address {
         if (equals && !this.getFull_address().equals( address.getFull_address()))
             equals = false;
         //  Compare Area_code
-        if (equals && !this.getArea_code().equals( address.getArea_code()))
+        if (equals && this.getArea_code() != address.getArea_code())
             equals = false;
         //  Compare Eir_code
         if (equals && !this.getEir_code().equals( address.getEir_code()))
@@ -99,11 +102,11 @@ public class DB_Address {
     //  AUTO GENERATED getters and setters
     public long getAddress_id() {    return address_id; }
     public String getFull_address() {   return full_address; }
-    public String getArea_code() {  return area_code; }
+    public int getArea_code() {  return area_code; }
     public String getEir_code() {   return eir_code; }
     public void setAddress_id(long address_id) throws DB_AddressExceptionHandler { this.address_id = validateID( address_id); }
     public void setFull_address(String full_address) throws DB_AddressExceptionHandler {  this.full_address = validateEntry( Att_Address.full_address, full_address); }
-    public void setArea_code(String area_code) throws DB_AddressExceptionHandler {    this.area_code = validateEntry( Att_Address.area_code, area_code); }
+    public void setArea_code(int area_code) throws DB_AddressExceptionHandler {    this.area_code = validateArea(area_code); }
     public void setEir_code(String eir_code) throws DB_AddressExceptionHandler {  this.eir_code = validateEntry( Att_Address.eir_code, eir_code); }
 }
 

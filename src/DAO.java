@@ -251,7 +251,7 @@ public class DAO {
                 return new DB_Address(
                         rs.getInt( Att_Address.address_id.column),
                         rs.getString( Att_Address.full_address.column),
-                        rs.getString( Att_Address.area_code.column),
+                        rs.getInt( Att_Address.area_code.column),
                         rs.getString( Att_Address.eir_code.column)
                 );
             } else {
@@ -275,7 +275,7 @@ public class DAO {
             if (address.getAddress_id() == 0) {
                 PreparedStatement ps = con.prepareStatement("INSERT INTO address VALUES(null, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
                 ps.setString( Att_Address.full_address.column - 1, address.getFull_address());
-                ps.setString( Att_Address.area_code.column - 1, address.getArea_code());
+                ps.setInt( Att_Address.area_code.column - 1, address.getArea_code());
                 ps.setString( Att_Address.eir_code.column - 1, address.getEir_code());
                 int lines = ps.executeUpdate();
                 ResultSet keys = ps.getGeneratedKeys();

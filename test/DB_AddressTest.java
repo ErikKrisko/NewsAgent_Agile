@@ -51,7 +51,7 @@ public class DB_AddressTest extends TestCase {
     }
 
     /** TEST 004
-     *  Test for too long area_code.
+     *  Invalid area code
      *  ==========
      *  Inputs: address.validateEntry( Att_Address.area_code, "AreaCode 05");
      *  ==========
@@ -59,10 +59,10 @@ public class DB_AddressTest extends TestCase {
      */
     public void testDB_Address004() {
         try {
-            address.validateEntry( Att_Address.area_code, "AreaCode 05");
+            address.validateArea( -1);
             fail("Exception expected.");
         } catch (DB_AddressExceptionHandler e) {
-            assertEquals("area_code too long.", e.getMessage());
+            assertEquals("Area code cannot be negative.", e.getMessage());
         }
     }
 
@@ -75,7 +75,7 @@ public class DB_AddressTest extends TestCase {
      */
     public void testDB_Address005() {
         try {
-            assertEquals("B1", address.validateEntry( Att_Address.area_code, "B1"));
+            assertEquals(0, address.validateArea( 0));
         } catch (DB_AddressExceptionHandler e) {
             fail("Exception not expected.");
         }
@@ -121,7 +121,7 @@ public class DB_AddressTest extends TestCase {
      */
     public void testDB_Address008() {
         try {
-            new DB_Address( -1, "", "", "");
+            new DB_Address( -1, "", 0, "");
             fail("Exception expected.");
         } catch (DB_AddressExceptionHandler e) {
             assertEquals("ID must be 0 or greater.", e.getMessage());
@@ -137,10 +137,10 @@ public class DB_AddressTest extends TestCase {
      */
     public void testDB_Address009() {
         try {
-            DB_Address test = new DB_Address( 0, "Athlone, Maple way 5", "B1", "1234567");
+            DB_Address test = new DB_Address( 0, "Athlone, Maple way 5", 1, "1234567");
             assertEquals( 0, test.getAddress_id());
             assertEquals( "Athlone, Maple way 5", test.getFull_address());
-            assertEquals( "B1", test.getArea_code());
+            assertEquals( 1, test.getArea_code());
             assertEquals( "1234567", test.getEir_code());
         } catch (DB_AddressExceptionHandler e) {
             fail("Exception not expected.");
