@@ -65,7 +65,7 @@ public class DaoTestInvoice extends DB_InvoiceTest {
             DB_Invoice test_invoice = dao.getInvoice(ID);
             assertEquals( 1, test_invoice.getInvoice_id());
             assertEquals(Date.valueOf("2021-02-10"), test_invoice.getIssue_date());
-            assertEquals( "1", test_invoice.getInvoice_status());
+            assertEquals( 1, test_invoice.getInvoice_status());
             assertEquals( "20.2", test_invoice.getInvoice_total());
         } catch (DAOExceptionHandler e) {
             e.printStackTrace();
@@ -158,7 +158,7 @@ public class DaoTestInvoice extends DB_InvoiceTest {
             dao.deleteInvoice( test_Invoice);
             fail("Exception expected.");
         } catch (DAOExceptionHandler e) {
-            assertEquals( "Cannot delete, Invoice with ID = '8', does not exist in the database.", e.getMessage());
+            assertEquals( "No invoice with Invoice id = 8 found.", e.getMessage());
         }
     }
 

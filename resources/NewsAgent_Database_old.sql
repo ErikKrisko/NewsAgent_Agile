@@ -70,6 +70,15 @@ CREATE TABLE employee (
 	PRIMARY KEY (employee_id)
 );
 
+/*Frequency Table*/
+DROP TABLE IF EXISTS frequency;
+CREATE TABLE frequency (
+   freq_id INTEGER AUTO_INCREMENT,
+   freq_date DATE NOT NULL,
+   freq_interval VARCHAR(10) NOT NULL DEFAULT '',
+   PRIMARY KEY (freq_id)
+);
+
 /*Publication Table*/
 DROP TABLE IF EXISTS publication;
 CREATE TABLE publication (
@@ -77,7 +86,8 @@ CREATE TABLE publication (
 	prod_name VARCHAR(25) NOT NULL DEFAULT '',
 	prod_type VARCHAR(25) NOT NULL DEFAULT '',
 	prod_price DECIMAL(4,2) NOT NULL,
-	frequency VARCHAR(25) NOT NULL,
+	freq_id INTEGER NOT NULL,
+    FOREIGN KEY (freq_id) REFERENCES frequency(freq_id),
 	PRIMARY KEY (prod_id)
 );
  

@@ -15,7 +15,7 @@ public class DAOTest extends TestCase {
             dao.open();
             fail("Exception expected");
         } catch (DAOExceptionHandler e) {
-            assertEquals("Entry cannot be empty String.", e.getMessage());
+            assertEquals("The url cannot be null", e.getMessage());
         }
     }
 

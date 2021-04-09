@@ -732,7 +732,7 @@ public class DAO {
                 return temp;
             } else {
                 //  If somehow this is reached throw an error
-                throw new DAOExceptionHandler("No invoice with 'invoice_id = " + ID + " not found.");
+                throw new DAOExceptionHandler("No invoice with invoice_id = " + ID + " not found.");
             }
         }
         catch (SQLException e) {
@@ -765,7 +765,7 @@ public class DAO {
             }
             else
             {
-                throw new DAOExceptionHandler("No invoice with 'Invoice id = " + invoice.getInvoice_id() + " found.");
+                throw new DAOExceptionHandler("No invoice with Invoice id = " + invoice.getInvoice_id() + " found.");
             }
         }
         catch(SQLException e) {
