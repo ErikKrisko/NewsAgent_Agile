@@ -2,36 +2,39 @@ import java.sql.Date;
 import java.util.ArrayList;
 
 public class Docket {
-    private DB_Employee employee;
     private ArrayList<DB_Delivery> deliveries;
     private Date date;
+
+    //  Blank constructor
     public Docket() {}
 
-    public Docket(DB_Employee employee, ArrayList<DB_Delivery> deliveries, Date date) throws DocketExceptionHandler {
-        this.employee = employee;
+    //  Full constructor
+    public Docket(ArrayList<DB_Delivery> deliveries, Date date) throws DocketExceptionHandler {
         this.date = date;
         this.deliveries = validateDeliveries(deliveries);
     }
 
+    //  Validate date comparing to existing delivery list
     private Date validateDate(Date date) throws DocketExceptionHandler {
         throw new DocketExceptionHandler("NO CODE");
     }
 
+    //  Validate deliveries comparing to date and area_code (dont think area_code is possible ?)
     private ArrayList<DB_Delivery> validateDeliveries(ArrayList<DB_Delivery> deliveries) throws DocketExceptionHandler {
         throw new DocketExceptionHandler("NO CODE");
     }
 
+    //  validate single delivery entry
     private DB_Delivery validateDelivery(DB_Delivery delivery) throws DocketExceptionHandler {
         throw new DocketExceptionHandler("NO CODE");
     }
 
+    //  Add delivery to the list and return a boolean depending if delivery exist already or not
     public boolean addDelivery(DB_Delivery delivery) throws DocketExceptionHandler {
         throw new DocketExceptionHandler("NO CODE");
     }
 
     //  AUTO GENERATED getters and setters
-    public DB_Employee getEmployee() { return employee; }
-    public void setEmployee(DB_Employee employee) { this.employee = employee; }
     public ArrayList<DB_Delivery> getDeliveries() { return deliveries; }
     public void setDeliveries(ArrayList<DB_Delivery> deliveries) throws DocketExceptionHandler { this.deliveries = validateDeliveries(deliveries); }
     public Date getDate() { return date; }

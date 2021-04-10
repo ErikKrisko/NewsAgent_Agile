@@ -25,16 +25,13 @@ public class DocketTest extends TestCase {
     /** TEST 001
      *  Test constructor
      *  ==========
-     *  Inputs:    DB_Address test_address = dao.getAddress( 1);
+     *  Inputs:    Docket test = new Docket(new DB_Employee(), new ArrayList<>(), Date.valueOf("2000-01-01"));
      *  ==========
-     *  Expected Outputs:   test_address.getAddress_id() = 1
-     *                      test_address.getFull_address() = "103 Lana Road Clara Co.Offaly"
-     *                      test_address.getArea_code() = "B1"
-     *                      test_address.getEir_code() = "R45YW41"
+     *  Expected Outputs:   Not a fail
      */
     public void testDocket001() {
         try {
-            Docket test = new Docket(new DB_Employee(), new ArrayList<DB_Delivery>(), Date.valueOf("2000-01-01"));
+            Docket test = new Docket(new ArrayList<>(), Date.valueOf("2000-01-01"));
             assertEquals( Date.valueOf("2000-01-01"), test.getDate());
             assertNull( test.getDeliveries());
         } catch (DocketExceptionHandler e) {
@@ -44,37 +41,37 @@ public class DocketTest extends TestCase {
     }
 
     /** TEST 002
-     *  Test inserting incorrect date delivery
+     *  Test inserting incorrect date delivery with failed constructor
      *  ==========
-     *  Inputs:    DB_Address test_address = dao.getAddress( 1);
+     *  Inputs:     ArrayList<DB_Delivery> testList = new ArrayList<>();
+     *              testList.add(dao.getDelivery(1));
+     *              Docket test = new Docket(new DB_Employee(), testList, Date.valueOf("2022-01-06"));
      *  ==========
-     *  Expected Outputs:   test_address.getAddress_id() = 1
-     *                      test_address.getFull_address() = "103 Lana Road Clara Co.Offaly"
-     *                      test_address.getArea_code() = "B1"
-     *                      test_address.getEir_code() = "R45YW41"
+     *  Expected Outputs:   DocketExceptionHandler = ""
      */
     public void testDocket002() {
         try {
-            Docket test = new Docket();
-            test.setDate(Date.valueOf("2022-01-06"));
-            test.addDelivery(dao.getDelivery(1));
+            ArrayList<DB_Delivery> testList = new ArrayList<>();
+            testList.add(dao.getDelivery(1));
+            Docket test = new Docket(testList, Date.valueOf("2022-01-06"));
             fail("Exception expected");
         } catch (DocketExceptionHandler | DAOExceptionHandler e) {
             e.printStackTrace();
+            assertEquals("", e.getMessage());
         }
     }
 
-    /** TEST 005    addDelivery()
-     *  Testing for address id 1
+    /** TEST 003
+     *  Testing for inserting delivery id 1 of matching date
      *  ==========
-     *  Inputs:    DB_Address test_address = dao.getAddress( 1);
+     *  Inputs:    Docket test = new Docket();
+     *             test.setDate(Date.valueOf("2022-01-05"));
+     *             test.setArea_code(0);
+     *             test.addDelivery(dao.getDelivery(1));
      *  ==========
-     *  Expected Outputs:   test_address.getAddress_id() = 1
-     *                      test_address.getFull_address() = "103 Lana Road Clara Co.Offaly"
-     *                      test_address.getArea_code() = "B1"
-     *                      test_address.getEir_code() = "R45YW41"
+     *  Expected Outputs:   Not fail
      */
-    public void testDocket005() {
+    public void testDocket003() {
         try {
             Docket test = new Docket();
             test.setDate(Date.valueOf("2022-01-05"));
@@ -85,5 +82,74 @@ public class DocketTest extends TestCase {
         }
     }
 
+    /** TEST 004
+     *  Testing for setting of new valid Delivery list
+     *  ==========
+     *  Inputs:    Docket test = new Docket(new DB_Employee(), new ArrayList<>(), Date.valueOf("2022-01-05"));
+     *             ArrayList<DB_Delivery> testList = new ArrayList<>();
+     *             testList.add(dao.getDelivery(1));
+     *             testList.add(dao.getDelivery(2));
+     *             test.setDeliveries(testList);
+     *  ==========
+     *  Expected Outputs:   Not fail
+     */
+    public void testDocket004() {
+        try {
+            Docket test = new Docket(new ArrayList<>(), Date.valueOf("2022-01-05"));
+            ArrayList<DB_Delivery> testList = new ArrayList<>();
+            testList.add(dao.getDelivery(1));
+            testList.add(dao.getDelivery(2));
+            test.setDeliveries(testList);
+        } catch (DocketExceptionHandler | DAOExceptionHandler e) {
+            e.printStackTrace();
+            fail("Exception not expected");
+        }
+    }
+
+    /** TEST 005
+     *  Testing for setting of new invalid Delivery list
+     *  ==========
+     *  Inputs:    Docket test = new Docket(new DB_Employee(), new ArrayList<>(), Date.valueOf("2022-01-05"), 0);
+     *             ArrayList<DB_Delivery> testList = new ArrayList<>();
+     *             testList.add(dao.getDelivery(1));
+     *             testList.add(dao.getDelivery(3));
+     *             test.setDeliveries(testList);
+     *  ==========
+     *  Expected Outputs:   DocketExceptionHandler = ""
+     */
+    public void testDocket005() {
+        try {
+            Docket test = new Docket(new ArrayList<>(), Date.valueOf("2022-01-05"));
+            ArrayList<DB_Delivery> testList = new ArrayList<>();
+            testList.add(dao.getDelivery(1));
+            testList.add(dao.getDelivery(3));
+            test.setDeliveries(testList);
+            fail("Exception expected");
+        } catch (DocketExceptionHandler | DAOExceptionHandler e) {
+            e.printStackTrace();
+            assertEquals("", e.getMessage());
+        }
+    }
+
+    /** TEST 006    addDelivery()
+     *  Testing for changing date with delivery list present
+     *  ==========
+     *  Inputs:    DB_Address test_address = dao.getAddress( 1);
+     *  ==========
+     *  Expected Outputs:   DocketExceptionHandler = ""
+     */
+    public void testDocket006() {
+        try {
+            ArrayList<DB_Delivery> testList = new ArrayList<>();
+            testList.add(dao.getDelivery(1));
+            testList.add(dao.getDelivery(2));
+            Docket test = new Docket(testList, Date.valueOf("2022-01-05"));
+            test.setDate(Date.valueOf("2022-01-06"));
+            fail("Exception expected");
+        } catch (DocketExceptionHandler | DAOExceptionHandler e) {
+            e.printStackTrace();
+            assertEquals("", e.getMessage());
+        }
+    }
 
 }
