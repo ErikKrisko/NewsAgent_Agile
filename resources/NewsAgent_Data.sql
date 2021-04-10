@@ -32,6 +32,7 @@ INSERT INTO delivery VALUES (null, '2022-04-05', 0, 2, 2);
 INSERT INTO delivery VALUES (null, '2022-07-18', 1, 3, 3);
 INSERT INTO delivery VALUES (null, '2022-06-10', 1, 4, 4);
 INSERT INTO delivery VALUES (null, '2022-09-05', 0, 5, 5);
+INSERT INTO delivery VALUES (null, '2022-01-05', 0, 1, 1);
 
 /*employee Table*/
 INSERT INTO employee VALUES (null, 'John', 'Doyle');
