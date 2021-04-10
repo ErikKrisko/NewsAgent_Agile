@@ -24,12 +24,14 @@ public class DB_Publication {
      * @param prod_price
      * @throws DB_PublicationExceptionHandler
      */
-    public DB_Publication(long prod_id, String prod_name, String prod_type, Double prod_price, String frequency, int day) throws DB_PublicationExceptionHandler {
+    public DB_Publication(long prod_id, String prod_name, String prod_type, Double prod_price, String frequency/*, int day*/) throws DB_PublicationExceptionHandler {
         this.prod_id = validateID(prod_id);
         this.prod_name = validateName( prod_name);
         this.prod_type = validateType(prod_type);
         this.prod_price = validatePrice(prod_price);
-        this.frequency = validateFrequency(frequency, day);
+        //  CHANGES
+        this.frequency = frequency;
+        /*this.frequency = validateFrequency(frequency, day);*/
     }
 
 
@@ -57,14 +59,14 @@ public class DB_Publication {
 
     //Test for two type anything else throw an error
     public String validateType(String type) throws DB_PublicationExceptionHandler {
-    if(type == "Tabloid")
-        return type;
-        else if (type == "Broadsheet")
+        if(type.equals("Tabloid"))
             return type;
-        else if(type == "Magazine")
+        else if (type.equals("Broadsheet"))
+            return type;
+        else if(type.equals("Magazine"))
             return type;
         else
-        throw new DB_PublicationExceptionHandler("Type = " + type + ", must be either Tabloid, Broadsheet, or Magazine");
+            throw new DB_PublicationExceptionHandler("Type = " + type + ", must be either Tabloid, Broadsheet, or Magazine");
     }
 
     //greater than zero less than 10.00

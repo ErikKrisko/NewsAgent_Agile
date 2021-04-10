@@ -1,5 +1,6 @@
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.LinkedList;
 
 public class DAO {
@@ -853,6 +854,11 @@ public class DAO {
             throw new DAOExceptionHandler(e.getMessage());
         }
     }
+
+    public ArrayList<DB_Subscription> getSubscriptionsByPublications(long[] publication_ids) throws DAOExceptionHandler {
+        throw new DAOExceptionHandler("NO CODE");
+    }
+
     //---------------------------------------------------
     //Update Subscription
 
@@ -1011,22 +1017,54 @@ public class DAO {
         }
     }
 
+
+    }*/
+
+    public ArrayList<DB_Publication> getPublicationsByDate(Date date) throws DAOExceptionHandler {
+        //  Push to calendar object
+        //  FEW NOTES. Calendar.DAY_OF_WEEK starts counting from sunday = 1, monday = 2,...
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+
+        //  Compile query
+        String statement = "SELECT * FROM publication WHERE frequency = 'WEEKLY " + cd(cal.get(Calendar.DAY_OF_WEEK)) + "' OR frequency = 'MONTHLY " + cal.get(Calendar.DAY_OF_MONTH) + "' ";
+        if (cal.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY && cal.get(Calendar.DAY_OF_WEEK) != Calendar.SATURDAY )
+            statement += "OR frequency = 'DAILY'";
+
+        //  Query
+        try {
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery(statement);
+            if ( rs.next()) {
+                ArrayList<DB_Publication> list = new ArrayList<>();
+                do {
+                    list.add( populatePublication( rs));
+                } while ( rs.next());
+                rs.close();
+                st.close();
+                return list;
+            } else {
+                return null;
+            }
+        } catch (SQLException e) {
+            throw new DAOExceptionHandler(e.getMessage());
+        }
+    }
+
     private DB_Publication populatePublication(ResultSet rs) throws DAOExceptionHandler {
         try {
             DB_Publication temp = new DB_Publication(
-                    rs.getInt(0),
-                    rs.getString(1),
+                    rs.getInt(1),
                     rs.getString(2),
-                    rs.getDouble(3),
-                    rs.getString(4),
-                    rs.getInt(5)
+                    rs.getString(3),
+                    rs.getDouble(4),
+                    rs.getString(5)
             );
             return temp;
-        }
-        catch(SQLException | DB_PublicationExceptionHandler e) {
+        } catch (SQLException | DB_PublicationExceptionHandler e) {
             throw new DAOExceptionHandler(e.getMessage());
         }
-    }*/
+    }
 
 
     /** Connection controls */
@@ -1055,6 +1093,14 @@ public class DAO {
         catch(SQLException | ClassNotFoundException e) {
             throw new DAOExceptionHandler(e.getMessage());
         }
+    }
+
+    //  BONUS METHOD FOR CALENDAR
+    private int cd(int day) {
+        if (day == 1)
+            return 7;
+        else
+            return day-1;
     }
 
     //  AUTO GENERATED getters and setters

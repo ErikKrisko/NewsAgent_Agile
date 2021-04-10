@@ -42,7 +42,7 @@ INSERT INTO employee VALUES (null, 'Johnny', 'Sins');
 INSERT INTO employee VALUES (null, 'Kerum', 'Asul');
 
 /*publication Table*/
-INSERT INTO publication VALUES (null, 'Offaly independent', 'BroadSheet', '2.50', 'WEEKLY 4');
+INSERT INTO publication VALUES (null, 'Offaly independent', 'Broadsheet', '2.50', 'WEEKLY 4');
 INSERT INTO publication VALUES (null, 'Westmeath independent', 'Broadsheet', '1.50', 'WEEKLY 3');
 INSERT INTO publication VALUES (null, 'Gamer essential', 'Magazine', '9.50 ', 'MONTHLY 14');
 INSERT INTO publication VALUES (null, 'The Sun', 'Tabloid', '2.50', 'DAILY');
