@@ -30,52 +30,98 @@ public class DAOTestPublication extends TestCase {
         }
     }
 
-    //  GET DAILY, Weekly 3 and Monthly 14 publications
-    public void testGetPublications001() {
+    /** TEST 001
+     *  Testing for to get Daily, Weekly 3 and Monthly 14 publications.
+     *  ==========
+     *  Inputs:    ArrayList<DB_Publication> list = dao.getPublicationsByDate(Date.valueOf("2021-04-14"));
+     *  ==========
+     *  Expected Outputs:   list.size() = 3
+     *                      list.get(0).getProd_id() = 2
+     *                      list.get(1).getProd_id() = 3
+     *                      list.get(2).getProd_id() = 4
+     */
+    public void testGetPublicationsByDate001() {
         try {
             ArrayList<DB_Publication> list = dao.getPublicationsByDate(Date.valueOf("2021-04-14"));
             assertEquals(3, list.size());
+            assertEquals(2, list.get(0).getProd_id());
+            assertEquals(3, list.get(1).getProd_id());
+            assertEquals(4, list.get(2).getProd_id());
         } catch (DAOExceptionHandler e) {
             e.printStackTrace();
             fail("Exception not Expected");
         }
     }
 
-    //  GET DAILY and Weekly 4 publications
-    public void testGetPublications002() {
+    /** TEST 002
+     *  Testing for to get Daily, Weekly 4
+     *  ==========
+     *  Inputs:    ArrayList<DB_Publication> list = dao.getPublicationsByDate(Date.valueOf("2021-04-15"));
+     *  ==========
+     *  Expected Outputs:   list.size() = 2
+     *                      list.get(0).getProd_id() = 1
+     *                      list.get(1).getProd_id() = 4
+     */
+    public void testGetPublicationsByDate002() {
         try {
             ArrayList<DB_Publication> list = dao.getPublicationsByDate(Date.valueOf("2021-04-15"));
             assertEquals(2, list.size());
+            assertEquals(1, list.get(0).getProd_id());
+            assertEquals(4, list.get(1).getProd_id());
         } catch (DAOExceptionHandler e) {
             e.printStackTrace();
             fail("Exception not Expected");
         }
     }
 
-    //  GET DAILY and Monthly 5 publications
-    public void testGetPublications003() {
+    /** TEST 003
+     *  Testing for to get Daily, Monthly 5
+     *  ==========
+     *  Inputs:    ArrayList<DB_Publication> list = dao.getPublicationsByDate(Date.valueOf("2021-04-05"));
+     *  ==========
+     *  Expected Outputs:   list.size() = 2
+     *                      list.get(0).getProd_id() = 4
+     *                      list.get(1).getProd_id() = 5
+     */
+    public void testGetPublicationsByDate003() {
         try {
             ArrayList<DB_Publication> list = dao.getPublicationsByDate(Date.valueOf("2021-04-05"));
             assertEquals(2, list.size());
+            assertEquals(4, list.get(0).getProd_id());
+            assertEquals(5, list.get(1).getProd_id());
         } catch (DAOExceptionHandler e) {
             e.printStackTrace();
             fail("Exception not Expected");
         }
     }
 
-    //  Get daily only publication
-    public void testGetPublications004() {
+    /** TEST 004
+     *  Testing for to get Daily
+     *  ==========
+     *  Inputs:    ArrayList<DB_Publication> list = dao.getPublicationsByDate(Date.valueOf("2021-04-06"));
+     *  ==========
+     *  Expected Outputs:   list.size() = 1
+     *                      list.get(0).getProd_id() = 4
+     */
+    public void testGetPublicationsByDate004() {
         try {
             ArrayList<DB_Publication> list = dao.getPublicationsByDate(Date.valueOf("2021-04-06"));
             assertEquals(1, list.size());
+            assertEquals(4, list.get(0).getProd_id());
         } catch (DAOExceptionHandler e) {
             e.printStackTrace();
             fail("Exception not Expected");
         }
     }
 
-    //  Get no publications (Saturday / Sunday)
-    public void testGetPublications005() {
+    /** TEST 005
+     *  Testing for to get no publications (Saturday / Sunday)
+     *  ==========
+     *  Inputs:    ArrayList<DB_Publication> list = dao.getPublicationsByDate(Date.valueOf("2021-04-03"));
+     *  ==========
+     *  Expected Outputs:   list == null;
+     */
+    public void testGetPublicationsByDate005() {
         try {
             ArrayList<DB_Publication> list = dao.getPublicationsByDate(Date.valueOf("2021-04-03"));
             assertNull( list);
