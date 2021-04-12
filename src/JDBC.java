@@ -15,7 +15,7 @@ public class JDBC {
         url = "jdbc:mysql://localhost:3306/";
         user = "root";
         pass = "admin";
-        dbName = "newsagent";
+        dbName = "newsagent?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
         open();
     }
     public JDBC( String url, String user, String pass) {
