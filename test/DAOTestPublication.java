@@ -14,13 +14,13 @@ public class DAOTestPublication extends TestCase {
      *  ==========
      *  Expected Outputs:   None
      */
-    public DAOTestPublication() {
+    public void initializeDatabase() {
         try {
             //  Reset Database
             JDBC connection = new JDBC("jdbc:mysql://localhost:3306/", "root", "admin");
             connection.executeScript("NewsAgent_Database.sql");
             connection.setDbName("newsagent");
-            connection.executeScript("NewsAgent_Data.sql");
+            connection.executeScript("NewsAgent_Data_Extended.sql");
             connection.close();
             //  Initialize DAO
             dao = new DAO("jdbc:mysql://localhost:3306/newsagent?useTimezone=true&serverTimezone=UTC", "root", "admin");
@@ -42,11 +42,13 @@ public class DAOTestPublication extends TestCase {
      */
     public void testGetPublicationsByDate001() {
         try {
+            initializeDatabase();
             ArrayList<DB_Publication> list = dao.getPublicationsByDate(Date.valueOf("2021-04-14"));
-            assertEquals(3, list.size());
+            assertEquals(4, list.size());
             assertEquals(2, list.get(0).getProd_id());
             assertEquals(3, list.get(1).getProd_id());
             assertEquals(4, list.get(2).getProd_id());
+            assertEquals(8, list.get(3).getProd_id());
         } catch (DAOExceptionHandler e) {
             e.printStackTrace();
             fail("Exception not Expected");
@@ -64,10 +66,12 @@ public class DAOTestPublication extends TestCase {
      */
     public void testGetPublicationsByDate002() {
         try {
+            initializeDatabase();
             ArrayList<DB_Publication> list = dao.getPublicationsByDate(Date.valueOf("2021-04-15"));
-            assertEquals(2, list.size());
+            assertEquals(3, list.size());
             assertEquals(1, list.get(0).getProd_id());
             assertEquals(4, list.get(1).getProd_id());
+            assertEquals(8, list.get(2).getProd_id());
         } catch (DAOExceptionHandler e) {
             e.printStackTrace();
             fail("Exception not Expected");
@@ -85,10 +89,12 @@ public class DAOTestPublication extends TestCase {
      */
     public void testGetPublicationsByDate003() {
         try {
+            initializeDatabase();
             ArrayList<DB_Publication> list = dao.getPublicationsByDate(Date.valueOf("2021-04-05"));
-            assertEquals(2, list.size());
+            assertEquals(3, list.size());
             assertEquals(4, list.get(0).getProd_id());
             assertEquals(5, list.get(1).getProd_id());
+            assertEquals(8, list.get(2).getProd_id());
         } catch (DAOExceptionHandler e) {
             e.printStackTrace();
             fail("Exception not Expected");
@@ -105,9 +111,11 @@ public class DAOTestPublication extends TestCase {
      */
     public void testGetPublicationsByDate004() {
         try {
+            initializeDatabase();
             ArrayList<DB_Publication> list = dao.getPublicationsByDate(Date.valueOf("2021-04-06"));
-            assertEquals(1, list.size());
+            assertEquals(2, list.size());
             assertEquals(4, list.get(0).getProd_id());
+            assertEquals(8, list.get(1).getProd_id());
         } catch (DAOExceptionHandler e) {
             e.printStackTrace();
             fail("Exception not Expected");
@@ -115,7 +123,7 @@ public class DAOTestPublication extends TestCase {
     }
 
     /** TEST 005
-     *  Testing for to get no publications (Saturday / Sunday)
+     *  Testing for to get no publications (Sunday)
      *  ==========
      *  Inputs:    ArrayList<DB_Publication> list = dao.getPublicationsByDate(Date.valueOf("2021-04-03"));
      *  ==========
@@ -123,7 +131,8 @@ public class DAOTestPublication extends TestCase {
      */
     public void testGetPublicationsByDate005() {
         try {
-            ArrayList<DB_Publication> list = dao.getPublicationsByDate(Date.valueOf("2021-04-03"));
+            initializeDatabase();
+            ArrayList<DB_Publication> list = dao.getPublicationsByDate(Date.valueOf("2021-04-04"));
             assertNull( list);
         } catch (DAOExceptionHandler e) {
             e.printStackTrace();

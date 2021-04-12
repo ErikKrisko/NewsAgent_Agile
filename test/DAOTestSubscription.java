@@ -1,5 +1,6 @@
 import junit.framework.TestCase;
 
+import java.sql.Date;
 import java.util.ArrayList;
 
 public class DAOTestSubscription extends TestCase {
@@ -21,6 +22,25 @@ public class DAOTestSubscription extends TestCase {
         }catch (DAOExceptionHandler | JDBCExceptionHandler e){
             e.printStackTrace();
             fail("DAO initialization failed");
+        }
+    }
+
+    /** Preemptive method for resetting database to be used as an initial starting point of each test.
+     *  Will need to change existing test to use this system too for be, most reliable results.
+     */
+    private void initializeDatabase() {
+        try {
+            //  Reset Database
+            JDBC connection = new JDBC("jdbc:mysql://localhost:3306/", "root", "admin");
+            connection.executeScript("NewsAgent_Database.sql");
+            connection.setDbName("newsagent");
+            connection.executeScript("NewsAgent_Data.sql");
+            connection.close();
+            //  Initialize DAO
+            dao = new DAO("jdbc:mysql://localhost:3306/newsagent?useTimezone=true&serverTimezone=UTC", "root", "admin");
+        } catch (DAOExceptionHandler | JDBCExceptionHandler e) {
+            e.printStackTrace();
+            fail("Test initialization failed.");
         }
     }
 
@@ -446,4 +466,56 @@ public class DAOTestSubscription extends TestCase {
             assertEquals("No subscription with customer_id = " + 6 + " and publication_id = " + 1 + " found. ", e.getMessage());
         }
     }
+
+    /**Test 017 getSubscriptionsByPublications
+     * Test for getting subscriptions from publication
+     * =====================================================
+     * Input(s):    ArrayList<DB_Publication> prod_list = dao.getPublicationsByDate(Date.valueOf("2021-04-14"));
+     *              ArrayList<DB_Subscription> sub_list = dao.getSubscriptionsByPublications(prod_list);
+     * =====================================================
+     * Expected Output(s):  sub_list.size = 3;
+     *                      sub_list.get(0).getCustomer_id() = 1;
+     *                      sub_list.get(1).getCustomer_id() = 2;
+     *                      sub_list.get(2).getCustomer_id() = 3;
+     */
+    public void testGetSubscriptionsByPublications001(){
+        try{
+            initializeDatabase();
+            ArrayList<DB_Publication> prod_list = dao.getPublicationsByDate(Date.valueOf("2021-04-14"));
+            ArrayList<DB_Subscription> sub_list = dao.getSubscriptionsByPublications(prod_list);
+            assertEquals(4, sub_list.size());
+            assertEquals(2, sub_list.get(0).getCustomer_id());
+            assertEquals(1, sub_list.get(1).getCustomer_id());
+            assertEquals(5, sub_list.get(2).getCustomer_id());
+            assertEquals(3, sub_list.get(3).getCustomer_id());
+        }catch (DAOExceptionHandler e){
+            e.printStackTrace();
+            fail("Exception not expected");
+        }
+    }
+
+    /**Test 018 getSubscriptionsByPublications
+     * Test for getting subscriptions from publication
+     * =====================================================
+     * Input(s):    ArrayList<DB_Publication> prod_list = dao.getPublicationsByDate(Date.valueOf("2021-04-15"));
+     *              ArrayList<DB_Subscription> sub_list = dao.getSubscriptionsByPublications(prod_list);
+     * =====================================================
+     * Expected Output(s):  sub_list.size = 1;
+     *                      sub_list.get(0).getCustomer_id() = 3;
+     */
+    public void testGetSubscriptionsByPublications002(){
+        try{
+            initializeDatabase();
+            ArrayList<DB_Publication> prod_list = dao.getPublicationsByDate(Date.valueOf("2021-04-15"));
+            ArrayList<DB_Subscription> sub_list = dao.getSubscriptionsByPublications(prod_list);
+            assertEquals(1, sub_list.size());
+            assertEquals(3, sub_list.get(0).getCustomer_id());
+        }catch (DAOExceptionHandler e){
+            e.printStackTrace();
+            fail("Exception not expected");
+        }
+    }
+
+    //  Test for fail of empty list
+
 }

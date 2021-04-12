@@ -1,5 +1,6 @@
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.LinkedList;
 
@@ -81,7 +82,7 @@ public class DAO {
                 }
                 //  Cut the last four characters off ( "AND " ) from the end
                 query = query.substring(0, query.length() - 4 );
-                System.out.println(query);
+//                System.out.println(query);
                 Statement st = con.createStatement();
                 ResultSet rs = st.executeQuery(query);
                 LinkedList<DB_Customer> tempList = new LinkedList<>();
@@ -326,7 +327,7 @@ public class DAO {
         } else {
             try {
                 Statement st = con.createStatement();
-                System.out.println("SELECT * FROM address WHERE " + Att_Address.address_id.name + " = " + address.getAddress_id());
+//                System.out.println("SELECT * FROM address WHERE " + Att_Address.address_id.name + " = " + address.getAddress_id());
                 ResultSet rs = st.executeQuery("SELECT * FROM address WHERE " + Att_Address.address_id.name + " = " + address.getAddress_id());
                 if ( rs.next()) {
                     int lines = st.executeUpdate( "DELETE FROM address WHERE " + Att_Address.address_id.name + " = " + address.getAddress_id());
@@ -674,7 +675,7 @@ public class DAO {
      * @throws DAOExceptionHandler if an SQL error occurred or there was invoice_id misshandling.
      */
     public int updateInvoice(DB_Invoice invoice) throws DAOExceptionHandler {
-        System.out.println();
+//        System.out.println();
         try {
             //  If customer ID == null , create new otherwise update
             if (invoice.getInvoice_id() == 0) {
@@ -705,7 +706,7 @@ public class DAO {
                 //  Specify update target
                 update += "WHERE " + Att_Invoice.invoice_id.name + " = " + invoice.getCustomer().getCustomer_id();
                 //  Create statement and executeUpdate. (Cannot recall why prepared statement was used)
-                System.out.println(update);
+//                System.out.println(update);
                 PreparedStatement ps = con.prepareStatement(update);
                 int lines = ps.executeUpdate();
                 return lines;
@@ -816,6 +817,57 @@ public class DAO {
                 rs.close();
                 st.close();
                 return null;
+            }
+        } catch (SQLException | DB_SubscriptionExceptionHandler e) {
+            throw new DAOExceptionHandler(e.getMessage());
+        }
+    }
+
+    public ArrayList<DB_Subscription> getSubscriptionsByPublications(ArrayList<DB_Publication> prod_list) throws DAOExceptionHandler {
+        try {
+            //  Compile unique prod_ids to an array
+            long[] prod_ids = new long[0];
+            for (DB_Publication pub : prod_list) {
+                boolean contains = false;
+                for (long i : prod_ids) {
+                    if (i == pub.getProd_id()) {
+                        contains = true;
+                        break;
+                    }
+                }
+                if (!contains) {
+                    prod_ids = Arrays.copyOf(prod_ids, prod_ids.length + 1);
+                    prod_ids[prod_ids.length-1] = pub.getProd_id();
+                }
+            }
+            if (prod_ids.length > 0) {
+                ArrayList<DB_Subscription> sub_list = new ArrayList<>();
+                String statement = "SELECT * FROM subscription WHERE prod_id IN (";
+                //  Add numbers to the list
+                for (long i : prod_ids)
+                    statement += i + ",";
+                //  Cut the last comma and add closing parentheses
+                statement = statement.substring(0, statement.length() - 1);
+                statement += ")";
+                //  Execute query
+                Statement st = con.createStatement();
+                ResultSet rs = st.executeQuery(statement);
+                if (rs.next()) {
+                    do {
+                        sub_list.add(new DB_Subscription(
+                                rs.getInt(3),
+                                rs.getLong(1),
+                                rs.getInt(2)
+                        ));
+                    } while ((rs.next()));
+                    return sub_list;
+                } else {
+                    rs.close();
+                    st.close();
+                    return null;
+                }
+            } else {
+                throw new DAOExceptionHandler("No product ids were found");
             }
         } catch (SQLException | DB_SubscriptionExceptionHandler e) {
             throw new DAOExceptionHandler(e.getMessage());

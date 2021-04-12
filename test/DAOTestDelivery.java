@@ -2,11 +2,11 @@ import junit.framework.TestCase;
 
 import java.sql.Date;
 
-public class DB_DeliveryTestDAO extends TestCase {
+public class DAOTestDelivery extends TestCase {
     DB_Delivery delivery = new DB_Delivery();
     private DAO dao;
 
-    public DB_DeliveryTestDAO() {
+    public DAOTestDelivery() {
         try {
             //  Initialize DAO
             dao = new DAO("jdbc:mysql://localhost:3306/newsagent?useTimezone=true&serverTimezone=UTC", "root", "admin");

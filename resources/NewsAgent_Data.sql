@@ -74,4 +74,4 @@ INSERT INTO subscription VALUES (1, 3, 1);
 INSERT INTO subscription VALUES (2, 2, 1);
 INSERT INTO subscription VALUES (3, 4, 1);
 INSERT INTO subscription VALUES (4, 5, 1);
-INSERT INTO subscription VALUES (5, 1, 1);
+INSERT INTO subscription VALUES (5, 3, 2);
