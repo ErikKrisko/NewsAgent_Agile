@@ -849,6 +849,7 @@ public class DAO {
                 //  Cut the last comma and add closing parentheses
                 statement = statement.substring(0, statement.length() - 1);
                 statement += ")";
+                System.out.println(statement);
                 //  Execute query
                 Statement st = con.createStatement();
                 ResultSet rs = st.executeQuery(statement);

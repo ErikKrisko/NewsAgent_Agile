@@ -34,7 +34,7 @@ public class DAOTestSubscription extends TestCase {
             JDBC connection = new JDBC("jdbc:mysql://localhost:3306/", "root", "admin");
             connection.executeScript("NewsAgent_Database.sql");
             connection.setDbName("newsagent");
-            connection.executeScript("NewsAgent_Data.sql");
+            connection.executeScript("NewsAgent_Data_Extended.sql");
             connection.close();
             //  Initialize DAO
             dao = new DAO("jdbc:mysql://localhost:3306/newsagent?useTimezone=true&serverTimezone=UTC", "root", "admin");
@@ -473,21 +473,26 @@ public class DAOTestSubscription extends TestCase {
      * Input(s):    ArrayList<DB_Publication> prod_list = dao.getPublicationsByDate(Date.valueOf("2021-04-14"));
      *              ArrayList<DB_Subscription> sub_list = dao.getSubscriptionsByPublications(prod_list);
      * =====================================================
-     * Expected Output(s):  sub_list.size = 3;
+     * Expected Output(s):  sub_list.size = 20;
      *                      sub_list.get(0).getCustomer_id() = 1;
      *                      sub_list.get(1).getCustomer_id() = 2;
      *                      sub_list.get(2).getCustomer_id() = 3;
+     *                      sub_list.get(3).getCustomer_id() = 2;
+     *                      sub_list.get(4).getCustomer_id() = 3;
+     *                      sub_list.get(19).getCustomer_id() = 23;
      */
     public void testGetSubscriptionsByPublications001(){
         try{
             initializeDatabase();
             ArrayList<DB_Publication> prod_list = dao.getPublicationsByDate(Date.valueOf("2021-04-14"));
             ArrayList<DB_Subscription> sub_list = dao.getSubscriptionsByPublications(prod_list);
-            assertEquals(4, sub_list.size());
-            assertEquals(2, sub_list.get(0).getCustomer_id());
-            assertEquals(1, sub_list.get(1).getCustomer_id());
-            assertEquals(5, sub_list.get(2).getCustomer_id());
-            assertEquals(3, sub_list.get(3).getCustomer_id());
+            assertEquals(20, sub_list.size());
+            assertEquals(1, sub_list.get(0).getCustomer_id());
+            assertEquals(2, sub_list.get(1).getCustomer_id());
+            assertEquals(3, sub_list.get(2).getCustomer_id());
+            assertEquals(4, sub_list.get(3).getCustomer_id());
+            assertEquals(7, sub_list.get(4).getCustomer_id());
+            assertEquals(23, sub_list.get(19).getCustomer_id());
         }catch (DAOExceptionHandler e){
             e.printStackTrace();
             fail("Exception not expected");
@@ -500,22 +505,47 @@ public class DAOTestSubscription extends TestCase {
      * Input(s):    ArrayList<DB_Publication> prod_list = dao.getPublicationsByDate(Date.valueOf("2021-04-15"));
      *              ArrayList<DB_Subscription> sub_list = dao.getSubscriptionsByPublications(prod_list);
      * =====================================================
-     * Expected Output(s):  sub_list.size = 1;
-     *                      sub_list.get(0).getCustomer_id() = 3;
+     * Expected Output(s):  sub_list.size = 20;
+     *                      sub_list.get(0).getCustomer_id() = 1;
+     *                      sub_list.get(1).getCustomer_id() = 1;
+     *                      sub_list.get(2).getCustomer_id() = 3;
+     *                      sub_list.get(3).getCustomer_id() = 7;
+     *                      sub_list.get(18).getCustomer_id() = 23;
      */
     public void testGetSubscriptionsByPublications002(){
         try{
             initializeDatabase();
             ArrayList<DB_Publication> prod_list = dao.getPublicationsByDate(Date.valueOf("2021-04-15"));
             ArrayList<DB_Subscription> sub_list = dao.getSubscriptionsByPublications(prod_list);
-            assertEquals(1, sub_list.size());
-            assertEquals(3, sub_list.get(0).getCustomer_id());
+            assertEquals(19, sub_list.size());
+            assertEquals(1, sub_list.get(0).getCustomer_id());
+            assertEquals(1, sub_list.get(1).getCustomer_id());
+            assertEquals(3, sub_list.get(2).getCustomer_id());
+            assertEquals(7, sub_list.get(3).getCustomer_id());
+            assertEquals(23, sub_list.get(18).getCustomer_id());
         }catch (DAOExceptionHandler e){
             e.printStackTrace();
             fail("Exception not expected");
         }
     }
 
-    //  Test for fail of empty list
+    /**Test 019 getSubscriptionsByPublications
+     * Test for failing
+     * =====================================================
+     * Input(s):    ArrayList<DB_Publication> prod_list = null
+     *              ArrayList<DB_Subscription> sub_list = dao.getSubscriptionsByPublications(prod_list);
+     * =====================================================
+     * Expected Output(s):  DAOExceptionHandler = "No product ids were found"
+     */
+    public void testGetSubscriptionsByPublications003(){
+        try{
+            initializeDatabase();
+            ArrayList<DB_Publication> prod_list = new ArrayList<>();
+            dao.getSubscriptionsByPublications(prod_list);
+            fail("Exception Expected");
+        }catch (DAOExceptionHandler e){
+            assertEquals("No product ids were found", e.getMessage());
+        }
+    }
 
 }
