@@ -2,20 +2,20 @@ import junit.framework.TestCase;
 
 import java.sql.Date;
 
-public class DB_DeliveryTestDAO extends TestCase {
+public class DAOTestDelivery extends TestCase {
     DB_Delivery delivery = new DB_Delivery();
     private DAO dao;
 
-    public DB_DeliveryTestDAO() {
+    public DAOTestDelivery() {
         try {
-            //  Initialize DAO
-            dao = new DAO("jdbc:mysql://localhost:3306/newsagent?useTimezone=true&serverTimezone=UTC", "root", "admin");
             //  Reset Database
             JDBC connection = new JDBC("jdbc:mysql://localhost:3306/", "root", "admin");
             connection.executeScript("NewsAgent_Database.sql");
             connection.setDbName("newsagent");
             connection.executeScript("NewsAgent_Data.sql");
             connection.close();
+            //  Initialize DAO
+            dao = new DAO("jdbc:mysql://localhost:3306/newsagent?useTimezone=true&serverTimezone=UTC", "root", "admin");
         } catch (DAOExceptionHandler | JDBCExceptionHandler e) {
             e.printStackTrace();
             fail("DAO initialization failed.");
@@ -43,7 +43,7 @@ public class DB_DeliveryTestDAO extends TestCase {
             assertEquals(1, delivery.getInvoice_id());
         } catch (DAOExceptionHandler e) {
             e.printStackTrace();
-            fail("Exception not expected.");
+            fail("Test initialization failed.");
         }
     }
 
@@ -56,7 +56,7 @@ public class DB_DeliveryTestDAO extends TestCase {
      * Expected Outputs: "No delivery with 'delivery_id = " + ID + " found."
      */
     public void testDB_Delivery016() {
-        int ID = 6;
+        int ID = 7;
         try {
             delivery = dao.getDelivery(ID);
             fail("Exception expected.");
@@ -77,13 +77,13 @@ public class DB_DeliveryTestDAO extends TestCase {
     public void testDB_Delivery017() {
         try {
             delivery.setDelivery_id(0);
-            delivery.setDelivery_date(Date.valueOf("2021-04-05"));
+            delivery.setDelivery_date(Date.valueOf(String.valueOf(new Date(System.currentTimeMillis()))));
             delivery.setDelivery_status(true);
             delivery.setCustomer_id((1));
             delivery.setInvoice_id((3));
             dao.updateDelivery(delivery);
-            assertEquals(6, delivery.getDelivery_id());
-            assertEquals(Date.valueOf("2021-04-05"), delivery.getDelivery_date());
+            assertEquals(7, delivery.getDelivery_id());
+            assertEquals(Date.valueOf(String.valueOf(new Date(System.currentTimeMillis()))), delivery.getDelivery_date());
             assertEquals(true, delivery.isDelivery_status());
         } catch (DAOExceptionHandler | DB_DeliveryExceptionHandler e) {
             e.printStackTrace();
