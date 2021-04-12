@@ -1,11 +1,11 @@
 import junit.framework.TestCase;
 
-public class DB_EmployeeTestDAO extends TestCase
+public class DAOTestEmployee extends TestCase
 {
     DB_Employee employee = new DB_Employee();
     private DAO dao;
 
-    public DB_EmployeeTestDAO() {
+    public DAOTestEmployee() {
         try {
             //  Initialize DAO
             dao = new DAO("jdbc:mysql://localhost:3306/newsagent?useTimezone=true&serverTimezone=UTC", "root", "admin");

@@ -13,13 +13,13 @@ public class DAOTestCustomer extends TestCase {
      *  ==========
      *  Expected Outputs:   None
      */
-    public DAOTestCustomer() {
+    public void initializeDatabase() {
         try {
             //  Reset Database
             JDBC connection = new JDBC("jdbc:mysql://localhost:3306/", "root", "admin");
             connection.executeScript("NewsAgent_Database.sql");
             connection.setDbName("newsagent");
-            connection.executeScript("NewsAgent_Data.sql");
+            connection.executeScript("NewsAgent_Data_Extended.sql");
             connection.close();
             //  Initialize DAO
             dao = new DAO("jdbc:mysql://localhost:3306/newsagent?useTimezone=true&serverTimezone=UTC", "root", "admin");
@@ -40,6 +40,7 @@ public class DAOTestCustomer extends TestCase {
     public void testGetCustomer001(){
         int ID = -1;
         try {
+            initializeDatabase();
             dao.getCustomer(ID);
             fail("Exception expected");
         } catch (DAOExceptionHandler e) {
@@ -56,17 +57,18 @@ public class DAOTestCustomer extends TestCase {
      *  Expected Outputs:   test_customer.getCustomer_id() = 1
      *                      test_customer.getFirst_name() = "Bill"
      *                      test_customer.getLast_name() = "Birr"
-     *                      test_customer.getPhone_no() = "0951078281"
+     *                      test_customer.getPhone_no() = "0875748271"
      *                      test_customer.getAddress().getAddress_id() = 1
      */
     public void testGetCustomer002() {
         int ID = 1;
         try {
+            initializeDatabase();
             DB_Customer test_customer = dao.getCustomer(ID);
             assertEquals( 1, test_customer.getCustomer_id());
             assertEquals( "Bill", test_customer.getFirst_name());
             assertEquals( "Birr", test_customer.getLast_name());
-            assertEquals( "0951078281", test_customer.getPhone_no());
+            assertEquals( "0875748271", test_customer.getPhone_no());
             assertEquals( 1, test_customer.getAddress().getAddress_id());
         } catch (DAOExceptionHandler e) {
             e.printStackTrace();
@@ -85,32 +87,33 @@ public class DAOTestCustomer extends TestCase {
      *                      test_customer1.getPhone_no() = "0951078281"
      *                      test_customer1.getAddress().getAddress_id() = 1
      *                      -----------------------------------------------
-     *                      test_customer2.getCustomer_id() = 5
-     *                      test_customer2.getFirst_name() = "Conor"
-     *                      test_customer2.getLast_name() = "Demain"
-     *                      test_customer2.getPhone_no() = "0725014729"
-     *                      test_customer2.getAddress().getAddress_id() = 5
+     *                      test_customer2.getCustomer_id() = 23
+     *                      test_customer2.getFirst_name() = "Neptune"
+     *                      test_customer2.getLast_name() = "Sorin"
+     *                      test_customer2.getPhone_no() = "0858673240"
+     *                      test_customer2.getAddress().getAddress_id() = 21
      */
     public void testGetCustomers001() {
         try {
+            initializeDatabase();
             LinkedList<DB_Customer> test_list = dao.getCustomers(null);
             //  Check the list size
-            assertEquals( 5, test_list.size());
+            assertEquals( 23, test_list.size());
             //  Get 1st entry in the list
             DB_Customer test_customer1 = test_list.get(0);
             //  Check 1st entry
             assertEquals( 1, test_customer1.getCustomer_id());
             assertEquals( "Bill", test_customer1.getFirst_name());
             assertEquals( "Birr", test_customer1.getLast_name());
-            assertEquals( "0951078281", test_customer1.getPhone_no());
+            assertEquals( "0875748271", test_customer1.getPhone_no());
             assertEquals( 1, test_customer1.getAddress().getAddress_id());
             //  Get last entry in the list
             DB_Customer test_customer2 = test_list.getLast();
-            assertEquals( 5, test_customer2.getCustomer_id());
-            assertEquals( "Conor", test_customer2.getFirst_name());
-            assertEquals( "Demain", test_customer2.getLast_name());
-            assertEquals( "0725014729", test_customer2.getPhone_no());
-            assertEquals( 5, test_customer2.getAddress().getAddress_id());
+            assertEquals( 23, test_customer2.getCustomer_id());
+            assertEquals( "Neptune", test_customer2.getFirst_name());
+            assertEquals( "Sorin", test_customer2.getLast_name());
+            assertEquals( "0858673240", test_customer2.getPhone_no());
+            assertEquals( 21, test_customer2.getAddress().getAddress_id());
         } catch (DAOExceptionHandler e) {
             e.printStackTrace();
             fail("Exception not expected.");
@@ -135,6 +138,7 @@ public class DAOTestCustomer extends TestCase {
      */
     public void testGetCustomers002() {
         try {
+            initializeDatabase();
             Search_Customer[] search_criteria = {
                     new Search_Customer( Att_Customer.first_name, "%i%", false),
                     new Search_Customer( Att_Customer.last_name, "%r%", false),
@@ -173,6 +177,7 @@ public class DAOTestCustomer extends TestCase {
      */
     public void testGetCustomers003() {
         try {
+            initializeDatabase();
             Search_Customer[] search_criteria = {
                     new Search_Customer( Att_Customer.first_name, "Bill", true)
             };
@@ -185,7 +190,7 @@ public class DAOTestCustomer extends TestCase {
             assertEquals( 1, test_customer1.getCustomer_id());
             assertEquals( "Bill", test_customer1.getFirst_name());
             assertEquals( "Birr", test_customer1.getLast_name());
-            assertEquals( "0951078281", test_customer1.getPhone_no());
+            assertEquals( "0875748271", test_customer1.getPhone_no());
             assertEquals( 1, test_customer1.getAddress().getAddress_id());
         } catch (DAOExceptionHandler e) {
             e.printStackTrace();
@@ -209,6 +214,7 @@ public class DAOTestCustomer extends TestCase {
      */
     public void testGetCustomers004() {
         try {
+            initializeDatabase();
             Search_Customer[] search_criteria = {
                     new Search_Customer( Att_Customer.last_name, "Tard", true)
             };
@@ -233,7 +239,7 @@ public class DAOTestCustomer extends TestCase {
      *  Test strong search criteria phone_no
      *  ==========
      *  Inputs:     Search_Customer[] search_criteria = {
-     *                      new Search_Customer( Att_Customer.phone_no, "0911078281", true)
+     *                      new Search_Customer( Att_Customer.phone_no, "0541073261", true)
      *              };
      *              LinkedList<DB_Customer> test_list = dao.getCustomers(search_criteria);
      *  ==========
@@ -245,8 +251,9 @@ public class DAOTestCustomer extends TestCase {
      */
     public void testGetCustomers005() {
         try {
+            initializeDatabase();
             Search_Customer[] search_criteria = {
-                    new Search_Customer( Att_Customer.phone_no, "0911078281", true)
+                    new Search_Customer( Att_Customer.phone_no, "0541073261", true)
             };
             LinkedList<DB_Customer> test_list = dao.getCustomers(search_criteria);
             //  Check the list size
@@ -254,11 +261,11 @@ public class DAOTestCustomer extends TestCase {
             //  Get 1st entry in the list
             DB_Customer test_customer1 = test_list.get(0);
             //  Check 1st entry
-            assertEquals( 3, test_customer1.getCustomer_id());
-            assertEquals( "Joe", test_customer1.getFirst_name());
-            assertEquals( "Joyce", test_customer1.getLast_name());
-            assertEquals( "0911078281", test_customer1.getPhone_no());
-            assertEquals( 3, test_customer1.getAddress().getAddress_id());
+            assertEquals( 2, test_customer1.getCustomer_id());
+            assertEquals( "Lib", test_customer1.getFirst_name());
+            assertEquals( "Tard", test_customer1.getLast_name());
+            assertEquals( "0541073261", test_customer1.getPhone_no());
+            assertEquals( 2, test_customer1.getAddress().getAddress_id());
         } catch (DAOExceptionHandler e) {
             e.printStackTrace();
             fail("Exception not expected.");
@@ -277,6 +284,7 @@ public class DAOTestCustomer extends TestCase {
      */
     public void testGetCustomers006() {
         try {
+            initializeDatabase();
             Search_Customer[] search_criteria = {
                     new Search_Customer( Att_Customer.customer_id, "0", true)
             };
@@ -298,14 +306,15 @@ public class DAOTestCustomer extends TestCase {
      */
     public void testUpdateCustomer001() {
         try {
+            initializeDatabase();
             //  Create new customer
             DB_Customer test_customer = new DB_Customer(0, "Ben", "Dover", "0123456789", dao.getAddress(3));
             //  Issue update
             dao.updateCustomer(test_customer);
             //  Asses the new ID
-            assertEquals( 6, test_customer.getCustomer_id());
+            assertEquals( 24, test_customer.getCustomer_id());
             //  Compare customer
-            assertTrue(test_customer.equals( dao.getCustomer(6)));
+            assertTrue(test_customer.equals( dao.getCustomer(24)));
         } catch (DAOExceptionHandler | DB_CustomerExceptionHandler e) {
             e.printStackTrace();
             fail("Exception not expected.");
@@ -325,6 +334,7 @@ public class DAOTestCustomer extends TestCase {
      */
     public void testUpdateCustomer002() {
         try {
+            initializeDatabase();
             //  Create new customer
             DB_Customer test_customer = dao.getCustomer(6);
             //  Make changes
@@ -346,15 +356,16 @@ public class DAOTestCustomer extends TestCase {
      *  Test update for non-existing customer
      *  ==========
      *  Inputs:     DB_Customer test_customer = new DB_Customer();
-     *              test_customer.setCustomer_id( 7);
+     *              test_customer.setCustomer_id( 24);
      *  ==========
      *  Expected Outputs:   DAOExceptionHandler = "There was customer_id mishandling."
      */
     public void testUpdateCustomer003() {
         try {
+            initializeDatabase();
             //  Create new customer
             DB_Customer test_customer = new DB_Customer();
-            test_customer.setCustomer_id( 7);
+            test_customer.setCustomer_id( 24);
             //  Issue update
             dao.updateCustomer(test_customer);
             fail("Exception not expected.");
@@ -375,6 +386,7 @@ public class DAOTestCustomer extends TestCase {
      */
     public void testDeleteCustomer001() {
         try {
+            initializeDatabase();
             DB_Customer test_customer = new DB_Customer();
             test_customer.setCustomer_id( 6);
             dao.deleteCustomer( test_customer);
@@ -400,12 +412,13 @@ public class DAOTestCustomer extends TestCase {
      */
     public void testDeleteCustomer002() {
         try {
+            initializeDatabase();
             DB_Customer test_customer = new DB_Customer();
-            test_customer.setCustomer_id( 6);
+            test_customer.setCustomer_id( 24);
             dao.deleteCustomer( test_customer);
             fail("Exception expected.");
         } catch (DAOExceptionHandler e) {
-            assertEquals( "Cannot delete, customer with ID = '6', does not exist in the database.", e.getMessage());
+            assertEquals( "Cannot delete, customer with ID = '24', does not exist in the database.", e.getMessage());
         } catch (DB_CustomerExceptionHandler e) {
             e.printStackTrace();
             fail("DB_CustomerExceptionHandler Exception not expected.");
