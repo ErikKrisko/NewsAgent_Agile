@@ -55,14 +55,6 @@ INSERT INTO stock VALUES (null, '2021-09-15', '900', '3-M', 1, 900);
 INSERT INTO stock VALUES (null, '2021-11-19', '20', '4-V', 1, 20);
 INSERT INTO stock VALUES (null, '2021-12-21', '24', '5-P', 1, 24);
 
-/*Prod_for_delivery relation Table*/
-/*NON EXISTENT*/
-# INSERT INTO prod_for_delivery VALUES (1, 2);
-# INSERT INTO prod_for_delivery VALUES (2, 3);
-# INSERT INTO prod_for_delivery VALUES (3, 1);
-# INSERT INTO prod_for_delivery VALUES (4, 4);
-# INSERT INTO prod_for_delivery VALUES (5, 5);
-
 /*Delivers relation Table*/
 INSERT INTO delivers VALUES (1, 1);
 INSERT INTO delivers VALUES (1, 2);

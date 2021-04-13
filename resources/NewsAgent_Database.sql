@@ -95,17 +95,6 @@ CREATE TABLE stock (
     FOREIGN KEY (prod_id) REFERENCES publication(prod_id),
 	PRIMARY KEY (stock_id)
 );
- 
-/*Prod_for_delivery relation Table*/
-/*REMOVED as it was like a third leg stuck to the chest. Changes made to delivery table*/
--- DROP TABLE IF EXISTS prod_for_delivery;
--- CREATE TABLE prod_for_delivery (
--- 	prod_id INTEGER NOT NULL,
--- 	delivery_id INTEGER NOT NULL,
--- 	FOREIGN KEY (prod_id) REFERENCES publication(prod_id),
--- 	FOREIGN KEY (delivery_id) REFERENCES delivery(delivery_id) ON DELETE CASCADE,
--- 	PRIMARY KEY (prod_id,delivery_id)
--- );
 	
 /*Delivers relation Table*/
 DROP TABLE IF EXISTS delivers;
