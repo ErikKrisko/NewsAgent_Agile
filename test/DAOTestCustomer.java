@@ -1,5 +1,6 @@
 import junit.framework.TestCase;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class DAOTestCustomer extends TestCase {
@@ -96,7 +97,7 @@ public class DAOTestCustomer extends TestCase {
     public void testGetCustomers001() {
         try {
             initializeDatabase();
-            LinkedList<DB_Customer> test_list = dao.getCustomers(null);
+            ArrayList<DB_Customer> test_list = dao.getCustomers(null);
             //  Check the list size
             assertEquals( 23, test_list.size());
             //  Get 1st entry in the list
@@ -108,7 +109,7 @@ public class DAOTestCustomer extends TestCase {
             assertEquals( "0875748271", test_customer1.getPhone_no());
             assertEquals( 1, test_customer1.getAddress().getAddress_id());
             //  Get last entry in the list
-            DB_Customer test_customer2 = test_list.getLast();
+            DB_Customer test_customer2 = test_list.get(test_list.size()-1);
             assertEquals( 23, test_customer2.getCustomer_id());
             assertEquals( "Neptune", test_customer2.getFirst_name());
             assertEquals( "Sorin", test_customer2.getLast_name());
@@ -144,7 +145,7 @@ public class DAOTestCustomer extends TestCase {
                     new Search_Customer( Att_Customer.last_name, "%r%", false),
                     new Search_Customer( Att_Customer.phone_no, "%61", false)
             };
-            LinkedList<DB_Customer> test_list = dao.getCustomers(search_criteria);
+            ArrayList<DB_Customer> test_list = dao.getCustomers(search_criteria);
             //  Check the list size
             assertEquals( 1, test_list.size());
             //  Get 1st entry in the list
@@ -181,7 +182,7 @@ public class DAOTestCustomer extends TestCase {
             Search_Customer[] search_criteria = {
                     new Search_Customer( Att_Customer.first_name, "Bill", true)
             };
-            LinkedList<DB_Customer> test_list = dao.getCustomers(search_criteria);
+            ArrayList<DB_Customer> test_list = dao.getCustomers(search_criteria);
             //  Check the list size
             assertEquals( 1, test_list.size());
             //  Get 1st entry in the list
@@ -218,7 +219,7 @@ public class DAOTestCustomer extends TestCase {
             Search_Customer[] search_criteria = {
                     new Search_Customer( Att_Customer.last_name, "Tard", true)
             };
-            LinkedList<DB_Customer> test_list = dao.getCustomers(search_criteria);
+            ArrayList<DB_Customer> test_list = dao.getCustomers(search_criteria);
             //  Check the list size
             assertEquals( 1, test_list.size());
             //  Get 1st entry in the list
@@ -255,7 +256,7 @@ public class DAOTestCustomer extends TestCase {
             Search_Customer[] search_criteria = {
                     new Search_Customer( Att_Customer.phone_no, "0541073261", true)
             };
-            LinkedList<DB_Customer> test_list = dao.getCustomers(search_criteria);
+            ArrayList<DB_Customer> test_list = dao.getCustomers(search_criteria);
             //  Check the list size
             assertEquals( 1, test_list.size());
             //  Get 1st entry in the list
@@ -288,7 +289,7 @@ public class DAOTestCustomer extends TestCase {
             Search_Customer[] search_criteria = {
                     new Search_Customer( Att_Customer.customer_id, "0", true)
             };
-            LinkedList<DB_Customer> test_list = dao.getCustomers(search_criteria);
+            ArrayList<DB_Customer> test_list = dao.getCustomers(search_criteria);
             //  Check the list size
             assertEquals( 0, test_list.size());
         } catch (DAOExceptionHandler e) {

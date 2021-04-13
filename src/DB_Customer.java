@@ -111,6 +111,18 @@ public class DB_Customer {
                 '}';
     }
 
+    public String[] getRowData() {
+        return new String[] {
+                String.valueOf(customer_id),
+                first_name,
+                last_name,
+                phone_no,
+                address.getFull_address(),
+                address.getEir_code(),
+                String.valueOf(address.getArea_code())
+        };
+    }
+
     //  AUTO GENERATED getters and setters
     public long getCustomer_id() {   return customer_id; }
     public String getFirst_name() { return first_name; }
