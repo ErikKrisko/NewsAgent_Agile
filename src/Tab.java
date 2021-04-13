@@ -26,13 +26,13 @@ public class Tab {
         return component = new customerTab();
     }
 
-    public JPanel blank1(){
-        return component = new blankTab();
-    }
-
-    public JPanel invoice() {
-        return component = new customerTab();
-    }
+//    public JPanel blank1(){
+//        return component = new blankTab1();
+//    }
+//
+//    public JPanel invoice() {
+//        return component = new invoiceTab();
+//    }
 
     //  Blank Tab
     private class blankTab extends JPanel implements ActionListener{
@@ -144,7 +144,7 @@ public class Tab {
 //                    }
 //                }
 //
-//                private class invoiceTab extends JPanel implements ActionListener {
+//                class invoiceTab extends JPanel implements ActionListener {
 //                    private final JButton button_search = new JButton("Search");
 //                    //  Top panel to put search functionality into
 //                    private final JPanel searchPanel = new JPanel();
@@ -179,7 +179,7 @@ public class Tab {
 //                    //  Builds the table headers (columns)
 //                    private void buildTableModel() {
 //                        //  Table model
-//                        invoice_tableModel = new DefaultTableModel();
+//                        DefaultTableModel invoice_tableModel = new DefaultTableModel();
 //                        //  Do the headers
 //                        invoice_tableModel.addColumn("ID");
 //                        invoice_tableModel.addColumn("Issue Date");
