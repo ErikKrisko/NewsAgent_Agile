@@ -3,7 +3,11 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.regex.Pattern;
 
 public class Tab {
     private final JTabbedPane pane;
@@ -16,20 +20,19 @@ public class Tab {
         this.dao = dao;
     }
 
-    public JPanel blank(){
-        return component = new blankTab();
-    }
+    public JPanel blank(){ return component = new blankTab(); }
+    public JPanel customer() { return component = new customerTab(); }
+    public JPanel invoice() { return component = new invoiceTab(); }
+    public JPanel delivery(){ return component = new deliveryTab(); }
 
-    public JPanel customer() {
-        return component = new customerTab();
-    }
 
-    public JPanel invoice() {
-        return component = new invoiceTab();
-    }
-
-    public JPanel delivery(){
-        return component = new deliveryTab();
+    //  Number checker
+    public boolean isInt(String num) {
+        Pattern pattern = Pattern.compile("\\d+");
+        if (num == null) {
+            return false;
+        }
+        return pattern.matcher(num).matches();
     }
 
     public JPanel subscription(){
@@ -95,6 +98,14 @@ public class Tab {
         private DefaultTableModel customer_tableModel;
         //  ArrayList for customers
         private ArrayList<DB_Customer> customers;
+        //  Context menu items
+        private final JMenuItem menu_edit = new JMenuItem("Edit");
+        private int rowSelected;
+        //  Search boxes
+        private final JTextField search_id = new JTextField(3),
+            search_fName = new JTextField(10),
+            search_lName = new JTextField(10),
+            search_phoneNo = new JTextField(10);
 
         //  Constructor WIP
         private customerTab() {
@@ -104,15 +115,34 @@ public class Tab {
             add(searchPanel, BorderLayout.NORTH);
             add(customer_tablePane, BorderLayout.CENTER);
             //  Search pane
-            searchPanel.add(button_search);
-            button_search.addActionListener(this);
-            //  Table pane
-            customer_tablePane.getViewport().add(customer_table);
+            buildSearchBox();
+            //  Table build
             buildTableModel();
+            //  Table listener
+            tableListener();
+        }
+
+        private void buildSearchBox() {
+            searchPanel.setLayout(new BorderLayout());
+            //  Add search button
+            searchPanel.add(button_search, BorderLayout.EAST);
+            button_search.addActionListener(this);
+            //  Add search boxes
+            JPanel sList = new JPanel(new FlowLayout());
+            sList.add(new JLabel("ID: "));
+            sList.add(search_id);
+            sList.add(new JLabel("First Name: "));
+            sList.add(search_fName);
+            sList.add(new JLabel("Last Name: "));
+            sList.add(search_lName);
+            sList.add(new JLabel("Phone: "));
+            sList.add(search_phoneNo);
+            searchPanel.add(sList);
         }
 
         //  Builds the table headers (columns)
         private void buildTableModel() {
+            customer_tablePane.getViewport().add(customer_table);
             //  Table model
             customer_tableModel = new DefaultTableModel();
             //  Do the headers
@@ -129,6 +159,22 @@ public class Tab {
             customer_table.getTableHeader().setReorderingAllowed(false);
         }
 
+        private void tableListener() {
+            customer_table.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    super.mouseClicked(e);
+                    if (e.getButton() == MouseEvent.BUTTON3) {
+                        rowSelected = customer_table.rowAtPoint(e.getPoint());
+                        customer_table.setRowSelectionInterval(rowSelected, rowSelected);
+                        JPopupMenu pop = new JPopupMenu();
+                        pop.add(menu_edit);
+                        pop.show(customer_tablePane, e.getX()+1, e.getY()+16);
+                    }
+                }
+            });
+        }
+
         //  Populates data from customers ArrayList
         private void updateTableModel() {
             customer_tableModel.setRowCount(0);
@@ -137,20 +183,44 @@ public class Tab {
             }
         }
 
+        private Search_Customer[] constructSearch() {
+            Search_Customer[] search = new Search_Customer[0];
+            if (search_id.getText().length() > 0 && isInt(search_id.getText())){
+                search = Arrays.copyOf(search, search.length + 1);
+                search[search.length - 1] = new Search_Customer(Att_Customer.customer_id, search_id.getText(), true);
+            }
+            if (search_fName.getText().length() > 0) {
+                search = Arrays.copyOf(search, search.length + 1);
+                search[search.length - 1] = new Search_Customer(Att_Customer.first_name, search_fName.getText(), false);
+            }
+            if (search_lName.getText().length() > 0) {
+                search = Arrays.copyOf(search, search.length + 1);
+                search[search.length - 1] = new Search_Customer(Att_Customer.last_name, search_lName.getText(), false);
+            }
+            if (search_phoneNo.getText().length() > 0) {
+                search = Arrays.copyOf(search, search.length + 1);
+                search[search.length - 1] = new Search_Customer(Att_Customer.phone_no, search_phoneNo.getText(), false);
+            }
+            return search;
+        }
+
         @Override
         public void actionPerformed(ActionEvent e) {
             //  If search button is pressed
             if (e.getSource() == button_search) {
                 try {
                     //  Get new data (no search criteria for now)
-                    customers = dao.getCustomers(new Search_Customer[0]);
+                    customers = dao.getCustomers(constructSearch());
                     //  Update table
                     updateTableModel();
                 } catch (DAOExceptionHandler exc) {
                     exc.printStackTrace();
                 }
+            } else if (e.getSource() == menu_edit) {
+                System.out.println("To edit "+rowSelected);
             }
         }
+
     }
 
     //  ========================================================================================================================

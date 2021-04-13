@@ -77,7 +77,7 @@ public class DAO {
                     if (search.isStrong())
                         query += search.getAttribute().name + " = '" + search.getTerm() + "'AND ";
                     else
-                        query += search.getAttribute().name + " LIKE '" + search.getTerm() + "'AND ";
+                        query += search.getAttribute().name + " LIKE '%" + search.getTerm() + "%'AND ";
                 }
                 //  Cut the last four characters off ( "AND " ) from the end
                 query = query.substring(0, query.length() - 4 );
