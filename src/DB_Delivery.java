@@ -78,6 +78,16 @@ public class DB_Delivery
                 '}';
     }
 
+    public String[] getRowData() {
+        return new String[] {
+                String.valueOf(delivery_id),
+                String.valueOf(delivery_date),
+                String.valueOf(delivery_status),
+                String.valueOf(customer_id),
+                String.valueOf(invoice_id)
+        };
+    }
+
     //AUTO GENERATED GETTERS AND SETTERS
 
     public long getDelivery_id() { return delivery_id; }
@@ -122,6 +132,33 @@ enum att_delivery {
     }
 }
 
+
+class Search_Delivery {
+    //  Customer attribute type
+    private att_delivery attribute;
+    //  Search term
+    private String term;
+    //  Search type to use : = || LIKE
+    private boolean strong;
+    //  Search_Address object
+    private Search_Address search_address;
+
+    public Search_Delivery(att_delivery attribute, String search_term, boolean strong) {
+        this.attribute = attribute;
+        this.term = search_term;
+        this.strong = strong;
+    }
+
+
+    //  AUTO GENERATED getters and setters
+
+    public att_delivery getAttribute() { return attribute; }
+    public void setAttribute(att_delivery attribute) { this.attribute = attribute; }
+    public String getTerm() { return term; }
+    public void setTerm(String term) { this.term = term; }
+    public boolean isStrong() { return strong; }
+    public void setStrong(boolean strong) { this.strong = strong; }
+}
 
 
 

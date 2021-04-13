@@ -26,6 +26,10 @@ public class Tab {
         return component = new customerTab();
     }
 
+    public JPanel delivery(){
+        return component = new deliveryTab();
+    }
+
 //    public JPanel blank1(){
 //        return component = new blankTab1();
 //    }
@@ -123,95 +127,9 @@ public class Tab {
                 } catch (DAOExceptionHandler exc) {
                     exc.printStackTrace();
                 }
-//                //Invoice
-//                //  Blank Tab
-//                private class blankTab1 extends JPanel implements ActionListener {
-//                    private blankTab1() {
-//                        setLayout(new FlowLayout());
-//                        blank_invoice = new JButton("Invoice");
-//                        blank_invoice.addActionListener(this);
-//                        add(blank_invoice);
-//                    }
-//
-//                    @Override
-//                    public void actionPerformed(ActionEvent e) {
-//                        //  Replace tab with new Tab
-//                        if (e.getSource() == blank_invoice) {
-//                            int pos = pane.indexOfComponent(component);
-//                            pane.setComponentAt(pos, new invoiceTab());
-//                            pane.setTitleAt(pos, "Invoice");
-//                        }
-//                    }
-//                }
-//
-//                class invoiceTab extends JPanel implements ActionListener {
-//                    private final JButton button_search = new JButton("Search");
-//                    //  Top panel to put search functionality into
-//                    private final JPanel searchPanel = new JPanel();
-//                    //  ScrollPane to be used by JTable
-//                    private final JScrollPane invoice_tablePane = new JScrollPane();
-//                    //  JTable and TableModel for it
-//                    private final JTable invoice_table = new JTable() {
-//                        //  Disable direct editing of the table will need to implement it separately
-//                        public boolean isCellEditable(int row, int column) {
-//                            return false;
-//                        }
-//                    };
-//                    private DefaultTableModel customer_tableModel;
-//                    //  ArrayList for customers
-//                    private ArrayList<DB_Invoice> invoice;
-//
-//                    //  Constructor WIP
-//                    private invoiceTab() {
-//                        //  Set layout
-//                        setLayout(new BorderLayout());
-//                        //  Add both panes
-//                        add(searchPanel, BorderLayout.NORTH);
-//                        add(customer_tablePane, BorderLayout.CENTER);
-//                        //  Search pane
-//                        searchPanel.add(button_search);
-//                        button_search.addActionListener(this);
-//                        //  Table pane
-//                        customer_tablePane.getViewport().add(invoice_table);
-//                        buildTableModel();
-//                    }
-//
-//                    //  Builds the table headers (columns)
-//                    private void buildTableModel() {
-//                        //  Table model
-//                        DefaultTableModel invoice_tableModel = new DefaultTableModel();
-//                        //  Do the headers
-//                        invoice_tableModel.addColumn("ID");
-//                        invoice_tableModel.addColumn("Issue Date");
-//                        invoice_tableModel.addColumn("Invoice Status");
-//                        invoice_tableModel.addColumn("Invoice Total");
-//                        invoice_tableModel.addColumn("Customer");
-//                        //  set table to use the model
-//                        invoice_table.setModel(invoice_tableModel);
-//                        //  disable moving columns around
-//                       invoice_table.getTableHeader().setReorderingAllowed(false);
-//                    }
-//
-//                    //  Populates data from customers ArrayList
-//                    private void updateTableModel() {
-//                        for (DB_Invoice inv : invoice) {
-//                            invoice_tableModel.addRow(inv.getRowData());
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void actionPerformed(ActionEvent e) {
-//                        //  If search button is pressed
-//                        if (e.getSource() == button_search) {
-//                            try {
-//                                //  Get new data (no search criteria for now)
-//                                invoice = dao.getInvoice(new Search_Invoice()[0]);
-//                                //  Update table
-//                                updateTableModel();
-//                            } catch (DAOExceptionHandler exc) {
-//                                exc.printStackTrace();
-//                            }
-                        }
-                    }
-                }
             }
+        }
+    }
+
+
+}
