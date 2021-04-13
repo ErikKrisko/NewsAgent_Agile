@@ -206,7 +206,7 @@ public class newsagent_interface {
                             System.out.println("Enter delivery date (yyyy-mm-dd): ");
                             delivery.setDelivery_date(Date.valueOf(sc.next()));
                             System.out.println("Enter delivery status (true or false): ");
-                            delivery.setDelivery_status(Boolean.valueOf(sc.next()));
+                            delivery.setDelivery_status(Boolean.parseBoolean(sc.next()));
                             System.out.println("Enter the customer id: ");
                             delivery.setCustomer_id(sc.nextLong());
                             System.out.println("Enter the invoice id: ");

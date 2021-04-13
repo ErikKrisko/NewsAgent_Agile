@@ -595,7 +595,7 @@ public class DAO {
         try{
             if(delivery.getDelivery_id() == 0)
             {
-                PreparedStatement pstmt = con.prepareStatement("INSERT INTO delivery VALUES(null, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+                PreparedStatement pstmt = con.prepareStatement("INSERT INTO delivery VALUES(null, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
                 pstmt.setDate(att_delivery.delivery_date.column - 1, delivery.getDelivery_date());
                 pstmt.setBoolean(att_delivery.delivery_status.column - 1, delivery.isDelivery_status());
                 pstmt.setLong( att_delivery.customer.column - 1, delivery.getCustomer_id());
@@ -618,7 +618,7 @@ public class DAO {
                     update += att_delivery.delivery_date.columnName + " = '" + delivery.getDelivery_date() + "', ";
                     update += att_delivery.delivery_status.columnName + " = " + delivery.getDelivery_status() + ", ";
                     update += att_delivery.customer.columnName + " = " + delivery.getCustomer_id() + ", ";
-                    update += att_delivery.invoice.columnName + " = " + delivery.getInvoice_id() + " ";
+                    update += att_delivery.invoice.columnName + " = " + delivery.getInvoice_id() + ", ";
                     update += att_delivery.publication.columnName + " = " + delivery.getProd_id() + " ";
                     update += "WHERE " + att_delivery.delivery_id.columnName + " = " + delivery.getDelivery_id();
 
