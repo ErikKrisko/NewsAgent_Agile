@@ -47,6 +47,13 @@ public class DB_Subscription {
                 "count=" + count +
         "publication=" + publication_id;
     }
+    public String [] getRowData(){
+        return new String[]{
+                String.valueOf(customer_id),
+                String.valueOf(publication_id),
+                String.valueOf(count)
+        };
+    }
 
 
     public int getCount() {

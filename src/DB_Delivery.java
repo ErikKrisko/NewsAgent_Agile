@@ -40,13 +40,13 @@ public class DB_Delivery
     {
         if(entry != null)
         {
-            if (entry.after(new Date(System.currentTimeMillis() - 24*60*60*1000))) //24*60*60*1000 one day in milli seconds. hours*mins*secs*millisecs 24 hours
+            if (entry.after(Date.valueOf("2000-01-01"))) //check if its after 2000-01-01
             {
                 return entry;
             }
             else
             {
-                throw new DB_DeliveryExceptionHandler("delivery_date is older than a day");
+                throw new DB_DeliveryExceptionHandler("delivery_date is older than 2000-01-01");
             }
         }
         else

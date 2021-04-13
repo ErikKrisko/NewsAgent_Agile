@@ -591,11 +591,42 @@ public class DAO {
         }
     }
 
+    //Get Deliveries by delivery_date
+    public ArrayList<DB_Delivery> getDeliveriesByDate(String date) throws DAOExceptionHandler {
+        try {
+            ArrayList<DB_Delivery> list = new ArrayList<>();
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM delivery WHERE delivery_date = " + Date.valueOf(date));
+            if (rs.next()) {
+                do {
+                    list.add(new DB_Delivery(
+                            rs.getLong(att_delivery.delivery_id.column),
+                            rs.getDate(att_delivery.delivery_date.column),
+                            rs.getBoolean(att_delivery.delivery_status.column),
+                            rs.getLong(att_delivery.customer.column),
+                            rs.getLong(att_delivery.invoice.column),
+                            rs.getLong(att_delivery.publication.column)
+                    ));
+                } while (rs.next());
+                rs.close();
+                st.close();
+                return list;
+            } else {
+                rs.close();
+                st.close();
+                return null;
+            }
+        } catch (SQLException | DB_DeliveryExceptionHandler e) {
+            throw new DAOExceptionHandler(e.getMessage());
+        }
+    }
+
+
     public int updateDelivery(DB_Delivery delivery) throws DAOExceptionHandler {
         try{
             if(delivery.getDelivery_id() == 0)
             {
-                PreparedStatement pstmt = con.prepareStatement("INSERT INTO delivery VALUES(null, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+                PreparedStatement pstmt = con.prepareStatement("INSERT INTO delivery VALUES(null, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
                 pstmt.setDate(att_delivery.delivery_date.column - 1, delivery.getDelivery_date());
                 pstmt.setBoolean(att_delivery.delivery_status.column - 1, delivery.isDelivery_status());
                 pstmt.setLong( att_delivery.customer.column - 1, delivery.getCustomer_id());
@@ -618,7 +649,7 @@ public class DAO {
                     update += att_delivery.delivery_date.columnName + " = '" + delivery.getDelivery_date() + "', ";
                     update += att_delivery.delivery_status.columnName + " = " + delivery.getDelivery_status() + ", ";
                     update += att_delivery.customer.columnName + " = " + delivery.getCustomer_id() + ", ";
-                    update += att_delivery.invoice.columnName + " = " + delivery.getInvoice_id() + " ";
+                    update += att_delivery.invoice.columnName + " = " + delivery.getInvoice_id() + ", ";
                     update += att_delivery.publication.columnName + " = " + delivery.getProd_id() + " ";
                     update += "WHERE " + att_delivery.delivery_id.columnName + " = " + delivery.getDelivery_id();
 
@@ -764,11 +795,34 @@ public class DAO {
 
     //  ====================================================================================================
     // INVOICE
-    /** Issues update for customer. Creates if ID is = 0 or updates an existing entry.
-     * @param invoice object which to update / create.
-     * @return int number of lines changed
-     * @throws DAOExceptionHandler if an SQL error occurred or there was invoice_id misshandling.
-     */
+
+//    public ArrayList<DB_Invoice> getInvoices() throws DAOExceptionHandler {
+//        try {
+//            ArrayList<DB_Invoice> list = new ArrayList<>();
+//            Statement st = con.createStatement();
+//            ResultSet rs = st.executeQuery("SELECT * FROM invoice");
+//            if ( rs.next()) {
+//                do {
+//                    list.add(new DB_Invoice(
+//                            rs.getLong(Att_Invoice.invoice_id.column),
+//                            rs.getDate(Att_Invoice.issue_date.column),
+//                            rs.getBoolean(Att_Invoice.invoice_status.column),
+//                            rs.getDouble(Att_Invoice.invoice_total.column),
+//                            rs.getLong(Att_Invoice.customer.column)
+//                    ));
+//                } while (rs.next());
+//                rs.close();
+//                st.close();
+//                return list;
+//            } else {
+//                rs.close();
+//                st.close();
+//                return null;
+//            }
+//        } catch (SQLException | DB_CustomerExceptionHandler | DB_InvoiceExceptionHandler e) {
+//            throw new DAOExceptionHandler(e.getMessage());
+//        }
+//    }
     public int updateInvoice(DB_Invoice invoice) throws DAOExceptionHandler {
 //        System.out.println();
         try {
@@ -781,7 +835,7 @@ public class DAO {
                 ps.setBoolean( Att_Invoice.invoice_status.column - 1, invoice.isInvoice_status());
                 ps.setDouble( Att_Invoice.invoice_total.column - 1, invoice.getInvoice_total());
                 //! Need to handle new addresses (Check if address_id = 0)
-                ps.setLong( Att_Invoice.customer.column - 1, invoice.getCustomer().getCustomer_id());
+                ps.setLong( Att_Invoice.customer.column - 1, invoice.getCustomer_id());
                 //  Execute update and get generated ID
                 int lines = ps.executeUpdate();
                 ResultSet keys = ps.getGeneratedKeys();
@@ -799,7 +853,7 @@ public class DAO {
                 update += Att_Invoice.invoice_status.name + " = " + invoice.getInvoice_status() + ", ";
                 update += Att_Invoice.invoice_total.name + " = " + invoice.getInvoice_total() + " ";
                 //  Specify update target
-                update += "WHERE " + Att_Invoice.invoice_id.name + " = " + invoice.getCustomer().getCustomer_id();
+                update += "WHERE " + Att_Invoice.invoice_id.name + " = " + invoice.getCustomer_id();
                 //  Create statement and executeUpdate. (Cannot recall why prepared statement was used)
 //                System.out.println(update);
                 PreparedStatement ps = con.prepareStatement(update);
@@ -839,12 +893,12 @@ public class DAO {
     private DB_Invoice populateInvoice(ResultSet rs) throws DAOExceptionHandler {
         try {
             //  Create customer with given result set
-            DB_Invoice temp = new DB_Invoice(rs);
+            DB_Invoice temp = new DB_Invoice();
             //  Set customer address with given ID
-            temp.setCustomer( getCustomer( rs.getInt(Att_Invoice.customer.column)));
+            temp.setCustomer_id(rs.getInt(Att_Invoice.customer.column));
             return temp;
         }
-        catch (SQLException | DB_InvoiceExceptionHandler | DB_CustomerExceptionHandler e) {
+        catch (SQLException e) {
             throw new DAOExceptionHandler(e.getMessage());
         }
     }
@@ -874,6 +928,39 @@ public class DAO {
 
     //  ====================================================================================================
     // SUBSCRIPTION
+        //This getSubscription method is being used in the GUI  for searching and viewing the whole table
+        public ArrayList<DB_Subscription> getSubscriptions() throws DAOExceptionHandler {
+        try{
+            ArrayList<DB_Subscription> list = new ArrayList<>();
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM subscription");
+
+            if(rs.next()){
+                do {
+                    list.add(new DB_Subscription(
+                            rs.getInt(1),
+                            rs.getLong(2),
+                            rs.getLong(3)
+                    ));
+                } while (rs.next());
+                rs.close();
+                st.close();
+                return list;
+            }else {
+                rs.close();
+                st.close();
+                return null;
+            }
+        } catch (SQLException | DB_SubscriptionExceptionHandler e){
+            throw new DAOExceptionHandler(e.getMessage());
+        }
+    }
+
+
+
+
+
+
     //GetSubscription
     public DB_Subscription getSubscription(long customer_id, long publication_id) throws DAOExceptionHandler {
         try {
@@ -899,7 +986,7 @@ public class DAO {
             if ( rs.next()) {
                 do {
                     customerList.add(new DB_Subscription(
-                            rs.getInt(0),
+                            rs.getInt(1),
                             rs.getInt(1),
                             rs.getInt(2)
                     ));
@@ -911,7 +998,7 @@ public class DAO {
             } else {
                 rs.close();
                 st.close();
-                return null;
+                throw new DAOExceptionHandler("No subscription with customer_id = " + customer_id+ " found.");
             }
         } catch (SQLException | DB_SubscriptionExceptionHandler e) {
             throw new DAOExceptionHandler(e.getMessage());
@@ -967,7 +1054,9 @@ public class DAO {
                 } else {
                     rs.close();
                     st.close();
-                    return null;
+                    //May need to change this
+                    throw new DAOExceptionHandler("No subscription with prod_list = " + prod_list + " found.");
+
                 }
             } else {
                 throw new DAOExceptionHandler("No product ids were found");
@@ -1037,7 +1126,7 @@ public class DAO {
             {
                 do{
                     publicationList.add(new DB_Subscription(
-                            rs.getInt(0),
+                            rs.getInt(1),
                             rs.getLong(1),
                             rs.getInt(2)
                     ));
