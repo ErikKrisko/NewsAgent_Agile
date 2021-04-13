@@ -16,7 +16,7 @@ public class Tab {
         this.dao = dao;
     }
 
-    public JPanel blank() {
+    public JPanel blank(){
         return component = new blankTab();
     }
 
@@ -28,12 +28,12 @@ public class Tab {
         return component = new invoiceTab();
     }
 
-    public JPanel delivery() {
+    public JPanel delivery(){
         return component = new deliveryTab();
     }
 
     //  Blank Tab
-    private class blankTab extends JPanel implements ActionListener {
+    private class blankTab extends JPanel implements ActionListener{
         private blankTab() {
             setLayout(new FlowLayout());
             //  Change to customer
@@ -58,7 +58,7 @@ public class Tab {
                 int pos = pane.indexOfComponent(component);
                 pane.setComponentAt(pos, new invoiceTab());
                 pane.setTitleAt(pos, "Invoice");
-            } else if (e.getSource() == swap_delivery) {
+            } else if(e.getSource() == swap_delivery){
                 int pos = pane.indexOfComponent(component);
                 pane.setComponentAt(pos, new deliveryTab());
                 pane.setTitleAt(pos, "Delivery");
@@ -121,6 +121,7 @@ public class Tab {
 
         //  Populates data from customers ArrayList
         private void updateTableModel() {
+            customer_tableModel.setRowCount(0);
             for (DB_Customer cus : customers) {
                 customer_tableModel.addRow(cus.getRowData());
             }
@@ -145,7 +146,7 @@ public class Tab {
     //  ========================================================================================================================
     //  DELIVERY TAB
     //  ========================================================================================================================
-    private class deliveryTab extends JPanel implements ActionListener {
+    private class deliveryTab extends JPanel implements ActionListener{
         private final JButton button_search = new JButton("Search");
         //  Top panel to put search functionality into
         private final JPanel searchPanel = new JPanel();
@@ -154,7 +155,7 @@ public class Tab {
         //  JTable and TableModel for it
         private final JTable delivery_table = new JTable() {
             //  Disable direct editing of the table will need to implement it separately
-            public boolean isCellEditable(int row, int column) {
+            public boolean isCellEditable(int row, int column){
                 return false;
             }
         };
@@ -187,6 +188,7 @@ public class Tab {
             delivery_tableModel.addColumn("Delivery Status");
             delivery_tableModel.addColumn("Customer ID");
             delivery_tableModel.addColumn("Invoice ID");
+            delivery_tableModel.addColumn("Publication ID");
             //  set table to use the model
             delivery_table.setModel(delivery_tableModel);
             //  disable moving columns around
@@ -195,6 +197,7 @@ public class Tab {
 
         //  Populates data from deliveries ArrayList
         private void updateTableModel() {
+            delivery_tableModel.setRowCount(0);
             for (DB_Delivery del : deliveries) {
                 delivery_tableModel.addRow(del.getRowData());
             }
@@ -205,11 +208,10 @@ public class Tab {
             //  If search button is pressed
             if (e.getSource() == button_search) {
                 try {
-                    //  Get new data (no search criteria for now)
-                    deliveries = dao.getDeliveries();
-                    //  Update table
-                    updateTableModel();
-
+                        //  Get new data (no search criteria for now)
+                        deliveries = dao.getDeliveries();
+                        //  Update table
+                        updateTableModel();
                 } catch (DAOExceptionHandler exception) {
                     exception.printStackTrace();
                 }
@@ -271,6 +273,7 @@ public class Tab {
 
         //  Populates data from customers ArrayList
         private void updateTableModel() {
+            invoice_tableModel.setRowCount(0);
             for (DB_Invoice inv : invoice) {
 //                invoice_tableModel.addRow(inv.getRowData());
             }
@@ -279,16 +282,16 @@ public class Tab {
         @Override
         public void actionPerformed(ActionEvent e) {
             //  If search button is pressed
+            //  MAKE ACTUAL INVOICE SEARCH USING INVOICE METHODS that are developed.
             if (e.getSource() == button_search) {
-                try {
-                    //  Get new data (no search criteria for now)
-                    invoice = dao.getInvoices();
-                    //  Update table
-                    updateTableModel();
-
-                } catch (DAOExceptionHandler exception) {
-                    exception.printStackTrace();
-                }
+//                try {
+//                    //  Get new data (no search criteria for now)
+//                    invoice = dao.getInvoice(new Search_Invoice()[0]);
+//                    //  Update table
+//                    updateTableModel();
+//                } catch (DAOExceptionHandler exc) {
+//                    exc.printStackTrace();
+//                }
             }
         }
     }

@@ -5,19 +5,20 @@ import java.sql.SQLException;
 public class DB_Delivery
 {
     //  Base customer attributes
-    private long delivery_id, customer_id, invoice_id;
+    private long delivery_id, customer_id, invoice_id, prod_id;
     private Date delivery_date;
     private boolean delivery_status;
 
 
     public DB_Delivery() { }
 
-    public DB_Delivery(long delivery_id,Date delivery_date, boolean delivery_status, long customer_id, long invoice_id) throws DB_DeliveryExceptionHandler {
+    public DB_Delivery(long delivery_id,Date delivery_date, boolean delivery_status, long customer_id, long invoice_id, long prod_id) throws DB_DeliveryExceptionHandler {
         this.delivery_id = validateDevID(delivery_id);
         this.delivery_date = validateDevDate(delivery_date);
         this.delivery_status = delivery_status;
         this.customer_id = customer_id;
         this.invoice_id = invoice_id;
+        this.prod_id = prod_id;
     }
 
     public DB_Delivery(ResultSet rs) throws DB_DeliveryExceptionHandler
@@ -66,15 +67,15 @@ public class DB_Delivery
     }
 
 
-
     @Override
     public String toString() {
         return "DB_Delivery{" +
                 "delivery_id=" + delivery_id +
+                ", customer_id=" + customer_id +
+                ", invoice_id=" + invoice_id +
+                ", prod_id=" + prod_id +
                 ", delivery_date=" + delivery_date +
                 ", delivery_status=" + delivery_status +
-                ", customer=" + customer_id +
-                ", invoice=" + invoice_id +
                 '}';
     }
 
@@ -84,7 +85,8 @@ public class DB_Delivery
                 String.valueOf(delivery_date),
                 String.valueOf(delivery_status),
                 String.valueOf(customer_id),
-                String.valueOf(invoice_id)
+                String.valueOf(invoice_id),
+                String.valueOf(prod_id)
         };
     }
 
@@ -95,6 +97,7 @@ public class DB_Delivery
     public boolean isDelivery_status() { return delivery_status; }
     public long getCustomer_id() { return customer_id; }
     public long getInvoice_id() { return invoice_id; }
+    public long getProd_id(){return prod_id;}
 
     public int getDelivery_status() {
         if (delivery_status){
@@ -110,6 +113,7 @@ public class DB_Delivery
     public void setDelivery_status(boolean delivery_status) { this.delivery_status = delivery_status; }
     public void setCustomer_id(long customer_id) { this.customer_id = customer_id; }
     public void setInvoice_id(long invoice_id) { this.invoice_id = invoice_id; }
+    public void setProd_id(long prod_id) {this.prod_id = prod_id; }
 
     public void replaceDelivery_date(){this.delivery_date = delivery_date;}
 
@@ -120,7 +124,8 @@ enum att_delivery {
     delivery_date(2, "delivery_date"),
     delivery_status(3 , "delivery_status"),
     customer(4, "customer_id"),
-    invoice(5, "invoice_id");
+    invoice(5, "invoice_id"),
+    publication(6, "prod_id");
 
     public final int column;
     public final String columnName;

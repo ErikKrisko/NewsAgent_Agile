@@ -47,19 +47,6 @@ CREATE TABLE holiday (
     FOREIGN KEY (customer_id) REFERENCES customer(customer_id) ON DELETE CASCADE,
 	PRIMARY KEY (holiday_id)
 );
- 
-/*Delivery Table*/
-DROP TABLE IF EXISTS delivery;
-CREATE TABLE delivery (
-	delivery_id INTEGER AUTO_INCREMENT,
-	delivery_date DATE NOT NULL,
-	delivery_status BIT NOT NULL,
-    customer_id INTEGER NOT NULL,
-    invoice_id INTEGER NOT NULL,
-    FOREIGN KEY (customer_id) REFERENCES customer(customer_id) ON DELETE CASCADE,
-    FOREIGN KEY (invoice_id) REFERENCES invoice(invoice_id) ON DELETE CASCADE,
-	PRIMARY KEY (delivery_id)
-);
 
 /*Employee Table*/
 DROP TABLE IF EXISTS employee;
@@ -80,6 +67,21 @@ CREATE TABLE publication (
 	frequency VARCHAR(25) NOT NULL,
 	PRIMARY KEY (prod_id)
 );
+
+/*Delivery Table*/
+DROP TABLE IF EXISTS delivery;
+CREATE TABLE delivery (
+      delivery_id INTEGER AUTO_INCREMENT,
+      delivery_date DATE NOT NULL,
+      delivery_status BIT NOT NULL,
+      customer_id INTEGER NOT NULL,
+      invoice_id INTEGER NOT NULL,
+      prod_id INTEGER NOT NULL,
+      FOREIGN KEY (customer_id) REFERENCES customer(customer_id) ON DELETE CASCADE,
+      FOREIGN KEY (invoice_id) REFERENCES invoice(invoice_id) ON DELETE CASCADE,
+      FOREIGN KEY (prod_id) REFERENCES publication(prod_id) ON DELETE CASCADE,
+      PRIMARY KEY (delivery_id)
+);
  
 /*Stock Table*/
 DROP TABLE IF EXISTS stock;
@@ -92,16 +94,6 @@ CREATE TABLE stock (
     stock_quantity_received INTEGER NOT NULL,
     FOREIGN KEY (prod_id) REFERENCES publication(prod_id),
 	PRIMARY KEY (stock_id)
-);
- 
-/*Prod_for_delivery relation Table*/
-DROP TABLE IF EXISTS prod_for_delivery;
-CREATE TABLE prod_for_delivery (
-	prod_id INTEGER NOT NULL,
-	delivery_id INTEGER NOT NULL,
-	FOREIGN KEY (prod_id) REFERENCES publication(prod_id),
-	FOREIGN KEY (delivery_id) REFERENCES delivery(delivery_id) ON DELETE CASCADE,
-	PRIMARY KEY (prod_id,delivery_id)
 );
 	
 /*Delivers relation Table*/
