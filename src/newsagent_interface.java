@@ -605,9 +605,7 @@ public class newsagent_interface {
 
         }
     }
-//    } catch (DAOExceptionHandler daoExceptionHandler) {
-//            daoExceptionHandler.printStackTrace();
-//        }
+
 
 /*    public static void publicationMenu()
     {

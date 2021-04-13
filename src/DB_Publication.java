@@ -2,13 +2,13 @@ import javax.swing.*;
 import java.lang.reflect.Type;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Scanner;
 
 public class DB_Publication {
     //  Base Publication attributes
     private long prod_id;
     private String prod_name, prod_type, frequency;
     private Double prod_price;
-    private int day;
 
     /**
      * Blank constructor for DB_Publication
@@ -79,38 +79,6 @@ public class DB_Publication {
         throw new DB_PublicationExceptionHandler("Price = " + price + ", must be greater than zero and less than ten.");
     }
 
-
-    public String validateFrequency(String frequency, int day) throws DB_PublicationExceptionHandler{
-        if(frequency == "Daily"){
-            if(day == 0){
-                return frequency;
-            }else{
-                throw new DB_PublicationExceptionHandler("Set day as 0 when using Daily!");
-            }
-        }
-        else if(frequency == "Weekly"){
-            if(day > 0 && day < 8){
-                return frequency + ", " + day;
-            }else{
-                throw new DB_PublicationExceptionHandler("Set day between 1-7(Monday - Sunday)!");
-            }
-        }
-        else if(frequency == "Monthly"){
-            if(day > 0 && day < 29){
-                return frequency + ", " + day;
-            }else{
-                throw new DB_PublicationExceptionHandler("Set day between 1-28!");
-            }
-        }
-        else if(frequency.isEmpty() || frequency.isBlank())
-            throw new DB_PublicationExceptionHandler("Frequency cannot be empty");
-        else{
-            throw new DB_PublicationExceptionHandler("Frequency is invalid : " + frequency);
-        }
-    }
-
-
-
     //ToString not auto generated Donny
     @Override
     public String toString() {
@@ -162,7 +130,28 @@ public class DB_Publication {
     }
 
     public void setFrequency(String frequency) throws DB_PublicationExceptionHandler {
-        this.frequency = validateFrequency(frequency, day);
+        String [] freq = frequency.split(" ");
+
+        if(freq[0].equals("DAILY")){
+            this.frequency = freq[0];
+        }
+        else if(freq[0].equals("WEEKLY")){
+            if(Integer.parseInt(freq[1]) > 0 && Integer.parseInt(freq[1]) < 8){
+                this.frequency = frequency;
+            }else{
+                throw new DB_PublicationExceptionHandler("Weekly frequency has to have a day of 1-7(MON-SUN)");
+            }
+        }
+        else if(freq[0].equals("MONTHLY")){
+            if(Integer.parseInt(freq[1]) > 0 && Integer.parseInt(freq[1]) < 29){
+                this.frequency = frequency;
+            }else{
+                throw new DB_PublicationExceptionHandler("Monthly frequency has to have a day of 1-28");
+            }
+        }
+        else{
+            throw new DB_PublicationExceptionHandler("Frequency has to be 'DAILY/WEEKLY/MONTHLY DAY(if WEEKLY/MONTHLY)'");
+        }
     }
 }
 
