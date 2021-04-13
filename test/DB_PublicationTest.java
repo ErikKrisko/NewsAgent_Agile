@@ -1,6 +1,5 @@
 import junit.framework.TestCase;
 
-import java.util.Map;
 
 public class DB_PublicationTest extends TestCase {
     DB_Publication publication = new DB_Publication();
@@ -172,33 +171,31 @@ public class DB_PublicationTest extends TestCase {
     /** Test 009
      *  Test for publication empty frequency
      *  ==========
-     *  Inputs: publication.validateFrequency("");
+     *  Inputs: publication.setFrequency("");
      *  ==========
-     *  Expected Outputs:  "Frequency = "" cannot be empty"
+     *  Expected Outputs:  "Frequency has to be 'DAILY/WEEKLY/MONTHLY DAY(if WEEKLY/MONTHLY)'"
      */
     public void testDB_Publication009()
     {
-        String entry = "";
         try {
-            publication.validateFrequency(entry, 0);
+            publication.setFrequency("");
             fail("Exception Expected.");
         } catch (DB_PublicationExceptionHandler e)
         {
-            assertEquals("Frequency cannot be empty",e.getMessage());
+            assertEquals("Frequency has to be 'DAILY/WEEKLY/MONTHLY DAY(if WEEKLY/MONTHLY)'",e.getMessage());
         }
     }
     /** Test 010
      *  Test for publication daily day0 frequency success
      *  ==========
-     *  Inputs: assertEquals("Daily", publication.validateFrequency("Daily", 0));
+     *  Inputs: publication.setFrequency("DAILY");
      *  ==========
-     *  Expected Outputs:  "Daily"
+     *  Expected Outputs:  NO ERROR
      */
     public void testDB_Publication010()
     {
-        String entry = "Daily";
         try {
-            assertEquals(entry, publication.validateFrequency(entry, 0));
+            publication.setFrequency("DAILY");
         } catch (DB_PublicationExceptionHandler e)
         {
             e.printStackTrace();
@@ -208,15 +205,14 @@ public class DB_PublicationTest extends TestCase {
     /** Test 011
      *  Test for publication weekly day1 frequency success
      *  ==========
-     *  Inputs: assertEquals("Weekly, 1", publication.validateFrequency("Weekly, 1"));
+     *  Inputs: publication.setFrequency("WEEKLY 1");
      *  ==========
-     *  Expected Outputs:  "Weekly, 1"
+     *  Expected Outputs:  NO ERROR
      */
     public void testDB_Publication011()
     {
-        String entry = "Weekly";
         try {
-            assertEquals("Weekly, 1", publication.validateFrequency(entry, 1));
+            publication.setFrequency("WEEKLY 1");
         } catch (DB_PublicationExceptionHandler e)
         {
             e.printStackTrace();
@@ -226,15 +222,14 @@ public class DB_PublicationTest extends TestCase {
     /** Test 012
      *  Test for publication weekly day7 frequency success
      *  ==========
-     *  Inputs: assertEquals("Weekly, 7", publication.validateFrequency("Weekly, 7"));
+     *  Inputs: publication.setFrequency("WEEKLY 7");
      *  ==========
-     *  Expected Outputs:  "Weekly, 7"
+     *  Expected Outputs:  NO ERROR
      */
     public void testDB_Publication012()
     {
-        String entry = "Weekly";
         try {
-            assertEquals("Weekly, 7", publication.validateFrequency(entry, 7));
+            publication.setFrequency("WEEKLY 7");
         } catch (DB_PublicationExceptionHandler e)
         {
             e.printStackTrace();
@@ -244,163 +239,121 @@ public class DB_PublicationTest extends TestCase {
     /** Test 013
      *  Test for publication weekly frequency day lesser value fail
      *  ==========
-     *  Inputs: assertEquals("Weekly, 0", publication.validateFrequency("Weekly, 0"));
+     *  Inputs: publication.setFrequency("WEEKLY 0");
      *  ==========
-     *  Expected Outputs:  "Frequency is wrong : Weekly, 0"
+     *  Expected Outputs:  "Weekly frequency has to have a day of 1-7(MON-SUN)"
      */
     public void testDB_Publication013()
     {
-        String entry = "Weekly";
         try {
-            publication.validateFrequency(entry, 0);
+            publication.setFrequency("WEEKLY 0");
             fail("Exception Expected.");
         } catch (DB_PublicationExceptionHandler e)
         {
-            assertEquals("Set day between 1-7(Monday - Sunday)!", e.getMessage());
+            assertEquals("Weekly frequency has to have a day of 1-7(MON-SUN)", e.getMessage());
         }
     }
     /** Test 014
      *  Test for publication weekly frequency
      *  ==========
-     *  Inputs: assertEquals("Weekly, 8", publication.validateFrequency("Weekly, 8"));
+     *  Inputs: publication.setFrequency("WEEKLY 8");
      *  ==========
-     *  Expected Outputs:  "Frequency is invalid : Weekly"
+     *  Expected Outputs:  "Weekly frequency has to have a day of 1-7(MON-SUN)"
      */
     public void testDB_Publication014()
     {
-        String entry = "Weekly";
         try {
-            publication.validateFrequency(entry, 8);
+            publication.setFrequency("WEEKLY 8");
             fail("Exception Expected.");
         } catch (DB_PublicationExceptionHandler e)
         {
-            assertEquals("Set day between 1-7(Monday - Sunday)!", e.getMessage());
+            assertEquals("Weekly frequency has to have a day of 1-7(MON-SUN)", e.getMessage());
         }
     }
+
     /** Test 015
-     *  Test for publication daily fail lesser day value
+     *  Test for publication Monthly fail lesser value
      *  ==========
-     *  Inputs: assertEquals("Daily, -1", publication.validateFrequency("Daily, -1"));
+     *  Inputs: publication.setFrequency("MONTHLY 8");
      *  ==========
-     *  Expected Outputs:  "Set day as 0 when using Daily!"
+     *  Expected Outputs:  "Monthly frequency has to have a day of 1-28"
      */
     public void testDB_Publication015()
     {
-        String entry = "Daily";
         try {
-            publication.validateFrequency(entry, -1);
+            publication.setFrequency("MONTHLY 0");
             fail("Exception Expected.");
         } catch (DB_PublicationExceptionHandler e)
         {
-            assertEquals("Set day as 0 when using Daily!", e.getMessage());
+            assertEquals("Monthly frequency has to have a day of 1-28", e.getMessage());
         }
     }
     /** Test 016
-     *  Test for publication daily fail upper day value
+     *  Test for publication Monthly fail upper value
      *  ==========
-     *  Inputs: assertEquals("Daily, 1", publication.validateFrequency("Daily, 1"));
+     *  Inputs: publication.setFrequency("MONTHLY 29");
      *  ==========
-     *  Expected Outputs:  "Set day as 0 when using Daily!"
+     *  Expected Outputs:  "Monthly frequency has to have a day of 1-28"
      */
     public void testDB_Publication016()
     {
-        String entry = "Daily";
         try {
-            publication.validateFrequency(entry, 1);
+            publication.setFrequency("MONTHLY 29");
             fail("Exception Expected.");
         } catch (DB_PublicationExceptionHandler e)
         {
-            assertEquals("Set day as 0 when using Daily!", e.getMessage());
+            assertEquals("Monthly frequency has to have a day of 1-28", e.getMessage());
         }
     }
     /** Test 017
-     *  Test for publication Monthly fail lesser value
+     *  Test for publication Monthly success lesser value
      *  ==========
-     *  Inputs: assertEquals("Monthly, 0", publication.validateFrequency("Monthly, 0"));
+     *  Inputs: publication.setFrequency("MONTHLY 1");
      *  ==========
-     *  Expected Outputs:  "Set day as 0 when using Daily!"
+     *  Expected Outputs:  NO ERROR
      */
     public void testDB_Publication017()
     {
-        String entry = "Monthly";
         try {
-            publication.validateFrequency(entry, 0);
-            fail("Exception Expected.");
+            publication.setFrequency("MONTHLY 1");
         } catch (DB_PublicationExceptionHandler e)
         {
-            assertEquals("Set day between 1-28!", e.getMessage());
+            e.printStackTrace();
+            fail("Exception not Expected.");
         }
     }
     /** Test 018
-     *  Test for publication Monthly fail upper value
+     *  Test for publication Monthly success upper value
      *  ==========
-     *  Inputs: assertEquals("Monthly, 29", publication.validateFrequency("Monthly, 29"));
+     *  Inputs: publication.setFrequency("MONTHLY 28");
      *  ==========
-     *  Expected Outputs:  "Set day as 0 when using Daily!"
+     *  Expected Outputs:  NO ERROR
      */
     public void testDB_Publication018()
     {
-        String entry = "Monthly";
         try {
-            publication.validateFrequency(entry, 29);
-            fail("Exception Expected.");
+            publication.setFrequency("MONTHLY 28");
         } catch (DB_PublicationExceptionHandler e)
         {
-            assertEquals("Set day between 1-28!", e.getMessage());
+            e.printStackTrace();
+            fail("Exception not Expected.");
         }
     }
     /** Test 019
-     *  Test for publication Monthly success lesser value
+     *  Test for publication wrong frequency
      *  ==========
-     *  Inputs: assertEquals("Monthly, 29", publication.validateFrequency("Monthly, 29"));
+     *  Inputs: publication.setFrequency("YEARLY");
      *  ==========
-     *  Expected Outputs:  "Set day as 0 when using Daily!"
+     *  Expected Outputs:  "Frequency has to be 'DAILY/WEEKLY/MONTHLY DAY(if WEEKLY/MONTHLY)'"
      */
     public void testDB_Publication019()
     {
-        String entry = "Monthly";
         try {
-            publication.validateFrequency(entry, 1);
-        } catch (DB_PublicationExceptionHandler e)
-        {
-            e.printStackTrace();
-            fail("Exception not Expected.");
-        }
-    }
-    /** Test 020
-     *  Test for publication Monthly success upper value
-     *  ==========
-     *  Inputs: assertEquals("Monthly, 29", publication.validateFrequency("Monthly, 29"));
-     *  ==========
-     *  Expected Outputs:  "Set day as 0 when using Daily!"
-     */
-    public void testDB_Publication020()
-    {
-        String entry = "Monthly";
-        try {
-            publication.validateFrequency(entry, 28);
-        } catch (DB_PublicationExceptionHandler e)
-        {
-            e.printStackTrace();
-            fail("Exception not Expected.");
-        }
-    }
-    /** Test 021
-     *  Test for publication Monthly fail upper value
-     *  ==========
-     *  Inputs: assertEquals("Monthly, 29", publication.validateFrequency("Monthly, 29"));
-     *  ==========
-     *  Expected Outputs:  "Set day as 0 when using Daily!"
-     */
-    public void testDB_Publication021()
-    {
-        String entry = "Yearly";
-        try {
-            publication.validateFrequency(entry, 1);
+            publication.setFrequency("YEARLY");
             fail("Exception Expected.");
         } catch (DB_PublicationExceptionHandler e)
         {
-            assertEquals("Frequency is invalid : " + entry, e.getMessage());
+            assertEquals("Frequency has to be 'DAILY/WEEKLY/MONTHLY DAY(if WEEKLY/MONTHLY)'", e.getMessage());
         }
     }
 
