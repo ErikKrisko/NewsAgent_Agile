@@ -16,7 +16,6 @@ public class Tab {
         this.dao = dao;
     }
 
-
     public JPanel blank(){
         return component = new blankTab();
     }
@@ -221,7 +220,7 @@ public class Tab {
 
 
     //  ========================================================================================================================
-    //  INVOICE TABb
+    //  INVOICE TAB
     //  ========================================================================================================================
     private class invoiceTab extends JPanel implements ActionListener {
         private final JButton button_search = new JButton("Search");
