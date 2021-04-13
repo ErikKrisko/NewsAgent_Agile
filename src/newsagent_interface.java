@@ -29,7 +29,7 @@ public class newsagent_interface {
 
             //  Main menu controller values
             int menuChoice = 0;
-            final int MENU_EXIT = 7;
+            final int MENU_EXIT = 8;
 
             //  Main menu loop
             while (menuChoice != MENU_EXIT) {
@@ -53,10 +53,10 @@ public class newsagent_interface {
                         case 6 -> employeeMenu();
 
                         //Publication Menu Selected
-                        //case 7 -> publicationMenu();
+                        case 7 -> publicationMenu();
 
                         //  Close
-                        case 7 -> System.out.println("Exiting...");
+                        case 8 -> System.out.println("Exiting...");
                         //  Error for unused menus / inputs
                         default -> System.out.println("Invalid Choice.");
                     }
@@ -607,7 +607,7 @@ public class newsagent_interface {
     }
 
 
-/*    public static void publicationMenu()
+    public static void publicationMenu()
     {
         try {
             //Controller values
@@ -623,11 +623,13 @@ public class newsagent_interface {
                         case 1 -> {
                             publication = new DB_Publication();
                             System.out.println("Enter Product Name: ");
-                            publication.setProd_name(sc.next());
+                            publication.setProd_name(sc.nextLine());
                             System.out.println("Enter Product Type: (Broadsheet,Tabloid & Magazine)");
                             publication.setProd_type(sc.next());
-                            System.out.println("Enter product Price: ");
+                            System.out.println("Enter Product Price: ");
                             publication.setProd_price(sc.nextDouble());
+                            System.out.println("Enter Product Frequency: 'DAILY' or 'WEEKLY/MONTHLY 1-7/1-28'");
+                            publication.setFrequency(sc.nextLine());
                             System.out.println(publication);
                         }
                         //load existing Publication
@@ -645,15 +647,19 @@ public class newsagent_interface {
                                 System.out.println("Editing: " + publication);
                                 System.out.println("Product Name: " + publication.getProd_name() + " -> ");
                                 if (sc.hasNextLine() && sc.hasNext()) {
-                                    publication.setProd_name( sc.next());
+                                    publication.setProd_name(sc.nextLine());
                                 }
                                 System.out.println("Product Type: (Broadsheet,Tabloid & Magazine)" + publication.getProd_type() + " -> ");
                                 if (sc.hasNextLine() && sc.hasNext()) {
-                                    publication.setProd_type( sc.next());
+                                    publication.setProd_type(sc.next());
                                 }
-                                System.out.println("Product Price: " + publication.getProd_price());
+                                System.out.println("Product Price: " + publication.getProd_price() + " -> ");
                                 if (sc.hasNextLine() && sc.hasNext()) {
                                     publication.setProd_price(sc.nextDouble());
+                                }
+                                System.out.println("Product Frequency ('DAILY' or 'WEEKLY/MONTHLY 1-7/1-28'): " + publication.getFrequency() + " -> ");
+                                if(sc.hasNextLine() && sc.hasNext()){
+                                    publication.setFrequency(sc.nextLine());
                                 }
                                 System.out.println("Changed Publication: " + publication);
                         }
@@ -707,7 +713,7 @@ public class newsagent_interface {
         }catch (Exception e) {
             e.printStackTrace();
         }
-    }*/
+    }
 
     public static void printMenu(int menu) {
         switch (menu) {
@@ -720,8 +726,8 @@ public class newsagent_interface {
                 System.out.println("4. Delivery");
                 System.out.println("5. Subscription");
                 System.out.println("6. Employees ");
-               // System.out.println("7. Publication ");
-                System.out.println("7. Exit");
+                System.out.println("7. Publication ");
+                System.out.println("8. Exit");
             }
             //  Customer menu
             case 1 -> {
@@ -782,7 +788,7 @@ public class newsagent_interface {
                 System.out.println("7. To Main Menu");
             }
 
-           /* // Publication Menu
+            // Publication Menu
             case 7 -> {
                 System.out.println("\n=====Publication Menu=====");
                 System.out.println("1. Create new Publication");
@@ -792,7 +798,7 @@ public class newsagent_interface {
                 System.out.println("5. Check");
                 System.out.println("6. Delete");
                 System.out.println("7. To Main Menu");
-            }*/
+            }
 
 
             default -> {

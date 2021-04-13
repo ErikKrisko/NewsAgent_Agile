@@ -1104,7 +1104,7 @@ public class DAO {
     }
 
 
- /*   //------------------------------------------------------
+    //------------------------------------------------------
     //  Publication Methods
     public DB_Publication getPublication(int ID) throws DAOExceptionHandler
     {
@@ -1131,6 +1131,7 @@ public class DAO {
                 pstmt.setString(1, publication.getProd_name());
                 pstmt.setString(2, publication.getProd_type());
                 pstmt.setDouble(3, publication.getProd_price());
+                pstmt.setString(4, publication.getFrequency());
 
 
                 int lines = pstmt.executeUpdate();
@@ -1149,7 +1150,7 @@ public class DAO {
                     update += "prod_name = '" + publication.getProd_name() + "', ";
                     update += "prod_type = '" + publication.getProd_type() + "', ";
                     update += "prod_price = '" + publication.getProd_price() + "', ";
-                    update += "prod_freq = '" + publication.getFreq + "' ";
+                    update += "prod_freq = '" + publication.getFrequency() + "' ";
                     update += "WHERE prod_id = " + publication.getProd_id();
 
                     PreparedStatement pstmt = con.prepareStatement(update);
@@ -1186,7 +1187,7 @@ public class DAO {
     }
 
 
-    }*/
+
 
     /** Returns a list of Publications that have issue for given date
      * To be replaced by getSubscriptionsForDate() for general use

@@ -24,7 +24,7 @@ public class DB_Publication {
      * @param prod_price
      * @throws DB_PublicationExceptionHandler
      */
-    public DB_Publication(long prod_id, String prod_name, String prod_type, Double prod_price, String frequency/*, int day*/) throws DB_PublicationExceptionHandler {
+    public DB_Publication(long prod_id, String prod_name, String prod_type, Double prod_price, String frequency) throws DB_PublicationExceptionHandler {
         this.prod_id = validateID(prod_id);
         this.prod_name = validateName( prod_name);
         this.prod_type = validateType(prod_type);
@@ -83,11 +83,11 @@ public class DB_Publication {
     @Override
     public String toString() {
         return "DB_Publication{" +
-                "prod_id =" + prod_id +
-                ", prod_name =" + prod_name + '\'' +
-                "prod_type =" + prod_type + '\'' +
-                "prod_price =" + prod_price + '\'' +
-                "frequency =" + frequency +  '\'' +
+                "prod_id = " + prod_id +
+                ", prod_name = " + prod_name +
+                ", prod_type = " + prod_type +
+                ", prod_price = " + prod_price +
+                ", frequency = " + frequency +
                 '}';
     }
 
