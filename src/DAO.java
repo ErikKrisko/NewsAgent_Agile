@@ -557,7 +557,8 @@ public class DAO {
                             rs.getDate(att_delivery.delivery_date.column),
                             rs.getBoolean(att_delivery.delivery_status.column),
                             rs.getLong(att_delivery.customer.column),
-                            rs.getLong(att_delivery.invoice.column)
+                            rs.getLong(att_delivery.invoice.column),
+                            rs.getLong(att_delivery.publication.column)
                     ));
                 } while (rs.next());
                 rs.close();
@@ -594,11 +595,12 @@ public class DAO {
         try{
             if(delivery.getDelivery_id() == 0)
             {
-                PreparedStatement pstmt = con.prepareStatement("INSERT INTO delivery VALUES(null, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+                PreparedStatement pstmt = con.prepareStatement("INSERT INTO delivery VALUES(null, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
                 pstmt.setDate(att_delivery.delivery_date.column - 1, delivery.getDelivery_date());
                 pstmt.setBoolean(att_delivery.delivery_status.column - 1, delivery.isDelivery_status());
                 pstmt.setLong( att_delivery.customer.column - 1, delivery.getCustomer_id());
                 pstmt.setLong( att_delivery.invoice.column - 1, delivery.getInvoice_id());
+                pstmt.setLong(att_delivery.publication.column -1, delivery.getProd_id());
 
                 int lines = pstmt.executeUpdate();
                 ResultSet keys = pstmt.getGeneratedKeys();
@@ -616,7 +618,8 @@ public class DAO {
                     update += att_delivery.delivery_date.columnName + " = '" + delivery.getDelivery_date() + "', ";
                     update += att_delivery.delivery_status.columnName + " = " + delivery.getDelivery_status() + ", ";
                     update += att_delivery.customer.columnName + " = " + delivery.getCustomer_id() + ", ";
-                    update += att_delivery.invoice.columnName + " = " + delivery.getInvoice_id() + " ";
+                    update += att_delivery.invoice.columnName + " = " + delivery.getInvoice_id() + ", ";
+                    update += att_delivery.publication.columnName + " = " + delivery.getProd_id() + " ";
                     update += "WHERE " + att_delivery.delivery_id.columnName + " = " + delivery.getDelivery_id();
 
                     PreparedStatement pstmt = con.prepareStatement(update);
@@ -657,6 +660,7 @@ public class DAO {
             DB_Delivery temp = new DB_Delivery(rs);
             temp.setCustomer_id((rs.getInt(att_delivery.customer.column)));
             temp.setInvoice_id((rs.getInt(att_delivery.invoice.column)));
+            temp.setProd_id((rs.getInt(att_delivery.publication.column)));
             return temp;
         }
         catch(SQLException | DB_DeliveryExceptionHandler e) {
@@ -760,11 +764,34 @@ public class DAO {
 
     //  ====================================================================================================
     // INVOICE
-    /** Issues update for customer. Creates if ID is = 0 or updates an existing entry.
-     * @param invoice object which to update / create.
-     * @return int number of lines changed
-     * @throws DAOExceptionHandler if an SQL error occurred or there was invoice_id misshandling.
-     */
+
+//    public ArrayList<DB_Invoice> getInvoices() throws DAOExceptionHandler {
+//        try {
+//            ArrayList<DB_Invoice> list = new ArrayList<>();
+//            Statement st = con.createStatement();
+//            ResultSet rs = st.executeQuery("SELECT * FROM invoice");
+//            if ( rs.next()) {
+//                do {
+//                    list.add(new DB_Invoice(
+//                            rs.getLong(Att_Invoice.invoice_id.column),
+//                            rs.getDate(Att_Invoice.issue_date.column),
+//                            rs.getBoolean(Att_Invoice.invoice_status.column),
+//                            rs.getDouble(Att_Invoice.invoice_total.column),
+//                            rs.getLong(Att_Invoice.customer.column)
+//                    ));
+//                } while (rs.next());
+//                rs.close();
+//                st.close();
+//                return list;
+//            } else {
+//                rs.close();
+//                st.close();
+//                return null;
+//            }
+//        } catch (SQLException | DB_InvoiceExceptionHandler e) {
+//            throw new DAOExceptionHandler(e.getMessage());
+//        }
+//    }
     public int updateInvoice(DB_Invoice invoice) throws DAOExceptionHandler {
 //        System.out.println();
         try {

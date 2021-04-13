@@ -41,12 +41,12 @@ INSERT INTO publication VALUES (null, 'The Sun', 'Tabloid', '2.50', 'DAILY');
 INSERT INTO publication VALUES (null, 'PlayBunny', 'Magazine', '10', 'MONTHLY 5');
 
 /*delivery Table*/
-INSERT INTO delivery VALUES (null, '2020-01-05', 1, 1, 1, 3);
-INSERT INTO delivery VALUES (null, '2020-04-05', 0, 2, 2, 2);
-INSERT INTO delivery VALUES (null, '2020-07-05', 1, 3, 3, 4);
-INSERT INTO delivery VALUES (null, '2020-06-05', 1, 4, 4, 5);
-INSERT INTO delivery VALUES (null, '2020-09-05', 0, 5, 5, 3);
-INSERT INTO delivery VALUES (null, '2020-02-05', 0, 1, 1, 3);
+INSERT INTO delivery VALUES (null, '2022-01-05', 1, 1, 1, 3);
+INSERT INTO delivery VALUES (null, '2022-04-05', 0, 2, 2, 2);
+INSERT INTO delivery VALUES (null, '2022-07-05', 1, 3, 3, 4);
+INSERT INTO delivery VALUES (null, '2022-06-05', 1, 4, 4, 5);
+INSERT INTO delivery VALUES (null, '2022-09-05', 0, 5, 5, 3);
+INSERT INTO delivery VALUES (null, '2022-02-05', 0, 1, 1, 3);
 
 /*Stock Table*/
 INSERT INTO stock VALUES (null, '2021-07-10', '200', '1-B', 1, 200);

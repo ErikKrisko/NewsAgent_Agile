@@ -206,11 +206,13 @@ public class newsagent_interface {
                             System.out.println("Enter delivery date (yyyy-mm-dd): ");
                             delivery.setDelivery_date(Date.valueOf(sc.next()));
                             System.out.println("Enter delivery status (true or false): ");
-                            delivery.setDelivery_status(Boolean.valueOf(sc.next()));
+                            delivery.setDelivery_status(Boolean.parseBoolean(sc.next()));
                             System.out.println("Enter the customer id: ");
-                            delivery.setCustomer_id((sc.nextLong()));
+                            delivery.setCustomer_id(sc.nextLong());
                             System.out.println("Enter the invoice id: ");
-                            delivery.setInvoice_id((sc.nextLong()));
+                            delivery.setInvoice_id(sc.nextLong());
+                            System.out.println("Enter the publication id: ");
+                            delivery.setProd_id(sc.nextLong());
                             System.out.println(delivery);
                         }
                         //Load existing delivery
@@ -241,6 +243,10 @@ public class newsagent_interface {
                                 System.out.println("Invoice id: " + delivery.getInvoice_id());
                                 if(sc.hasNextLine() && sc.hasNext()){
                                     delivery.setInvoice_id(sc.nextInt());
+                                }
+                                System.out.println("Publication id: " + delivery.getProd_id());
+                                if(sc.hasNextLine() && sc.hasNext()){
+                                    delivery.setProd_id(sc.nextInt());
                                 }
                                 System.out.println("Changed delivery: " + delivery);
                             }
