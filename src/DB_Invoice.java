@@ -75,6 +75,17 @@ public class DB_Invoice
                 ", customer=" + customer +
                 '}';
     }
+    public String[] getRowData() {
+        return new String[] {
+                String.valueOf(invoice_id),
+                String.valueOf(invoice_id),
+                String.valueOf(issue_date),
+                String.valueOf(invoice_status),
+                String.valueOf(invoice_total),
+                String.valueOf(customer.getCustomer_id())
+        };
+    }
+
 
     public long getInvoice_id() { return invoice_id; }
     public void setInvoice_total(double invoice_total) { this.invoice_total = invoice_total; }

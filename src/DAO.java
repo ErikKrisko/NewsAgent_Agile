@@ -545,6 +545,58 @@ public class DAO {
     //  ====================================================================================================
     // DELIVERY
 
+    public ArrayList<DB_Delivery> getDeliveries(Search_Delivery[] search_list) throws DAOExceptionHandler {
+        //  Create bew Linked list of customers
+        ArrayList<DB_Delivery> list = new ArrayList<>();
+        try {
+            //  If no search parameters are specified
+            if (search_list == null || search_list.length <= 0) {
+                //  Create new result set
+                Statement st = con.createStatement();
+                ResultSet rs = st.executeQuery("SELECT * FROM delivery");
+                //  While there are results in the list create customer objects
+                if ( rs.next()) {
+                    do {
+                        list.add(populateDelivery(rs));
+                    } while ( rs.next());
+                    rs.close();
+                    st.close();
+                    return list;
+                } else {
+                    rs.close();
+                    st.close();
+                    throw new DAOExceptionHandler("No Deliveries where found in the database.");
+                }
+            } else {
+                //  Construct a query
+                String query = "SELECT * FROM delivery WHERE ";
+                //  Martina extensively advised against expanding this methodology to include any more search criteria such as address or publication and told us to do it in separate methods.
+                for (Search_Delivery search : search_list) {
+                    if (search.isStrong())
+                        query += search.getAttribute().name + " = '" + search.getTerm() + "'AND ";
+                    else
+                        query += search.getAttribute().name + " LIKE '" + search.getTerm() + "'AND ";
+                }
+                //  Cut the last four characters off ( "AND " ) from the end
+                query = query.substring(0, query.length() - 4 );
+
+                Statement st = con.createStatement();
+                ResultSet rs = st.executeQuery(query);
+                ArrayList<DB_Delivery> tempList = new ArrayList<>();
+                while (rs.next()) {
+                    DB_Delivery temp = populateDelivery(rs);
+                    tempList.add(temp);
+                }
+                rs.close();
+                st.close();
+                return tempList;
+            }
+        }
+        catch (SQLException e) {
+            throw new DAOExceptionHandler(e.getMessage());
+        }
+    }
+
     public DB_Delivery getDelivery(int ID) throws DAOExceptionHandler
     {
         try {
@@ -579,7 +631,7 @@ public class DAO {
                 }
                 return lines;
             }
-            else{
+            else {
                 Statement st = con.createStatement();
                 ResultSet rs = st.executeQuery("SELECT * FROM delivery WHERE delivery_id = " + delivery.getDelivery_id());
                 if(rs.next()){

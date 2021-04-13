@@ -16,6 +16,7 @@ public class Tab {
         this.dao = dao;
     }
 
+
     public JPanel blank(){
         return component = new blankTab();
     }
@@ -26,6 +27,9 @@ public class Tab {
 
     public JPanel invoice() {
         return component = new invoiceTab();
+    }
+    public JPanel delivery(){
+//        return component = new deliveryTab();
     }
 
     //  Blank Tab
@@ -55,9 +59,6 @@ public class Tab {
         }
     }
 
-    //  ========================================================================================================================
-    //  CUSTOMER TAB
-    //  ========================================================================================================================
     private class customerTab extends JPanel implements ActionListener {
         private final JButton button_search = new JButton("Search");
         //  Top panel to put search functionality into
