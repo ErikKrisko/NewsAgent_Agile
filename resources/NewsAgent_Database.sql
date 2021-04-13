@@ -48,21 +48,6 @@ CREATE TABLE holiday (
 	PRIMARY KEY (holiday_id)
 );
 
-/*Delivery Table*/
-DROP TABLE IF EXISTS delivery;
-CREATE TABLE delivery (
-	delivery_id INTEGER AUTO_INCREMENT,
-	delivery_date DATE NOT NULL,
-	delivery_status BIT NOT NULL,
-    customer_id INTEGER NOT NULL,
-    invoice_id INTEGER NOT NULL,
-    prod_id INTEGER NOT NULL,
-    FOREIGN KEY (customer_id) REFERENCES customer(customer_id) ON DELETE CASCADE,
-    FOREIGN KEY (invoice_id) REFERENCES invoice(invoice_id) ON DELETE CASCADE,
-    FOREIGN KEY (prod_id) REFERENCES publication(prod_id) ON DELETE CASCADE,
-	PRIMARY KEY (delivery_id)
-);
-
 /*Employee Table*/
 DROP TABLE IF EXISTS employee;
 CREATE TABLE employee (
@@ -81,6 +66,21 @@ CREATE TABLE publication (
 	prod_price DECIMAL(4,2) NOT NULL,
 	frequency VARCHAR(25) NOT NULL,
 	PRIMARY KEY (prod_id)
+);
+
+/*Delivery Table*/
+DROP TABLE IF EXISTS delivery;
+CREATE TABLE delivery (
+      delivery_id INTEGER AUTO_INCREMENT,
+      delivery_date DATE NOT NULL,
+      delivery_status BIT NOT NULL,
+      customer_id INTEGER NOT NULL,
+      invoice_id INTEGER NOT NULL,
+      prod_id INTEGER NOT NULL,
+      FOREIGN KEY (customer_id) REFERENCES customer(customer_id) ON DELETE CASCADE,
+      FOREIGN KEY (invoice_id) REFERENCES invoice(invoice_id) ON DELETE CASCADE,
+      FOREIGN KEY (prod_id) REFERENCES publication(prod_id) ON DELETE CASCADE,
+      PRIMARY KEY (delivery_id)
 );
  
 /*Stock Table*/
