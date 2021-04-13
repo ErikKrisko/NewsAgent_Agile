@@ -765,33 +765,33 @@ public class DAO {
     //  ====================================================================================================
     // INVOICE
 
-//    public ArrayList<DB_Invoice> getInvoices() throws DAOExceptionHandler {
-//        try {
-//            ArrayList<DB_Invoice> list = new ArrayList<>();
-//            Statement st = con.createStatement();
-//            ResultSet rs = st.executeQuery("SELECT * FROM invoice");
-//            if ( rs.next()) {
-//                do {
-//                    list.add(new DB_Invoice(
-//                            rs.getLong(Att_Invoice.invoice_id.column),
-//                            rs.getDate(Att_Invoice.issue_date.column),
-//                            rs.getBoolean(Att_Invoice.invoice_status.column),
-//                            rs.getDouble(Att_Invoice.invoice_total.column),
-//                            rs.getLong(Att_Invoice.customer.column)
-//                    ));
-//                } while (rs.next());
-//                rs.close();
-//                st.close();
-//                return list;
-//            } else {
-//                rs.close();
-//                st.close();
-//                return null;
-//            }
-//        } catch (SQLException | DB_CustomerExceptionHandler | DB_InvoiceExceptionHandler e) {
-//            throw new DAOExceptionHandler(e.getMessage());
-//        }
-//    }
+    public ArrayList<DB_Invoice> getInvoices() throws DAOExceptionHandler {
+        try {
+            ArrayList<DB_Invoice> list = new ArrayList<>();
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM invoice");
+            if ( rs.next()) {
+                do {
+                    list.add(new DB_Invoice(
+                            rs.getLong(Att_Invoice.invoice_id.column),
+                            rs.getDate(Att_Invoice.issue_date.column),
+                            rs.getBoolean(Att_Invoice.invoice_status.column),
+                            rs.getDouble(Att_Invoice.invoice_total.column),
+                            rs.getLong(Att_Invoice.customer.column)
+                    ));
+                } while (rs.next());
+                rs.close();
+                st.close();
+                return list;
+            } else {
+                rs.close();
+                st.close();
+                return null;
+            }
+        } catch (SQLException | DB_CustomerExceptionHandler | DB_InvoiceExceptionHandler e) {
+            throw new DAOExceptionHandler(e.getMessage());
+        }
+    }
     public int updateInvoice(DB_Invoice invoice) throws DAOExceptionHandler {
 //        System.out.println();
         try {
