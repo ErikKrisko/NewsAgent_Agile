@@ -28,9 +28,10 @@ public class Tab {
     public JPanel invoice() {
         return component = new invoiceTab();
     }
-    public JPanel delivery(){
+
+//    public JPanel delivery(){
 //        return component = new deliveryTab();
-    }
+//    }
 
     //  Blank Tab
     private class blankTab extends JPanel implements ActionListener{
