@@ -591,6 +591,37 @@ public class DAO {
         }
     }
 
+    //Get Deliveries by delivery_date
+    public ArrayList<DB_Delivery> getDeliveriesByDate(String date) throws DAOExceptionHandler {
+        try {
+            ArrayList<DB_Delivery> list = new ArrayList<>();
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM delivery WHERE delivery_date = " + Date.valueOf(date));
+            if (rs.next()) {
+                do {
+                    list.add(new DB_Delivery(
+                            rs.getLong(att_delivery.delivery_id.column),
+                            rs.getDate(att_delivery.delivery_date.column),
+                            rs.getBoolean(att_delivery.delivery_status.column),
+                            rs.getLong(att_delivery.customer.column),
+                            rs.getLong(att_delivery.invoice.column),
+                            rs.getLong(att_delivery.publication.column)
+                    ));
+                } while (rs.next());
+                rs.close();
+                st.close();
+                return list;
+            } else {
+                rs.close();
+                st.close();
+                return null;
+            }
+        } catch (SQLException | DB_DeliveryExceptionHandler e) {
+            throw new DAOExceptionHandler(e.getMessage());
+        }
+    }
+
+
     public int updateDelivery(DB_Delivery delivery) throws DAOExceptionHandler {
         try{
             if(delivery.getDelivery_id() == 0)

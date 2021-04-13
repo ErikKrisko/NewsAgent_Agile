@@ -193,7 +193,7 @@ public class newsagent_interface {
         try {
             //Controller values
             int menuChoice = 0;
-            final int menuExit = 7;
+            final int menuExit = 8;
 
             while(menuChoice != menuExit) {
                 printMenu(4); //Display Menu
@@ -287,8 +287,31 @@ public class newsagent_interface {
                                 delivery = null;
                             }
                         }
-                        //Exit
+                        //Display deliveries by date
                         case 7 -> {
+                            System.out.println("Please enter a date to search by (yyyy-mm-dd): ");
+                            String date = sc.next();
+                            System.out.println(date);
+                            ArrayList<DB_Delivery> list = dao.getDeliveriesByDate(date);
+                            if(list == null){
+                                throw new DB_DeliveryExceptionHandler("No deliveries with date: " + date);
+                            }
+                            else{
+                                for(DB_Delivery del : list){
+                                    System.out.println(
+                                                    "delivery_id=" + del.getDelivery_id() +
+                                                    ", customer_id=" + del.getCustomer_id() +
+                                                    ", invoice_id=" + del.getInvoice_id() +
+                                                    ", prod_id=" + del.getProd_id() +
+                                                    ", delivery_date=" + del.getDelivery_date() +
+                                                    ", delivery_status=" + del.getDelivery_status()
+                                    );
+                                }
+                            }
+                        }
+
+                        //Exit
+                        case 8 -> {
                             System.out.println("Returning to Main Menu.....");
                             delivery = null;
                         }
@@ -767,7 +790,8 @@ public class newsagent_interface {
                 System.out.println("4. Update database");
                 System.out.println("5. Check");
                 System.out.println("6. Delete");
-                System.out.println("7. To Main Menu");
+                System.out.println("7. Display by Date");
+                System.out.println("8. To Main Menu");
             }
 
             //  Subscription menu
