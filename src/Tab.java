@@ -16,7 +16,6 @@ public class Tab {
         this.dao = dao;
     }
 
-
     public JPanel blank(){
         return component = new blankTab();
     }
@@ -160,7 +159,7 @@ public class Tab {
             }
         };
         private DefaultTableModel delivery_tableModel;
-        //  ArrayList for customers
+        //  ArrayList for deliveries
         private ArrayList<DB_Delivery> deliveries;
 
         //  Constructor WIP
@@ -206,10 +205,11 @@ public class Tab {
             //  If search button is pressed
             if (e.getSource() == button_search) {
                 try {
-                    //  Get new data (no search criteria for now)
-                    deliveries = dao.getDeliveries(1);
-                    //  Update table
-                    updateTableModel();
+                        //  Get new data (no search criteria for now)
+                        deliveries = dao.getDeliveries();
+                        //  Update table
+                        updateTableModel();
+
                 } catch (DAOExceptionHandler exception) {
                     exception.printStackTrace();
                 }
