@@ -121,6 +121,7 @@ public class Tab {
 
         //  Populates data from customers ArrayList
         private void updateTableModel() {
+            customer_tableModel.setRowCount(0);
             for (DB_Customer cus : customers) {
                 customer_tableModel.addRow(cus.getRowData());
             }
@@ -195,6 +196,7 @@ public class Tab {
 
         //  Populates data from deliveries ArrayList
         private void updateTableModel() {
+            delivery_tableModel.setRowCount(0);
             for (DB_Delivery del : deliveries) {
                 delivery_tableModel.addRow(del.getRowData());
             }
@@ -271,6 +273,7 @@ public class Tab {
 
         //  Populates data from customers ArrayList
         private void updateTableModel() {
+            invoice_tableModel.setRowCount(0);
             for (DB_Invoice inv : invoice) {
 //                invoice_tableModel.addRow(inv.getRowData());
             }
