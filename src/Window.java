@@ -16,6 +16,12 @@ public class Window extends JFrame implements MouseListener, ActionListener {
     private JMenuItem menu_file_exit, menu_debug_database;
 
     public Window() {
+        //  connect DAO
+        try {
+            dao = new DAO("jdbc:mysql://localhost:3306/newsagent?useTimezone=true&serverTimezone=UTC","root","admin");
+        } catch (DAOExceptionHandler e) {
+            e.printStackTrace();
+        }
         //  Set application close
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         //  Table name and dimensions
@@ -51,7 +57,7 @@ public class Window extends JFrame implements MouseListener, ActionListener {
         //  Add a mouse listener to tabs
         tabbedPane.addMouseListener(this);
         //  Add Placeholder Tab
-        tabbedPane.addTab("new_tab", new Tab(tabbedPane).blank());
+        tabbedPane.addTab("new_tab", new Tab(tabbedPane, dao).blank());
 
     }
 
@@ -60,7 +66,7 @@ public class Window extends JFrame implements MouseListener, ActionListener {
         if (e.getSource() == popup_close && popup_close_id != -1) {
             tabbedPane.remove(popup_close_id);
             if (tabbedPane.getTabCount() < 1)
-                tabbedPane.addTab("new_tab", new Tab(tabbedPane).blank());
+                tabbedPane.addTab("new_tab", new Tab(tabbedPane, dao).blank());
         }
     }
 

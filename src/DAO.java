@@ -48,9 +48,9 @@ public class DAO {
      * @param search_list Keywords to search for or null to return all customers.
      * @throws DAOExceptionHandler if an SQL error occurred
      */
-    public LinkedList<DB_Customer> getCustomers(Search_Customer[] search_list) throws DAOExceptionHandler {
+    public ArrayList<DB_Customer> getCustomers(Search_Customer[] search_list) throws DAOExceptionHandler {
         //  Create bew Linked list of customers
-        LinkedList<DB_Customer> list = new LinkedList<>();
+        ArrayList<DB_Customer> list = new ArrayList<>();
         try {
             //  If no search parameters are specified
             if (search_list == null || search_list.length <= 0) {
@@ -85,7 +85,7 @@ public class DAO {
 //                System.out.println(query);
                 Statement st = con.createStatement();
                 ResultSet rs = st.executeQuery(query);
-                LinkedList<DB_Customer> tempList = new LinkedList<>();
+                ArrayList<DB_Customer> tempList = new ArrayList<>();
                 while (rs.next()) {
                     DB_Customer temp = populateCustomer(rs);
                     tempList.add(temp);

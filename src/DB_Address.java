@@ -99,6 +99,10 @@ public class DB_Address {
                 '}';
     }
 
+    public String[] getRowData() {
+        return new String[] {full_address, eir_code, String.valueOf(area_code)};
+    }
+
     //  AUTO GENERATED getters and setters
     public long getAddress_id() {    return address_id; }
     public String getFull_address() {   return full_address; }

@@ -1,5 +1,5 @@
 import java.sql.Date;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class newsagent_interface {
@@ -112,7 +112,7 @@ public class newsagent_interface {
                             //  Phone no
                             System.out.print("Enter phone no for search: ");
                             searchElements[2] = new Search_Customer( Att_Customer.phone_no, sc.next(), false);
-                            LinkedList<DB_Customer> cList = dao.getCustomers(searchElements);
+                            ArrayList<DB_Customer> cList = dao.getCustomers(searchElements);
                             for (DB_Customer cus : cList) {
                                 System.out.println(cus);
                             }
