@@ -10,8 +10,6 @@ public class DAOTestSubscription extends TestCase {
 
     public DAOTestSubscription() {
         try{
-            //Initialize DAO
-            dao = new DAO("jdbc:mysql://localhost:3306/newsagent?useTimezone=true&serverTimezone=UTC", "root", "admin");
             //Reset the Database
             JDBC connection = new JDBC("jdbc:mysql://localhost:3306/", "root", "admin");
             connection.executeScript("NewsAgent_Database.sql");
