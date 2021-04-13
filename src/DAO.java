@@ -896,7 +896,7 @@ public class DAO {
             if ( rs.next()) {
                 do {
                     customerList.add(new DB_Subscription(
-                            rs.getInt(0),
+                            rs.getInt(1),
                             rs.getInt(1),
                             rs.getInt(2)
                     ));
@@ -908,7 +908,7 @@ public class DAO {
             } else {
                 rs.close();
                 st.close();
-                return null;
+                throw new DAOExceptionHandler("No subscription with customer_id = " + customer_id+ " found.");
             }
         } catch (SQLException | DB_SubscriptionExceptionHandler e) {
             throw new DAOExceptionHandler(e.getMessage());
@@ -964,7 +964,9 @@ public class DAO {
                 } else {
                     rs.close();
                     st.close();
-                    return null;
+                    //May need to change this
+                    throw new DAOExceptionHandler("No subscription with prod_list = " + prod_list + " found.");
+
                 }
             } else {
                 throw new DAOExceptionHandler("No product ids were found");
@@ -1034,7 +1036,7 @@ public class DAO {
             {
                 do{
                     publicationList.add(new DB_Subscription(
-                            rs.getInt(0),
+                            rs.getInt(1),
                             rs.getLong(1),
                             rs.getInt(2)
                     ));
