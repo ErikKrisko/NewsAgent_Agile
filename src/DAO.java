@@ -557,7 +557,8 @@ public class DAO {
                             rs.getDate(att_delivery.delivery_date.column),
                             rs.getBoolean(att_delivery.delivery_status.column),
                             rs.getLong(att_delivery.customer.column),
-                            rs.getLong(att_delivery.invoice.column)
+                            rs.getLong(att_delivery.invoice.column),
+                            rs.getLong(att_delivery.publication.column)
                     ));
                 } while (rs.next());
                 rs.close();
@@ -599,6 +600,7 @@ public class DAO {
                 pstmt.setBoolean(att_delivery.delivery_status.column - 1, delivery.isDelivery_status());
                 pstmt.setLong( att_delivery.customer.column - 1, delivery.getCustomer_id());
                 pstmt.setLong( att_delivery.invoice.column - 1, delivery.getInvoice_id());
+                pstmt.setLong(att_delivery.publication.column -1, delivery.getProd_id());
 
                 int lines = pstmt.executeUpdate();
                 ResultSet keys = pstmt.getGeneratedKeys();
@@ -617,6 +619,7 @@ public class DAO {
                     update += att_delivery.delivery_status.columnName + " = " + delivery.getDelivery_status() + ", ";
                     update += att_delivery.customer.columnName + " = " + delivery.getCustomer_id() + ", ";
                     update += att_delivery.invoice.columnName + " = " + delivery.getInvoice_id() + " ";
+                    update += att_delivery.publication.columnName + " = " + delivery.getProd_id() + " ";
                     update += "WHERE " + att_delivery.delivery_id.columnName + " = " + delivery.getDelivery_id();
 
                     PreparedStatement pstmt = con.prepareStatement(update);
@@ -657,6 +660,7 @@ public class DAO {
             DB_Delivery temp = new DB_Delivery(rs);
             temp.setCustomer_id((rs.getInt(att_delivery.customer.column)));
             temp.setInvoice_id((rs.getInt(att_delivery.invoice.column)));
+            temp.setProd_id((rs.getInt(att_delivery.publication.column)));
             return temp;
         }
         catch(SQLException | DB_DeliveryExceptionHandler e) {

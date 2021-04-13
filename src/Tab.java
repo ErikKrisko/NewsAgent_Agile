@@ -188,6 +188,7 @@ public class Tab {
             delivery_tableModel.addColumn("Delivery Status");
             delivery_tableModel.addColumn("Customer ID");
             delivery_tableModel.addColumn("Invoice ID");
+            delivery_tableModel.addColumn("Publication ID");
             //  set table to use the model
             delivery_table.setModel(delivery_tableModel);
             //  disable moving columns around
@@ -211,7 +212,6 @@ public class Tab {
                         deliveries = dao.getDeliveries();
                         //  Update table
                         updateTableModel();
-
                 } catch (DAOExceptionHandler exception) {
                     exception.printStackTrace();
                 }

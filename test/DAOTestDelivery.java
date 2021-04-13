@@ -188,7 +188,6 @@ public class DAOTestDelivery extends TestCase {
 
         } catch (DAOExceptionHandler | DB_DeliveryExceptionHandler e) {
             fail("Exception not expected.");
-
         }
     }
 
