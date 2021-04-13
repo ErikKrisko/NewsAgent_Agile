@@ -545,11 +545,12 @@ public class DAO {
     //  ====================================================================================================
     // DELIVERY
 
-    public ArrayList<DB_Delivery> getDeliveries(long delivery_id) throws DAOExceptionHandler {
+    //getDeliveries is being used for the gui Search/View to view the whole table
+    public ArrayList<DB_Delivery> getDeliveries() throws DAOExceptionHandler {
         try {
             ArrayList<DB_Delivery> list = new ArrayList<>();
             Statement st = con.createStatement();
-            ResultSet rs = st.executeQuery("SELECT * FROM delivery WHERE " + att_delivery.delivery_id.columnName + " = " + delivery_id);
+            ResultSet rs = st.executeQuery("SELECT * FROM delivery");
             if ( rs.next()) {
                 do {
                     list.add(new DB_Delivery(
