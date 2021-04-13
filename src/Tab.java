@@ -16,7 +16,6 @@ public class Tab {
         this.dao = dao;
     }
 
-
     public JPanel blank(){
         return component = new blankTab();
     }
