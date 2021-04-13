@@ -60,7 +60,7 @@ public class DAOTestSubscription extends TestCase {
             dao.getSubscriptionByCustomer(-1);
             fail("Exception Expected");
         }catch(DAOExceptionHandler e){
-            assertEquals("No subscription with customer_id = " + -1 + " found.", e.getMessage());
+            assertEquals("No subscription with customer_id = " + ID + " found.", e.getMessage());
         }
     }
 
@@ -227,9 +227,9 @@ public class DAOTestSubscription extends TestCase {
         int prod_ID = 3;
         try {
             ArrayList<DB_Subscription> getSubscriptionByPublication = dao.getSubscriptionByPublication(3);
-            assertEquals(1, getSubscriptionByPublication.size());
+            assertEquals(3, getSubscriptionByPublication.size());
             DB_Subscription subscriptionCustomer = getSubscriptionByPublication.get(0);
-            assertEquals(1, subscriptionCustomer.getCustomer_id());
+            assertEquals(4, subscriptionCustomer.getCustomer_id());
             assertEquals(3, subscriptionCustomer.getPublication_id());
             dao.getSubscriptionByPublication(3);
         }catch(DAOExceptionHandler e){
@@ -254,7 +254,7 @@ public class DAOTestSubscription extends TestCase {
         int prod_ID = 2;
         try {
             ArrayList<DB_Subscription> getSubscriptionByPublication = dao.getSubscriptionByPublication(2);
-            assertEquals(1, getSubscriptionByPublication.size());
+            assertEquals(6, getSubscriptionByPublication.size());
             DB_Subscription subscriptionCustomer = getSubscriptionByPublication.get(0);
             assertEquals(2, subscriptionCustomer.getCustomer_id());
             assertEquals(2, subscriptionCustomer.getPublication_id());
@@ -280,9 +280,9 @@ public class DAOTestSubscription extends TestCase {
         int prod_ID = 4;
         try {
             ArrayList<DB_Subscription> getSubscriptionByPublication = dao.getSubscriptionByPublication(4);
-            assertEquals(1, getSubscriptionByPublication.size());
+            assertEquals(6, getSubscriptionByPublication.size());
             DB_Subscription subscriptionCustomer = getSubscriptionByPublication.get(0);
-            assertEquals(3, subscriptionCustomer.getCustomer_id());
+            assertEquals(8, subscriptionCustomer.getCustomer_id());
             assertEquals(4, subscriptionCustomer.getPublication_id());
             dao.getSubscriptionByPublication(4);
         }catch(DAOExceptionHandler e){
@@ -308,9 +308,9 @@ public class DAOTestSubscription extends TestCase {
         int prod_ID = 5;
         try{
             ArrayList<DB_Subscription> getSubscriptionByPublication = dao.getSubscriptionByPublication(5);
-            assertEquals(1, getSubscriptionByPublication.size());
+            assertEquals(5, getSubscriptionByPublication.size());
             DB_Subscription subscriptionCustomer = getSubscriptionByPublication.get(0);
-            assertEquals(1, subscriptionCustomer.getCustomer_id());
+            assertEquals(2, subscriptionCustomer.getCustomer_id());
             assertEquals(5, subscriptionCustomer.getPublication_id());
             dao.getSubscriptionByPublication(5);
         }catch(DAOExceptionHandler e){
@@ -359,14 +359,12 @@ public class DAOTestSubscription extends TestCase {
 
         public void testUpdateSubscription002() {
             try {
-                DB_Subscription update_subscription = new DB_Subscription(1,6,2);
+                DB_Subscription update_subscription = new DB_Subscription(1, 44, 2);
                 dao.updateSubscription(update_subscription);
                 fail("Exception expected");
-            } catch (DAOExceptionHandler e) {
+            } catch (DAOExceptionHandler | DB_SubscriptionExceptionHandler e) {
                 assertEquals("Cannot add or update a child row: a foreign key constraint fails (`newsagent`.`subscription`, CONSTRAINT `subscription_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`) ON DELETE CASCADE)", e.getMessage());
-            }catch (DB_SubscriptionExceptionHandler e){
-                e.printStackTrace();
-                fail("DB_Subscription exception not expected");
+
             }
         }
 
@@ -383,14 +381,11 @@ public class DAOTestSubscription extends TestCase {
 
     public void testUpdateSubscription003(){
         try {
-            DB_Subscription update_subscription = new DB_Subscription(1,2,6);
+            DB_Subscription update_subscription = new DB_Subscription(1,2,44);
             dao.updateSubscription(update_subscription);
             fail("Exception expected");
-        } catch (DAOExceptionHandler e) {
+        } catch (DAOExceptionHandler | DB_SubscriptionExceptionHandler e) {
             assertEquals("Cannot add or update a child row: a foreign key constraint fails (`newsagent`.`subscription`, CONSTRAINT `subscription_ibfk_2` FOREIGN KEY (`prod_id`) REFERENCES `publication` (`prod_id`))", e.getMessage());
-        }catch (DB_SubscriptionExceptionHandler e){
-            e.printStackTrace();
-            fail("DB_Subscription exception not expected");
         }
     }
 

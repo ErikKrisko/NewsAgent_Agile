@@ -595,7 +595,7 @@ public class DAO {
         try{
             if(delivery.getDelivery_id() == 0)
             {
-                PreparedStatement pstmt = con.prepareStatement("INSERT INTO delivery VALUES(null, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+                PreparedStatement pstmt = con.prepareStatement("INSERT INTO delivery VALUES(null, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
                 pstmt.setDate(att_delivery.delivery_date.column - 1, delivery.getDelivery_date());
                 pstmt.setBoolean(att_delivery.delivery_status.column - 1, delivery.isDelivery_status());
                 pstmt.setLong( att_delivery.customer.column - 1, delivery.getCustomer_id());
@@ -618,7 +618,7 @@ public class DAO {
                     update += att_delivery.delivery_date.columnName + " = '" + delivery.getDelivery_date() + "', ";
                     update += att_delivery.delivery_status.columnName + " = " + delivery.getDelivery_status() + ", ";
                     update += att_delivery.customer.columnName + " = " + delivery.getCustomer_id() + ", ";
-                    update += att_delivery.invoice.columnName + " = " + delivery.getInvoice_id() + " ";
+                    update += att_delivery.invoice.columnName + " = " + delivery.getInvoice_id() + ", ";
                     update += att_delivery.publication.columnName + " = " + delivery.getProd_id() + " ";
                     update += "WHERE " + att_delivery.delivery_id.columnName + " = " + delivery.getDelivery_id();
 
@@ -897,6 +897,39 @@ public class DAO {
 
     //  ====================================================================================================
     // SUBSCRIPTION
+        //This getSubscription method is being used in the GUI  for searching and viewing the whole table
+        public ArrayList<DB_Subscription> getSubscriptions() throws DAOExceptionHandler {
+        try{
+            ArrayList<DB_Subscription> list = new ArrayList<>();
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM subscription");
+
+            if(rs.next()){
+                do {
+                    list.add(new DB_Subscription(
+                            rs.getInt(1),
+                            rs.getLong(2),
+                            rs.getLong(3)
+                    ));
+                } while (rs.next());
+                rs.close();
+                st.close();
+                return list;
+            }else {
+                rs.close();
+                st.close();
+                return null;
+            }
+        } catch (SQLException | DB_SubscriptionExceptionHandler e){
+            throw new DAOExceptionHandler(e.getMessage());
+        }
+    }
+
+
+
+
+
+
     //GetSubscription
     public DB_Subscription getSubscription(long customer_id, long publication_id) throws DAOExceptionHandler {
         try {
@@ -922,7 +955,7 @@ public class DAO {
             if ( rs.next()) {
                 do {
                     customerList.add(new DB_Subscription(
-                            rs.getInt(0),
+                            rs.getInt(1),
                             rs.getInt(1),
                             rs.getInt(2)
                     ));
@@ -934,7 +967,7 @@ public class DAO {
             } else {
                 rs.close();
                 st.close();
-                return null;
+                throw new DAOExceptionHandler("No subscription with customer_id = " + customer_id+ " found.");
             }
         } catch (SQLException | DB_SubscriptionExceptionHandler e) {
             throw new DAOExceptionHandler(e.getMessage());
@@ -990,7 +1023,9 @@ public class DAO {
                 } else {
                     rs.close();
                     st.close();
-                    return null;
+                    //May need to change this
+                    throw new DAOExceptionHandler("No subscription with prod_list = " + prod_list + " found.");
+
                 }
             } else {
                 throw new DAOExceptionHandler("No product ids were found");
@@ -1060,7 +1095,7 @@ public class DAO {
             {
                 do{
                     publicationList.add(new DB_Subscription(
-                            rs.getInt(0),
+                            rs.getInt(1),
                             rs.getLong(1),
                             rs.getInt(2)
                     ));
