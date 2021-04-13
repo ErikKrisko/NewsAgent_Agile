@@ -2,14 +2,17 @@ import java.sql.Date;
 import java.util.ArrayList;
 
 public class Docket {
+    private ArrayList<DB_Subscription> subscriptions;
     private ArrayList<DB_Delivery> deliveries;
     private Date date;
+    private DeliveryDocket deliveryDockets;
 
     //  Blank constructor
     public Docket() {}
 
     //  Full constructor
-    public Docket(ArrayList<DB_Delivery> deliveries, Date date) throws DocketExceptionHandler {
+    public Docket(ArrayList<DB_Subscription> subscriptions, ArrayList<DB_Delivery> deliveries, Date date) throws DocketExceptionHandler {
+        this.subscriptions = subscriptions;
         this.date = date;
         this.deliveries = validateDeliveries(deliveries);
     }
@@ -66,12 +69,12 @@ public class Docket {
     public void setDeliveries(ArrayList<DB_Delivery> deliveries) throws DocketExceptionHandler { this.deliveries = validateDeliveries(deliveries); }
     public Date getDate() { return date; }
     public void setDate(Date date) throws DocketExceptionHandler { this.date = validateDate(date); }
+    public ArrayList<DB_Subscription> getSubscriptions() { return subscriptions; }
+    public void setSubscriptions(ArrayList<DB_Subscription> subscriptions) { this.subscriptions = subscriptions; }
 }
 
 class DocketExceptionHandler extends Exception {
     String message;
-
     public DocketExceptionHandler(String errMessage) { message = errMessage; }
-
     public String getMessage() { return message; }
 }

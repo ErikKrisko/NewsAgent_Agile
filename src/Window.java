@@ -1,9 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
 
 public class Window extends JFrame implements MouseListener, ActionListener {
     private DAO dao;
@@ -13,7 +10,7 @@ public class Window extends JFrame implements MouseListener, ActionListener {
     private int popup_close_id = -1;
     private final Container contentPane = this.getContentPane();
     private final JTabbedPane tabbedPane = new JTabbedPane();
-    private JMenuItem menu_file_exit, menu_debug_database;
+    private final JMenuItem menu_file_exit = new JMenuItem("Exit"), menu_debug_database = new JMenuItem("Reset DB");
 
     public Window() {
         //  connect DAO
@@ -41,8 +38,11 @@ public class Window extends JFrame implements MouseListener, ActionListener {
         //  PopupMenu
         popup_close.addActionListener(this);
         //  Menu file
-        menu_file.add(menu_file_exit = new JMenuItem("Exit"));
-        menu_debug.add(menu_debug_database = new JMenuItem("Reset DB"));
+        menu_file.add(menu_file_exit);
+        menu_file_exit.addActionListener(this);
+        menu_debug.add(menu_debug_database);
+        menu_debug_database.addActionListener(this);
+
 
         //  Populate menuBar
         menuBar.add(menu_file);
@@ -67,6 +67,21 @@ public class Window extends JFrame implements MouseListener, ActionListener {
             tabbedPane.remove(popup_close_id);
             if (tabbedPane.getTabCount() < 1)
                 tabbedPane.addTab("new_tab", new Tab(tabbedPane, dao).blank());
+        } else if (e.getSource() == menu_file_exit) {
+            this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+        } else if (e.getSource() == menu_debug_database) {
+            try {
+                //  Run scripts to reset the Database
+                JDBC connection = new JDBC("jdbc:mysql://localhost:3306/", "root", "admin");
+                connection.executeScript("NewsAgent_Database.sql");
+                connection.setDbName("newsagent");
+                connection.executeScript("NewsAgent_Data_Extended.sql");
+                connection.close();
+                //  Re-establish dao connection
+                dao = new DAO("jdbc:mysql://localhost:3306/newsagent?useTimezone=true&serverTimezone=UTC","root","admin");
+            } catch (Exception exc) {
+                exc.printStackTrace();
+            }
         }
     }
 

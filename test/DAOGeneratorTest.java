@@ -1,5 +1,8 @@
 import junit.framework.TestCase;
 
+import java.sql.Date;
+import java.util.ArrayList;
+
 public class DAOGeneratorTest extends TestCase {
     //  Global dao object reference
     private DAO dao;
@@ -11,7 +14,7 @@ public class DAOGeneratorTest extends TestCase {
      *  ==========
      *  Expected Outputs:   None
      */
-    public DAOGeneratorTest() {
+    public void initializeDatabase() {
         try {
             //  Reset Database
             JDBC connection = new JDBC("jdbc:mysql://localhost:3306/", "root", "admin");
@@ -27,8 +30,5 @@ public class DAOGeneratorTest extends TestCase {
         }
     }
 
-
-    public void testDAOGenerator001() {
-
-    }
+    //  Do not know how to effectively test this as all the methods being used are tested and proven...
 }
