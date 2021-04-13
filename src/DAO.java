@@ -592,11 +592,11 @@ public class DAO {
     }
 
     //Get Deliveries by delivery_date
-    public ArrayList<DB_Delivery> getDeliveriesByDate(String date) throws DAOExceptionHandler {
+    public ArrayList<DB_Delivery> getDeliveriesByDate(Date date) throws DAOExceptionHandler {
         try {
             ArrayList<DB_Delivery> list = new ArrayList<>();
             Statement st = con.createStatement();
-            ResultSet rs = st.executeQuery("SELECT * FROM delivery WHERE delivery_date = " + Date.valueOf(date));
+            ResultSet rs = st.executeQuery("SELECT * FROM delivery WHERE delivery_date = '" + date + "'");
             if (rs.next()) {
                 do {
                     list.add(new DB_Delivery(
@@ -614,7 +614,8 @@ public class DAO {
             } else {
                 rs.close();
                 st.close();
-                return null;
+                throw new DAOExceptionHandler("No delivery with date " + date + " found");
+                //return null;
             }
         } catch (SQLException | DB_DeliveryExceptionHandler e) {
             throw new DAOExceptionHandler(e.getMessage());

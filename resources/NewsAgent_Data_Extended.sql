@@ -89,7 +89,12 @@ INSERT INTO delivery VALUES (null, '2022-04-05', 0, 2, 2, 5);
 INSERT INTO delivery VALUES (null, '2022-07-18', 1, 3, 3, 8);
 INSERT INTO delivery VALUES (null, '2022-06-10', 1, 4, 4, 3);
 INSERT INTO delivery VALUES (null, '2022-09-05', 0, 5, 5, 5);
-INSERT INTO delivery VALUES (null, '2022-02-05', 0, 1, 1, 8);
+INSERT INTO delivery VALUES (null, '2022-02-05', 1, 1, 1, 8);
+INSERT INTO delivery VALUES (null, '2022-02-05', 0, 2, 1, 4);
+INSERT INTO delivery VALUES (null, '2022-01-05', 1, 1, 3, 1);
+INSERT INTO delivery VALUES (null, '2022-01-05', 1, 2, 5, 3);
+INSERT INTO delivery VALUES (null, '2022-01-05', 1, 3, 5, 6);
+INSERT INTO delivery VALUES (null, '2022-01-05', 0, 4, 1, 2);
 
 /*Delivers relation Table*/
 INSERT INTO delivers VALUES (1, 1);

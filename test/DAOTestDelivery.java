@@ -1,18 +1,19 @@
 import junit.framework.TestCase;
 
 import java.sql.Date;
+import java.util.ArrayList;
 
 public class DAOTestDelivery extends TestCase {
     DB_Delivery delivery = new DB_Delivery();
     private DAO dao;
 
-    public DAOTestDelivery() {
+    public void DAOTestDelivery() {
         try {
             //  Reset Database
             JDBC connection = new JDBC("jdbc:mysql://localhost:3306/", "root", "admin");
             connection.executeScript("NewsAgent_Database.sql");
             connection.setDbName("newsagent");
-            connection.executeScript("NewsAgent_Data.sql");
+            connection.executeScript("NewsAgent_Data_Extended.sql");
             connection.close();
             //  Initialize DAO
             dao = new DAO("jdbc:mysql://localhost:3306/newsagent?useTimezone=true&serverTimezone=UTC", "root", "admin");
@@ -35,12 +36,15 @@ public class DAOTestDelivery extends TestCase {
      */
     public void testDB_Delivery015() {
         try {
+            DAOTestDelivery();
             delivery = dao.getDelivery(1);
             assertEquals(1, delivery.getDelivery_id());
             assertEquals(Date.valueOf("2022-01-05"), delivery.getDelivery_date());
             assertEquals(true, delivery.isDelivery_status());
             assertEquals(1, delivery.getCustomer_id());
             assertEquals(1, delivery.getInvoice_id());
+            //  Close the DAO
+            dao.close();
         } catch (DAOExceptionHandler e) {
             e.printStackTrace();
             fail("Test initialization failed.");
@@ -56,12 +60,19 @@ public class DAOTestDelivery extends TestCase {
      * Expected Outputs: "No delivery with 'delivery_id = " + ID + " found."
      */
     public void testDB_Delivery016() {
-        int ID = 7;
+        int ID = 12;
         try {
+            DAOTestDelivery();
             delivery = dao.getDelivery(ID);
             fail("Exception expected.");
         } catch (DAOExceptionHandler e) {
             assertEquals("No delivery with 'delivery_id = " + ID + " found.", e.getMessage());
+            //  Close the DAO
+            try {
+                dao.close();
+            } catch (DAOExceptionHandler daoExceptionHandler) {
+                daoExceptionHandler.printStackTrace();
+            }
         }
     }
 
@@ -76,15 +87,19 @@ public class DAOTestDelivery extends TestCase {
     //
     public void testDB_Delivery017() {
         try {
+            DAOTestDelivery();
             delivery.setDelivery_id(0);
             delivery.setDelivery_date(Date.valueOf(String.valueOf(new Date(System.currentTimeMillis()))));
             delivery.setDelivery_status(true);
             delivery.setCustomer_id((1));
             delivery.setInvoice_id((3));
+            delivery.setProd_id(2);
             dao.updateDelivery(delivery);
-            assertEquals(7, delivery.getDelivery_id());
+            assertEquals(12, delivery.getDelivery_id());
             assertEquals(Date.valueOf(String.valueOf(new Date(System.currentTimeMillis()))), delivery.getDelivery_date());
             assertEquals(true, delivery.isDelivery_status());
+            //  Close the DAO
+            dao.close();
         } catch (DAOExceptionHandler | DB_DeliveryExceptionHandler e) {
             e.printStackTrace();
             fail("Exception not expected.");
@@ -102,15 +117,16 @@ public class DAOTestDelivery extends TestCase {
     //
     public void testDB_Delivery018() {
         try {
+            DAOTestDelivery();
             delivery = dao.getDelivery(1);
             delivery.setDelivery_date(Date.valueOf("2022-08-24"));
             delivery.setDelivery_status(false);
             delivery.setCustomer_id(3);
             delivery.setInvoice_id(3);
+            delivery.setProd_id(3);
             dao.updateDelivery(delivery);
             DB_Delivery delivery2 = dao.getDelivery(1);
 
-            //assertTrue(delivery.equals(delivery2));
 
             //Comparing the changed object and a new object that took the data after the change
             assertEquals(delivery2.getDelivery_id(), delivery.getDelivery_id());
@@ -118,7 +134,9 @@ public class DAOTestDelivery extends TestCase {
             assertEquals(delivery2.getDelivery_status(), delivery.getDelivery_status());
             assertEquals(delivery2.getCustomer_id(), delivery.getCustomer_id());
             assertEquals(delivery2.getInvoice_id(), delivery.getInvoice_id());
-
+            assertEquals(delivery2.getProd_id(), delivery.getProd_id());
+//  Close the DAO
+            dao.close();
         } catch (DAOExceptionHandler | DB_DeliveryExceptionHandler e) {
             e.printStackTrace();
             fail("Exception not expected.");
@@ -136,17 +154,25 @@ public class DAOTestDelivery extends TestCase {
     //
     public void testDB_Delivery019() {
         try {
-            delivery.setDelivery_id(9);
+            DAOTestDelivery();
+            delivery.setDelivery_id(12);
             delivery.setDelivery_date(Date.valueOf("2022-08-24"));
             delivery.setDelivery_status(false);
             delivery.setCustomer_id((3));
             delivery.setInvoice_id((3));
+            delivery.setProd_id(2);
 
             dao.updateDelivery(delivery);
 
             fail("Exception expected.");
         } catch (DAOExceptionHandler | DB_DeliveryExceptionHandler e) {
             assertEquals("There was delivery_id mishandling.",e.getMessage());
+            //  Close the DAO
+            try {
+                dao.close();
+            } catch (DAOExceptionHandler daoExceptionHandler) {
+                daoExceptionHandler.printStackTrace();
+            }
         }
     }
 
@@ -154,21 +180,27 @@ public class DAOTestDelivery extends TestCase {
      * Test 020
      * Test for DAO deleteDelivery method unsuccessful
      * ==========
-     * Inputs: Delivery object of id = 9
+     * Inputs: Delivery object of id = 14
      * ==========
      * Expected Outputs: "No delivery with 'delivery_id = " + delivery.getDelivery_id() + " found."
      */
     //
     public void testDB_Delivery020() {
         try {
-            delivery.setDelivery_id(9);
-
+            DAOTestDelivery();
+            delivery.setDelivery_id(14);
 
             dao.deleteDelivery(delivery);
 
             fail("Exception expected.");
         } catch (DAOExceptionHandler | DB_DeliveryExceptionHandler e) {
             assertEquals("No delivery with 'delivery_id = " + delivery.getDelivery_id() + " found.",e.getMessage());
+            //  Close the DAO
+            try {
+                dao.close();
+            } catch (DAOExceptionHandler daoExceptionHandler) {
+                daoExceptionHandler.printStackTrace();
+            }
         }
     }
 
@@ -183,13 +215,196 @@ public class DAOTestDelivery extends TestCase {
     //
     public void testDB_Delivery021() {
         try {
+            DAOTestDelivery();
             delivery.setDelivery_id(5);
             dao.deleteDelivery(delivery);
 
+            //  Close the DAO
+            dao.close();
         } catch (DAOExceptionHandler | DB_DeliveryExceptionHandler e) {
             fail("Exception not expected.");
         }
     }
 
+    /**
+     * Test 001 - getDeliveriesByDate
+     * Test for DAO getDeliveriesByDate method successful first entry
+     * ==========
+     * Inputs: delivery_date=2022-01-05
+     * ==========
+     * Expected Outputs:
+     *                          delivery_list.get(0).getDelivery_id() = 1
+     *                          delivery_list.get(0).getDelivery_date() = 2022-01-05
+     *                          delivery_list.get(0).getDelivery_status() = 1
+     *                          delivery_list.get(0).getCustomer_id() = 1
+     *                          delivery_list.get(0).getInvoice_id() = 1
+     *                          delivery_list.get(0).getProd_id() = 8
+     */
+    public void testDB_getDeliveriesByDate001(){
+        try {
+            DAOTestDelivery();
+            Date date = Date.valueOf("2022-01-05");
+
+            ArrayList<DB_Delivery> del_list = dao.getDeliveriesByDate(date);
+            //Check del_list size
+            assertEquals(5, del_list.size());
+            //Get first entry
+            DB_Delivery test_delivery = del_list.get(0);
+            //Compare delivery object information
+            assertEquals(1, test_delivery.getDelivery_id());
+            assertEquals(Date.valueOf("2022-01-05"), test_delivery.getDelivery_date());
+            assertEquals(1, test_delivery.getDelivery_status());
+            assertEquals(1, test_delivery.getCustomer_id());
+            assertEquals(1, test_delivery.getInvoice_id());
+            assertEquals(8, test_delivery.getProd_id());
+            //  Close the DAO
+            dao.close();
+        }catch(DAOExceptionHandler e){
+            e.printStackTrace();
+            fail("Exception not Expected");
+        }
+    }
+
+    /**
+     * Test 002 - getDeliveriesByDate
+     * Test for DAO getDeliveriesByDate method successful last entry
+     * ==========
+     * Inputs: delivery_date=2022-01-05
+     * ==========
+     * Expected Outputs:
+     *                          delivery_list.get(0).getDelivery_id() = 11
+     *                          delivery_list.get(0).getDelivery_date() = 2022-01-05
+     *                          delivery_list.get(0).getDelivery_status() = 0
+     *                          delivery_list.get(0).getCustomer_id() = 4
+     *                          delivery_list.get(0).getInvoice_id() = 1
+     *                          delivery_list.get(0).getProd_id() = 2
+     */
+    public void testDB_getDeliveriesByDate002(){
+        try {
+            DAOTestDelivery();
+            Date date = Date.valueOf("2022-01-05");
+
+            ArrayList<DB_Delivery> del_list = dao.getDeliveriesByDate(date);
+            //Check del_list size
+            assertEquals(5, del_list.size());
+            //Get first entry
+            DB_Delivery test_delivery = del_list.get(4);
+            //Compare delivery object information
+            assertEquals(11, test_delivery.getDelivery_id());
+            assertEquals(Date.valueOf("2022-01-05"), test_delivery.getDelivery_date());
+            assertEquals(0, test_delivery.getDelivery_status());
+            assertEquals(4, test_delivery.getCustomer_id());
+            assertEquals(1, test_delivery.getInvoice_id());
+            assertEquals(2, test_delivery.getProd_id());
+            //  Close the DAO
+            dao.close();
+        }catch(DAOExceptionHandler e){
+            e.printStackTrace();
+            fail("Exception not Expected");
+        }
+    }
+    /**
+     * Test 003 - getDeliveriesByDate
+     * Test for DAO getDeliveriesByDate method successful second entry
+     * ==========
+     * Inputs: delivery_date=2022-01-05
+     * ==========
+     * Expected Outputs:
+     *                          delivery_list.get(0).getDelivery_id() = 8
+     *                          delivery_list.get(0).getDelivery_date() = 2022-01-05
+     *                          delivery_list.get(0).getDelivery_status() = 1
+     *                          delivery_list.get(0).getCustomer_id() = 1
+     *                          delivery_list.get(0).getInvoice_id() = 3
+     *                          delivery_list.get(0).getProd_id() = 1
+     */
+    public void testDB_getDeliveriesByDate003(){
+        try {
+            DAOTestDelivery();
+            Date date = Date.valueOf("2022-01-05");
+
+            ArrayList<DB_Delivery> del_list = dao.getDeliveriesByDate(date);
+            //Check del_list size
+            assertEquals(5, del_list.size());
+            //Get first entry
+            DB_Delivery test_delivery = del_list.get(1);
+            //Compare delivery object information
+            assertEquals(8, test_delivery.getDelivery_id());
+            assertEquals(Date.valueOf("2022-01-05"), test_delivery.getDelivery_date());
+            assertEquals(1, test_delivery.getDelivery_status());
+            assertEquals(1, test_delivery.getCustomer_id());
+            assertEquals(3, test_delivery.getInvoice_id());
+            assertEquals(1, test_delivery.getProd_id());
+            //  Close the DAO
+            dao.close();
+        }catch(DAOExceptionHandler e){
+            e.printStackTrace();
+            fail("Exception not Expected");
+        }
+    }
+    /**
+     * Test 004 - getDeliveriesByDate
+     * Test for DAO getDeliveriesByDate method successful fourth entry
+     * ==========
+     * Inputs: delivery_date=2022-01-05
+     * ==========
+     * Expected Outputs:
+     *                          delivery_list.get(0).getDelivery_id() = 10
+     *                          delivery_list.get(0).getDelivery_date() = 2022-01-05
+     *                          delivery_list.get(0).getDelivery_status() = 1
+     *                          delivery_list.get(0).getCustomer_id() = 3
+     *                          delivery_list.get(0).getInvoice_id() = 5
+     *                          delivery_list.get(0).getProd_id() = 6
+     */
+    public void testDB_getDeliveriesByDate004(){
+        try {
+            DAOTestDelivery();
+            Date date = Date.valueOf("2022-01-05");
+
+            ArrayList<DB_Delivery> del_list = dao.getDeliveriesByDate(date);
+            //Check del_list size
+            assertEquals(5, del_list.size());
+            //Get first entry
+            DB_Delivery test_delivery = del_list.get(3);
+            //Compare delivery object information
+            assertEquals(10, test_delivery.getDelivery_id());
+            assertEquals(Date.valueOf("2022-01-05"), test_delivery.getDelivery_date());
+            assertEquals(1, test_delivery.getDelivery_status());
+            assertEquals(3, test_delivery.getCustomer_id());
+            assertEquals(5, test_delivery.getInvoice_id());
+            assertEquals(6, test_delivery.getProd_id());
+            //  Close the DAO
+            dao.close();
+        }catch(DAOExceptionHandler e){
+            e.printStackTrace();
+            fail("Exception not Expected");
+        }
+    }
+
+    /**
+     * Test 005 - getDeliveriesByDate
+     * Test for DAO getDeliveriesByDate method unsuccessful non matching date
+     * ==========
+     * Inputs: delivery_date=2021-01-05
+     * ==========
+     * Expected Outputs: "No delivery with date " + date + " found"
+     */
+    public void testDB_getDeliveriesByDate005(){
+        try {
+            DAOTestDelivery();
+            Date date = Date.valueOf("2021-01-05");
+
+            ArrayList<DB_Delivery> del_list = dao.getDeliveriesByDate(date);
+
+            fail("Exception Expected");
+        }catch(DAOExceptionHandler e){
+            assertEquals("No delivery with date " + "2021-01-05" + " found", e.getMessage());
+            //  Close the DAO
+            try {
+                dao.close();
+            } catch (DAOExceptionHandler daoExceptionHandler) {
+                daoExceptionHandler.printStackTrace();
+            }
+        }
+    }
 
 }

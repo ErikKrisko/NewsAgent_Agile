@@ -290,7 +290,7 @@ public class newsagent_interface {
                         //Display deliveries by date
                         case 7 -> {
                             System.out.println("Please enter a date to search by (yyyy-mm-dd): ");
-                            String date = sc.next();
+                            Date date = Date.valueOf(sc.next());
                             System.out.println(date);
                             ArrayList<DB_Delivery> list = dao.getDeliveriesByDate(date);
                             if(list == null){
@@ -347,7 +347,7 @@ public class newsagent_interface {
                             System.out.println("Enter invoice total (??.?): ");
                             invoice.setInvoice_total(sc.nextDouble());
                             System.out.println("Enter a customer id: ");
-                            invoice.setCustomer(dao.getCustomer(sc.nextInt()));
+//                            invoice.setCustomer(dao.getCustomer(sc.nextInt()));
                             System.out.println(invoice);
                         }
                         //Load existing Invoice
@@ -375,9 +375,9 @@ public class newsagent_interface {
                                 if(sc.hasNextLine() && sc.hasNext()) {
                                     invoice.setInvoice_total(Double.valueOf(sc.next()));
                                 }
-                                System.out.println("Customer id: " + invoice.getCustomer().getCustomer_id());
+//                                System.out.println("Customer id: " + invoice.getCustomer().getCustomer_id());
                                 if(sc.hasNextLine() && sc.hasNext()){
-                                    invoice.setCustomer(dao.getCustomer(sc.nextInt()));
+//                                    invoice.setCustomer(dao.getCustomer(sc.nextInt()));
                                 }
                                 System.out.println("Changed invoice: " + invoice);
                             }
