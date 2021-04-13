@@ -545,54 +545,30 @@ public class DAO {
     //  ====================================================================================================
     // DELIVERY
 
-    public ArrayList<DB_Delivery> getDeliveries(Search_Delivery[] search_list) throws DAOExceptionHandler {
-        //  Create bew Linked list of customers
-        ArrayList<DB_Delivery> list = new ArrayList<>();
+    public ArrayList<DB_Delivery> getDeliveries(long delivery_id) throws DAOExceptionHandler {
         try {
-            //  If no search parameters are specified
-            if (search_list == null || search_list.length <= 0) {
-                //  Create new result set
-                Statement st = con.createStatement();
-                ResultSet rs = st.executeQuery("SELECT * FROM delivery");
-                //  While there are results in the list create customer objects
-                if ( rs.next()) {
-                    do {
-                        list.add(populateDelivery(rs));
-                    } while ( rs.next());
-                    rs.close();
-                    st.close();
-                    return list;
-                } else {
-                    rs.close();
-                    st.close();
-                    throw new DAOExceptionHandler("No Deliveries where found in the database.");
-                }
-            } else {
-                //  Construct a query
-                String query = "SELECT * FROM delivery WHERE ";
-                //  Martina extensively advised against expanding this methodology to include any more search criteria such as address or publication and told us to do it in separate methods.
-                for (Search_Delivery search : search_list) {
-                    if (search.isStrong())
-                        query += search.getAttribute().name + " = '" + search.getTerm() + "'AND ";
-                    else
-                        query += search.getAttribute().name + " LIKE '" + search.getTerm() + "'AND ";
-                }
-                //  Cut the last four characters off ( "AND " ) from the end
-                query = query.substring(0, query.length() - 4 );
-
-                Statement st = con.createStatement();
-                ResultSet rs = st.executeQuery(query);
-                ArrayList<DB_Delivery> tempList = new ArrayList<>();
-                while (rs.next()) {
-                    DB_Delivery temp = populateDelivery(rs);
-                    tempList.add(temp);
-                }
+            ArrayList<DB_Delivery> list = new ArrayList<>();
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM delivery WHERE " + att_delivery.delivery_id.columnName + " = " + delivery_id);
+            if ( rs.next()) {
+                do {
+                    list.add(new DB_Delivery(
+                            rs.getLong(att_delivery.delivery_id.column),
+                            rs.getDate(att_delivery.delivery_date.column),
+                            rs.getBoolean(att_delivery.delivery_status.column),
+                            rs.getLong(att_delivery.customer.column),
+                            rs.getLong(att_delivery.invoice.column)
+                    ));
+                } while (rs.next());
                 rs.close();
                 st.close();
-                return tempList;
+                return list;
+            } else {
+                rs.close();
+                st.close();
+                return null;
             }
-        }
-        catch (SQLException e) {
+        } catch (SQLException | DB_DeliveryExceptionHandler e) {
             throw new DAOExceptionHandler(e.getMessage());
         }
     }
