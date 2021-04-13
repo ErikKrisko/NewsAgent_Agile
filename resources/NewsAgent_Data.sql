@@ -26,7 +26,6 @@ INSERT INTO holiday VALUES (null, '2021-03-02', '2021-05-15', 3);
 INSERT INTO holiday VALUES (null, '2021-01-10', '2021-06-01', 4);
 INSERT INTO holiday VALUES (null, '2021-12-15', '2021-12-20', 5);
 
-
 /*employee Table*/
 INSERT INTO employee VALUES (null, 'John', 'Doyle');
 INSERT INTO employee VALUES (null, 'Micheal', 'DeSanta');
@@ -42,12 +41,12 @@ INSERT INTO publication VALUES (null, 'The Sun', 'Tabloid', '2.50', 'DAILY');
 INSERT INTO publication VALUES (null, 'PlayBunny', 'Magazine', '10', 'MONTHLY 5');
 
 /*delivery Table*/
-INSERT INTO delivery VALUES (null, '2022-01-05', 1, 1, 1);
-INSERT INTO delivery VALUES (null, '2022-04-05', 0, 2, 2);
-INSERT INTO delivery VALUES (null, '2022-07-18', 1, 3, 3);
-INSERT INTO delivery VALUES (null, '2022-06-10', 1, 4, 4);
-INSERT INTO delivery VALUES (null, '2022-09-05', 0, 5, 5);
-INSERT INTO delivery VALUES (null, '2022-01-05', 0, 1, 1);
+INSERT INTO delivery VALUES (null, '2020-01-05', 1, 1, 1, 3);
+INSERT INTO delivery VALUES (null, '2020-04-05', 0, 2, 2, 2);
+INSERT INTO delivery VALUES (null, '2020-07-05', 1, 3, 3, 4);
+INSERT INTO delivery VALUES (null, '2020-06-05', 1, 4, 4, 5);
+INSERT INTO delivery VALUES (null, '2020-09-05', 0, 5, 5, 3);
+INSERT INTO delivery VALUES (null, '2020-02-05', 0, 1, 1, 3);
 
 /*Stock Table*/
 INSERT INTO stock VALUES (null, '2021-07-10', '200', '1-B', 1, 200);
@@ -55,14 +54,6 @@ INSERT INTO stock VALUES (null, '2021-05-04', '400', '2-F', 1, 400);
 INSERT INTO stock VALUES (null, '2021-09-15', '900', '3-M', 1, 900);
 INSERT INTO stock VALUES (null, '2021-11-19', '20', '4-V', 1, 20);
 INSERT INTO stock VALUES (null, '2021-12-21', '24', '5-P', 1, 24);
-
-/*Prod_for_delivery relation Table*/
-/*NON EXISTENT*/
-# INSERT INTO prod_for_delivery VALUES (1, 2);
-# INSERT INTO prod_for_delivery VALUES (2, 3);
-# INSERT INTO prod_for_delivery VALUES (3, 1);
-# INSERT INTO prod_for_delivery VALUES (4, 4);
-# INSERT INTO prod_for_delivery VALUES (5, 5);
 
 /*Delivers relation Table*/
 INSERT INTO delivers VALUES (1, 1);

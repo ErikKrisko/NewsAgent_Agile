@@ -65,14 +65,6 @@ INSERT INTO holiday VALUES (null, '2021-04-12', '2021-04-18', 20);
 INSERT INTO holiday VALUES (null, '2021-04-04', '2021-04-14', 7);
 INSERT INTO holiday VALUES (null, '2021-06-29', '2021-07-29', 13);
 
-/*delivery Table*/
-INSERT INTO delivery VALUES (null, '2022-01-05', 1, 1, 1);
-INSERT INTO delivery VALUES (null, '2022-04-05', 0, 2, 2);
-INSERT INTO delivery VALUES (null, '2022-07-18', 1, 3, 3);
-INSERT INTO delivery VALUES (null, '2022-06-10', 1, 4, 4);
-INSERT INTO delivery VALUES (null, '2022-09-05', 0, 5, 5);
-INSERT INTO delivery VALUES (null, '2022-01-05', 0, 1, 1);
-
 /*employee Table*/
 INSERT INTO employee VALUES (null, 'John', 'Doyle');
 INSERT INTO employee VALUES (null, 'Micheal', 'DeSanta');
@@ -91,15 +83,13 @@ INSERT INTO publication VALUES (null, 'The Saturday', 'Tabloid', '3.00', 'WEEKLY
 INSERT INTO publication VALUES (null, 'Daily News', 'Broadsheet', '1.95', 'DAILY');
 INSERT INTO publication VALUES (null, 'Final Straw', 'Magazine', '10', 'MONTHLY 28');
 
-/*Stock Table UNUSED*/
-/*INSERT INTO stock VALUES (null, '2021-07-10', '200', '1-B', 1, 200);*/
-
-/*Prod_for_delivery relation Table*/
-INSERT INTO prod_for_delivery VALUES (1, 2);
-INSERT INTO prod_for_delivery VALUES (2, 3);
-INSERT INTO prod_for_delivery VALUES (3, 1);
-INSERT INTO prod_for_delivery VALUES (4, 4);
-INSERT INTO prod_for_delivery VALUES (5, 5);
+/*delivery Table*/
+INSERT INTO delivery VALUES (null, '2022-01-05', 1, 1, 1, 8);
+INSERT INTO delivery VALUES (null, '2022-04-05', 0, 2, 2, 5);
+INSERT INTO delivery VALUES (null, '2022-07-18', 1, 3, 3, 8);
+INSERT INTO delivery VALUES (null, '2022-06-10', 1, 4, 4, 3);
+INSERT INTO delivery VALUES (null, '2022-09-05', 0, 5, 5, 5);
+INSERT INTO delivery VALUES (null, '2022-02-05', 0, 1, 1, 8);
 
 /*Delivers relation Table*/
 INSERT INTO delivers VALUES (1, 1);
