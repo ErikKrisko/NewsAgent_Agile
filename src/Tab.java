@@ -196,6 +196,7 @@ public class Tab {
 
         //  Populates data from deliveries ArrayList
         private void updateTableModel() {
+            delivery_tableModel.setRowCount(0);
             for (DB_Delivery del : deliveries) {
                 delivery_tableModel.addRow(del.getRowData());
             }
