@@ -548,4 +548,101 @@ public class DAOTestSubscription extends TestCase {
         }
     }
 
+    /**Test 020 getSubscriptionsForDate
+     * Test for getting subscriptions for given date, excluding holidays and ordered by customer ID
+     * =====================================================
+     * Input(s):    ArrayList<DB_Subscription> sub_list = dao.getSubscriptionsForDate(Date.valueOf("2021-04-14"), true, true);
+     * =====================================================
+     * Expected Output(s):  assertEquals(19, sub_list.size());
+     *                      assertEquals(2, sub_list.get(0).getCustomer_id());
+     *                      assertEquals(7, sub_list.get(3).getCustomer_id());
+     *                      assertEquals(15, sub_list.get(10).getCustomer_id());
+     *                      assertEquals(23, sub_list.get(18).getCustomer_id());
+     */
+    public void testGetSubscriptionsForDate001(){
+        try{
+            initializeDatabase();
+            ArrayList<DB_Subscription> sub_list = dao.getSubscriptionsForDate(Date.valueOf("2021-04-14"), true, true);
+            assertEquals(17, sub_list.size());
+            assertEquals(1, sub_list.get(0).getCustomer_id());
+            assertEquals(8, sub_list.get(4).getCustomer_id());
+            assertEquals(15, sub_list.get(10).getCustomer_id());
+            assertEquals(23, sub_list.get(16).getCustomer_id());
+        }catch (DAOExceptionHandler e){
+            e.printStackTrace();
+            fail("Exception not expected");
+        }
+    }
+
+    /**Test 021 getSubscriptionsForDate
+     * Test for getting subscriptions for given date, including holidays
+     * =====================================================
+     * Input(s):    ArrayList<DB_Subscription> sub_list = dao.getSubscriptionsForDate(Date.valueOf("2021-04-17"), false, false);
+     * =====================================================
+     * Expected Output(s):  assertEquals(6, sub_list.size());
+     *                      assertEquals(3, sub_list.get(0).getCustomer_id());
+     *                      assertEquals(6, sub_list.get(1).getCustomer_id());
+     *                      assertEquals(7, sub_list.get(2).getCustomer_id());
+     *                      assertEquals(22, sub_list.get(5).getCustomer_id());
+     */
+    public void testGetSubscriptionsForDate002(){
+        try{
+            initializeDatabase();
+            ArrayList<DB_Subscription> sub_list = dao.getSubscriptionsForDate(Date.valueOf("2021-04-17"), false, false);
+            assertEquals(6, sub_list.size());
+            assertEquals(3, sub_list.get(0).getCustomer_id());
+            assertEquals(6, sub_list.get(1).getCustomer_id());
+            assertEquals(7, sub_list.get(2).getCustomer_id());
+            assertEquals(22, sub_list.get(5).getCustomer_id());
+        }catch (DAOExceptionHandler e){
+            e.printStackTrace();
+            fail("Exception not expected");
+        }
+    }
+
+    /**Test 022 getSubscriptionsForDate
+     * Test for getting subscriptions for given date, excluding holidays
+     * =====================================================
+     * Input(s):    ArrayList<DB_Subscription> sub_list = dao.getSubscriptionsForDate(Date.valueOf("2021-04-17"), true, false);
+     * =====================================================
+     * Expected Output(s):  assertEquals(5, sub_list.size());
+     *                      assertEquals(3, sub_list.get(0).getCustomer_id());
+     *                      assertEquals(7, sub_list.get(1).getCustomer_id());
+     *                      assertEquals(12, sub_list.get(2).getCustomer_id());
+     *                      assertEquals(22, sub_list.get(4).getCustomer_id());
+     */
+    public void testGetSubscriptionsForDate003(){
+        try{
+            initializeDatabase();
+            ArrayList<DB_Subscription> sub_list = dao.getSubscriptionsForDate(Date.valueOf("2021-04-17"), true, false);
+            assertEquals(4, sub_list.size());
+            assertEquals(3, sub_list.get(0).getCustomer_id());
+            assertEquals(7, sub_list.get(1).getCustomer_id());
+            assertEquals(16, sub_list.get(2).getCustomer_id());
+            assertEquals(22, sub_list.get(3).getCustomer_id());
+        }catch (DAOExceptionHandler e){
+            e.printStackTrace();
+            fail("Exception not expected");
+        }
+    }
+
+    /**Test 023 getSubscriptionsForDate
+     * Test for getting subscriptions for given date that no products apply to.
+     * =====================================================
+     * Input(s):    ArrayList<DB_Subscription> sub_list = dao.getSubscriptionsForDate(Date.valueOf("2021-04-18"), false, false);
+     * =====================================================
+     * Expected Output(s):  assertEquals(0, sub_list.size());
+     */
+    public void testGetSubscriptionsForDate004(){
+        try{
+            initializeDatabase();
+            ArrayList<DB_Subscription> sub_list = dao.getSubscriptionsForDate(Date.valueOf("2021-04-18"), false, false);
+            assertNull(sub_list);
+        }catch (DAOExceptionHandler e){
+            e.printStackTrace();
+            fail("Exception not expected");
+        }
+    }
+
+
 }

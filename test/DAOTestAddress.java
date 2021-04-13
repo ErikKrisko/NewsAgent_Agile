@@ -1,5 +1,8 @@
 import junit.framework.TestCase;
 
+import java.sql.Date;
+import java.util.ArrayList;
+
 public class DAOTestAddress extends TestCase {
     //  Global dao object reference
     private DAO dao;
@@ -208,6 +211,79 @@ public class DAOTestAddress extends TestCase {
         } catch (DB_AddressExceptionHandler e) {
             e.printStackTrace();
             fail("Exception not expected.");
+        }
+    }
+
+    /** TEST 009    getAddressesBySubscriptions()
+     *  Testing for getting addresses for given list of Subscriptions
+     *  ==========
+     *  Inputs:
+     *              ArrayList<DB_Publication> prod_list = dao.getPublicationsByDate(Date.valueOf("2021-04-14"));
+     *              ArrayList<DB_Subscription> sub_list = dao.getSubscriptionsByPublications(prod_list);
+     *              ArrayList<DB_Address> addresses = dao.getAddressesBySubscriptions(sub_list);
+     *  ==========
+     *  Expected Outputs:   addresses.size() = 17
+     *                      addresses.get(0).getAddress_id() = 1
+     *                      addresses.get(4).getAddress_id() = 6
+     *                      addresses.get(16).getAddress_id() = 21
+     *
+     *  Query that should execute: "SELECT DISTINCT a.address_id, a.full_address, a.area_code, a.eir_code FROM address AS a, customer AS c WHERE c.customer_id IN (1,2,3,4,7,8,9,10,10,10,12,14,15,17,18,18,20,21,22,23) && c.address_id = a.address_id;"
+     */
+    public void testGetAddressBySubscription001() {
+        try {
+            initializeDatabase();
+            //  Pre variables
+            ArrayList<DB_Publication> prod_list = dao.getPublicationsByDate(Date.valueOf("2021-04-14"));
+            ArrayList<DB_Subscription> sub_list = dao.getSubscriptionsByPublications(prod_list);
+            //  Get address list
+            ArrayList<DB_Address> addresses = dao.getAddressesBySubscriptions(sub_list);
+            //  Check ids
+            assertEquals(17, addresses.size());
+            assertEquals(1, addresses.get(0).getAddress_id());
+            assertEquals(6, addresses.get(4).getAddress_id());
+            assertEquals(21, addresses.get(16).getAddress_id());
+        } catch (DAOExceptionHandler  e) {
+            e.printStackTrace();
+            fail("Exception not Expected");
+        }
+    }
+
+    /** TEST 010    getAddressesBySubscriptions()
+     *  Testing for getting addresses from empty list
+     *  ==========
+     *  Inputs:     ArrayList<DB_Address> addresses = dao.getAddressesBySubscriptions(new ArrayList<DB_Subscription>);
+     *  ==========
+     *  Expected Outputs:
+     */
+    public void testGetAddressBySubscription002() {
+        try {
+            initializeDatabase();
+            //  Pre variables
+            ArrayList<DB_Address> addresses = dao.getAddressesBySubscriptions(new ArrayList<DB_Subscription>());
+            //  Check for null
+            assertNull(addresses);
+        } catch (DAOExceptionHandler  e) {
+            e.printStackTrace();
+            fail("Exception not Expected");
+        }
+    }
+
+    /** TEST 011    getAddressesBySubscriptions()
+     *  Testing for getting addresses from null list
+     *  ==========
+     *  Inputs:     ArrayList<DB_Address> addresses = dao.getAddressesBySubscriptions(new ArrayList<DB_Subscription>);
+     *  ==========
+     *  Expected Outputs:
+     */
+    public void testGetAddressBySubscription003() {
+        try {
+            initializeDatabase();
+            //  Pre variables
+            dao.getAddressesBySubscriptions(null);
+            //  Check ids
+            fail("Exception expected");
+        } catch (DAOExceptionHandler  e) {
+            assertEquals( "A null list was provided.", e.getMessage());
         }
     }
 

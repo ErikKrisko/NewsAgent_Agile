@@ -266,6 +266,69 @@ public class DAO {
         }
     }
 
+    public ArrayList<DB_Address> getAddressesBySubscriptions(ArrayList<DB_Subscription> sub_list) throws DAOExceptionHandler {
+        if (sub_list != null) {
+            if (sub_list.size() > 0) {
+                try {
+                    //  Compile unique prod_ids to an array
+                    long[] cus_ids = new long[0];
+                    for (DB_Subscription sub : sub_list) {
+                        boolean contains = false;
+                        for (long i : cus_ids) {
+                            if (i == sub.getCustomer_id()) {
+                                contains = true;
+                                break;
+                            }
+                        }
+                        if (!contains) {
+                            cus_ids = Arrays.copyOf(cus_ids, cus_ids.length + 1);
+                            cus_ids[cus_ids.length - 1] = sub.getCustomer_id();
+                        }
+                    }
+                    //  Query using ids
+                    if (cus_ids.length > 0) {
+                        ArrayList<DB_Address> addresses = new ArrayList<>();
+                        String statement = "SELECT DISTINCT a.address_id, a.full_address, a.area_code, a.eir_code FROM address AS a, customer AS c WHERE c.customer_id IN (";
+                        //  Add numbers to the list
+                        for (long i : cus_ids)
+                            statement += i + ",";
+                        //  Cut the last comma and add closing parentheses
+                        statement = statement.substring(0, statement.length() - 1);
+                        statement += ") AND c.address_id = a.address_id";
+                        //  Execute query
+                        Statement st = con.createStatement();
+                        ResultSet rs = st.executeQuery(statement);
+                        if (rs.next()) {
+                            do {
+                                addresses.add(new DB_Address(
+                                        rs.getInt( Att_Address.address_id.column),
+                                        rs.getString( Att_Address.full_address.column),
+                                        rs.getInt( Att_Address.area_code.column),
+                                        rs.getString( Att_Address.eir_code.column)
+                                ));
+                            } while ((rs.next()));
+                            rs.close();
+                            st.close();
+                            return addresses;
+                        } else {
+                            rs.close();
+                            st.close();
+                            return null;
+                        }
+                    } else {
+                        throw new DAOExceptionHandler("No product ids were found");
+                    }
+                } catch (SQLException | DB_AddressExceptionHandler e) {
+                    throw new DAOExceptionHandler(e.getMessage());
+                }
+            } else {
+                return null;
+            }
+        } else {
+            throw new DAOExceptionHandler("A null list was provided.");
+        }
+    }
+
     /** Issues update for address. Creates if ID is = 0 or updates an existing entry.
      * @param address object which to update / create.
      * @return int number of lines changed.
@@ -823,6 +886,12 @@ public class DAO {
         }
     }
 
+    /** Gets a list of subscriptions for given ArrayList of publications
+     *  Not particularly useful anymore to be replaced by getSubscriptionsForDate()
+     * @param prod_list ArrayList of publications.
+     * @return ArrayList of Subscriptions that any given publication is part of.
+     * @throws DAOExceptionHandler
+     */
     public ArrayList<DB_Subscription> getSubscriptionsByPublications(ArrayList<DB_Publication> prod_list) throws DAOExceptionHandler {
         try {
             //  Compile unique prod_ids to an array
@@ -849,7 +918,6 @@ public class DAO {
                 //  Cut the last comma and add closing parentheses
                 statement = statement.substring(0, statement.length() - 1);
                 statement += ")";
-                System.out.println(statement);
                 //  Execute query
                 Statement st = con.createStatement();
                 ResultSet rs = st.executeQuery(statement);
@@ -861,6 +929,8 @@ public class DAO {
                                 rs.getInt(2)
                         ));
                     } while ((rs.next()));
+                    rs.close();
+                    st.close();
                     return sub_list;
                 } else {
                     rs.close();
@@ -869,6 +939,55 @@ public class DAO {
                 }
             } else {
                 throw new DAOExceptionHandler("No product ids were found");
+            }
+        } catch (SQLException | DB_SubscriptionExceptionHandler e) {
+            throw new DAOExceptionHandler(e.getMessage());
+        }
+    }
+
+    public ArrayList<DB_Subscription> getSubscriptionsForDate(Date date, boolean holiday_state, boolean cus_order) throws DAOExceptionHandler {
+        //  Construct a usable calendar
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+
+        //  Compile query
+        String statement = "SELECT DISTINCT s.customer_id, s.prod_id, s.count FROM subscription AS s, publication AS p WHERE p.frequency IN ('WEEKLY "
+                + cd(cal.get(Calendar.DAY_OF_WEEK)) + "','MONTHLY " + cal.get(Calendar.DAY_OF_MONTH) + "' ";
+        if (cal.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY && cal.get(Calendar.DAY_OF_WEEK) != Calendar.SATURDAY )
+            statement += ",'DAILY'";
+        statement += ") AND p.prod_id = s.prod_id";
+        //  To check for holiday status
+        if (holiday_state)
+            statement += " AND s.customer_id NOT IN (SELECT s.customer_id FROM subscription AS s, holiday AS h WHERE ('"
+                    + date.toString() + "' BETWEEN start_date AND end_date) AND s.customer_id = h.customer_id)";
+        //  To check for order type
+        if (cus_order) {
+            statement += " ORDER BY s.customer_id";
+        } else {
+            statement += " ORDER BY s.prod_id";
+        }
+        System.out.println(date.toString());
+        System.out.println(statement);
+        //  Query
+        try {
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery(statement);
+            if ( rs.next()) {
+                ArrayList<DB_Subscription> list = new ArrayList<>();
+                do {
+                    list.add( new DB_Subscription(
+                            rs.getInt(3),
+                            rs.getLong(1),
+                            rs.getInt(2)
+                    ));
+                } while ( rs.next());
+                rs.close();
+                st.close();
+                return list;
+            } else {
+                rs.close();
+                st.close();
+                return null;
             }
         } catch (SQLException | DB_SubscriptionExceptionHandler e) {
             throw new DAOExceptionHandler(e.getMessage());
@@ -906,10 +1025,6 @@ public class DAO {
         {
             throw new DAOExceptionHandler(e.getMessage());
         }
-    }
-
-    public ArrayList<DB_Subscription> getSubscriptionsByPublications(long[] publication_ids) throws DAOExceptionHandler {
-        throw new DAOExceptionHandler("NO CODE");
     }
 
     //---------------------------------------------------
@@ -1073,6 +1188,12 @@ public class DAO {
 
     }*/
 
+    /** Returns a list of Publications that have issue for given date
+     * To be replaced by getSubscriptionsForDate() for general use
+     * @param date Date to use for searcing. Searches for DAILY (Mon-Fri), WEEKLY # and MONTHLY ##
+     * @return ArrayList of Publications
+     * @throws DAOExceptionHandler
+     */
     public ArrayList<DB_Publication> getPublicationsByDate(Date date) throws DAOExceptionHandler {
         //  Push to calendar object
         //  FEW NOTES. Calendar.DAY_OF_WEEK starts counting from sunday = 1, monday = 2,...
@@ -1097,6 +1218,8 @@ public class DAO {
                 st.close();
                 return list;
             } else {
+                rs.close();
+                st.close();
                 return null;
             }
         } catch (SQLException e) {
