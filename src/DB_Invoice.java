@@ -4,19 +4,19 @@ import java.sql.SQLException;
 
 public class DB_Invoice
 {
-    private long invoice_id =0;
+    private long invoice_id , customer_id;
     private Date issue_date;
     private boolean invoice_status;
     private double invoice_total;
-    private DB_Customer customer;
+
 
     public DB_Invoice() { }
 
-    public DB_Invoice(Date issue_date, boolean invoice_status, double invoice_total, DB_Customer customer) throws DB_InvoiceExceptionHandler, DB_CustomerExceptionHandler {
+    public DB_Invoice(Date issue_date, boolean invoice_status, double invoice_total, long customer_id) throws DB_InvoiceExceptionHandler, DB_CustomerExceptionHandler {
         this.issue_date = validateDate( issue_date);
         this.invoice_status = invoice_status;
         this.invoice_total = validateTotal( invoice_total);
-        this.customer = customer;
+        this.customer_id = customer_id;
     }
 
     public DB_Invoice(ResultSet rs) throws DB_InvoiceExceptionHandler, DB_CustomerExceptionHandler {
@@ -72,7 +72,7 @@ public class DB_Invoice
                 ", issue_date=" + issue_date +
                 ", invoice_status=" + invoice_status +
                 ", invoice_total=" + invoice_total +
-                ", customer=" + customer +
+                ", customer=" + customer_id +
                 '}';
     }
     public String[] getRowData() {
@@ -82,15 +82,15 @@ public class DB_Invoice
                 String.valueOf(issue_date),
                 String.valueOf(invoice_status),
                 String.valueOf(invoice_total),
-                String.valueOf(customer.getCustomer_id())
+                String.valueOf(customer_id)
         };
     }
 
 
     public long getInvoice_id() { return invoice_id; }
     public void setInvoice_total(double invoice_total) { this.invoice_total = invoice_total; }
-    public DB_Customer getCustomer() { return customer; }
-    public void setCustomer(DB_Customer customer) { this.customer = customer; }
+    public long getCustomer_id() { return customer_id; }
+    public void setCustomer_id(long customer_id) { this.customer_id = customer_id; }
 
     public void setInvoice_id(long invoice_id) {
         this.invoice_id = invoice_id;
@@ -131,7 +131,7 @@ enum Att_Invoice {
     issue_date(2, "issue_date"),
     invoice_status(3, "invoice_status"),
     invoice_total(4, "invoice_total"),
-    customer(5, "customer");
+    customer(5, "customer_id");
 
     //  Column in which the given attribute appears by default
     public final int column;

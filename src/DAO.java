@@ -788,7 +788,7 @@ public class DAO {
 //                st.close();
 //                return null;
 //            }
-//        } catch (SQLException | DB_InvoiceExceptionHandler e) {
+//        } catch (SQLException | DB_CustomerExceptionHandler | DB_InvoiceExceptionHandler e) {
 //            throw new DAOExceptionHandler(e.getMessage());
 //        }
 //    }
@@ -804,7 +804,7 @@ public class DAO {
                 ps.setBoolean( Att_Invoice.invoice_status.column - 1, invoice.isInvoice_status());
                 ps.setDouble( Att_Invoice.invoice_total.column - 1, invoice.getInvoice_total());
                 //! Need to handle new addresses (Check if address_id = 0)
-                ps.setLong( Att_Invoice.customer.column - 1, invoice.getCustomer().getCustomer_id());
+                ps.setLong( Att_Invoice.customer.column - 1, invoice.getCustomer_id());
                 //  Execute update and get generated ID
                 int lines = ps.executeUpdate();
                 ResultSet keys = ps.getGeneratedKeys();
@@ -822,7 +822,7 @@ public class DAO {
                 update += Att_Invoice.invoice_status.name + " = " + invoice.getInvoice_status() + ", ";
                 update += Att_Invoice.invoice_total.name + " = " + invoice.getInvoice_total() + " ";
                 //  Specify update target
-                update += "WHERE " + Att_Invoice.invoice_id.name + " = " + invoice.getCustomer().getCustomer_id();
+                update += "WHERE " + Att_Invoice.invoice_id.name + " = " + invoice.getCustomer_id();
                 //  Create statement and executeUpdate. (Cannot recall why prepared statement was used)
 //                System.out.println(update);
                 PreparedStatement ps = con.prepareStatement(update);
@@ -862,12 +862,12 @@ public class DAO {
     private DB_Invoice populateInvoice(ResultSet rs) throws DAOExceptionHandler {
         try {
             //  Create customer with given result set
-            DB_Invoice temp = new DB_Invoice(rs);
+            DB_Invoice temp = new DB_Invoice();
             //  Set customer address with given ID
-            temp.setCustomer( getCustomer( rs.getInt(Att_Invoice.customer.column)));
+            temp.setCustomer_id(rs.getInt(Att_Invoice.customer.column));
             return temp;
         }
-        catch (SQLException | DB_InvoiceExceptionHandler | DB_CustomerExceptionHandler e) {
+        catch (SQLException e) {
             throw new DAOExceptionHandler(e.getMessage());
         }
     }
