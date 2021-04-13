@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public class Tab {
     private final JTabbedPane pane;
-    private final JButton swap_customer = new JButton("Customer"), swap_invoice = new JButton("Invoice"), swap_delivery = new JButton("Delivery");
+    private final JButton swap_customer = new JButton("Customer"), swap_invoice = new JButton("Invoice"), swap_delivery = new JButton("Delivery"), swap_subscription = new JButton("Subscription");
     private JPanel component;
     private final DAO dao;
 
@@ -32,6 +32,10 @@ public class Tab {
         return component = new deliveryTab();
     }
 
+    public JPanel subscription(){
+        return component = new subscriptionTab();
+    }
+
     //  Blank Tab
     private class blankTab extends JPanel implements ActionListener{
         private blankTab() {
@@ -45,6 +49,8 @@ public class Tab {
             //  Change to invoice
             swap_delivery.addActionListener(this);
             add(swap_delivery);
+            swap_subscription.addActionListener(this);
+            add(swap_subscription);
         }
 
         @Override
@@ -62,6 +68,10 @@ public class Tab {
                 int pos = pane.indexOfComponent(component);
                 pane.setComponentAt(pos, new deliveryTab());
                 pane.setTitleAt(pos, "Delivery");
+            }else if(e.getSource() == swap_subscription) {
+                int pos = pane.indexOfComponent(component);
+                pane.setComponentAt(pos, new subscriptionTab());
+                pane.setTitleAt(pos, "Subscription");
             }
         }
     }
@@ -292,6 +302,80 @@ public class Tab {
 //                } catch (DAOExceptionHandler exc) {
 //                    exc.printStackTrace();
 //                }
+            }
+        }
+    }
+
+    //  ========================================================================================================================
+    //  SUBSCRIPTION TAB
+    //  ========================================================================================================================
+    private class subscriptionTab extends JPanel implements ActionListener{
+        private final JButton button_search = new JButton("Search");
+        //  Top panel to put search functionality into
+        private final JPanel searchPanel = new JPanel();
+        //  ScrollPane to be used by JTable
+        private final JScrollPane susbcription_tablePane = new JScrollPane();
+        //  JTable and TableModel for it
+        private final JTable subscription_table = new JTable() {
+            //  Disable direct editing of the table will need to implement it separately
+            public boolean isCellEditable(int row, int column){
+                return false;
+            }
+        };
+        private DefaultTableModel subscription_tableModel;
+        //  ArrayList for subscription
+        private ArrayList<DB_Subscription> subscriptions;
+
+        //  Constructor WIP
+        private subscriptionTab() {
+            //  Set layout
+            setLayout(new BorderLayout());
+            //  Add both panes
+            add(searchPanel, BorderLayout.NORTH);
+            add(susbcription_tablePane, BorderLayout.CENTER);
+            //  Search pane
+            searchPanel.add(button_search);
+            button_search.addActionListener(this);
+            //  Table pane
+            susbcription_tablePane.getViewport().add(subscription_table);
+            buildTableModel();
+        }
+
+        //  Builds the table headers (columns)
+        private void buildTableModel() {
+            //  Table model
+            subscription_tableModel = new DefaultTableModel();
+            //  Do the headers
+            subscription_tableModel.addColumn("Customer ID");
+            subscription_tableModel.addColumn("Publication ID");
+            subscription_tableModel.addColumn("Count");
+            //  set table to use the model
+            subscription_table.setModel(subscription_tableModel);
+            //  disable moving columns around
+            subscription_table.getTableHeader().setReorderingAllowed(false);
+        }
+
+        //  Populates data from subscriptions ArrayList
+        private void updateTableModel() {
+            subscription_tableModel.setRowCount(0);
+            for (DB_Subscription sub : subscriptions) {
+                subscription_tableModel.addRow(sub.getRowData());
+            }
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            //  If search button is pressed
+            if (e.getSource() == button_search) {
+                try {
+                    //  Get new data (no search criteria for now)
+                    subscriptions = dao.getSubscriptions();
+                    //  Update table
+                    updateTableModel();
+
+                } catch (DAOExceptionHandler exception) {
+                    exception.printStackTrace();
+                }
             }
         }
     }

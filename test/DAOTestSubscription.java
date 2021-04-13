@@ -361,7 +361,7 @@ public class DAOTestSubscription extends TestCase {
 
         public void testUpdateSubscription002() {
             try {
-                DB_Subscription update_subscription = new DB_Subscription(1, 21, 2);
+                DB_Subscription update_subscription = new DB_Subscription(1, 44, 2);
                 dao.updateSubscription(update_subscription);
                 fail("Exception expected");
             } catch (DAOExceptionHandler | DB_SubscriptionExceptionHandler e) {
@@ -383,7 +383,7 @@ public class DAOTestSubscription extends TestCase {
 
     public void testUpdateSubscription003(){
         try {
-            DB_Subscription update_subscription = new DB_Subscription(1,2,6);
+            DB_Subscription update_subscription = new DB_Subscription(1,2,44);
             dao.updateSubscription(update_subscription);
             fail("Exception expected");
         } catch (DAOExceptionHandler | DB_SubscriptionExceptionHandler e) {

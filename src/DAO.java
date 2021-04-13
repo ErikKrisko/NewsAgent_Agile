@@ -870,6 +870,39 @@ public class DAO {
 
     //  ====================================================================================================
     // SUBSCRIPTION
+        //This getSubscription method is being used in the GUI  for searching and viewing the whole table
+        public ArrayList<DB_Subscription> getSubscriptions() throws DAOExceptionHandler {
+        try{
+            ArrayList<DB_Subscription> list = new ArrayList<>();
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM subscription");
+
+            if(rs.next()){
+                do {
+                    list.add(new DB_Subscription(
+                            rs.getInt(1),
+                            rs.getLong(2),
+                            rs.getLong(3)
+                    ));
+                } while (rs.next());
+                rs.close();
+                st.close();
+                return list;
+            }else {
+                rs.close();
+                st.close();
+                return null;
+            }
+        } catch (SQLException | DB_SubscriptionExceptionHandler e){
+            throw new DAOExceptionHandler(e.getMessage());
+        }
+    }
+
+
+
+
+
+
     //GetSubscription
     public DB_Subscription getSubscription(long customer_id, long publication_id) throws DAOExceptionHandler {
         try {
