@@ -17,7 +17,7 @@ public class DB_InvoiceTest extends TestCase {
         try {
             invoice.validateDate(Date.valueOf("2021-02-05"));
         } catch (DB_InvoiceExceptionHandler e) {
-            assertEquals("Invalid issue date.", e.getMessage());
+            assertEquals("Invalid invoice date.", e.getMessage());
         }
     }
 
