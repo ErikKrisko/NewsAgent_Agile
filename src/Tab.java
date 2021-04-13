@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public class Tab {
     private final JTabbedPane pane;
-    private final JButton swap_customer = new JButton("Customer"), swap_invoice = new JButton("Invoice");
+    private final JButton swap_customer = new JButton("Customer"), swap_invoice = new JButton("Invoice"), swap_delivery = new JButton("Delivery");
     private JPanel component;
     private final DAO dao;
 
@@ -29,9 +29,9 @@ public class Tab {
         return component = new invoiceTab();
     }
 
-//    public JPanel delivery(){
-//        return component = new deliveryTab();
-//    }
+    public JPanel delivery(){
+        return component = new deliveryTab();
+    }
 
     //  Blank Tab
     private class blankTab extends JPanel implements ActionListener{
@@ -43,6 +43,9 @@ public class Tab {
             //  Change to invoice
             swap_invoice.addActionListener(this);
             add(swap_invoice);
+            //  Change to invoice
+            swap_delivery.addActionListener(this);
+            add(swap_delivery);
         }
 
         @Override
@@ -56,6 +59,10 @@ public class Tab {
                 int pos = pane.indexOfComponent(component);
                 pane.setComponentAt(pos, new invoiceTab());
                 pane.setTitleAt(pos, "Invoice");
+            } else if(e.getSource() == swap_delivery){
+                int pos = pane.indexOfComponent(component);
+                pane.setComponentAt(pos, new deliveryTab());
+                pane.setTitleAt(pos, "Delivery");
             }
         }
     }
@@ -132,6 +139,81 @@ public class Tab {
             }
         }
     }
+
+    //  ========================================================================================================================
+    //  DELIVERY TAB
+    //  ========================================================================================================================
+    private class deliveryTab extends JPanel implements ActionListener{
+        private final JButton button_search = new JButton("Search");
+        //  Top panel to put search functionality into
+        private final JPanel searchPanel = new JPanel();
+        //  ScrollPane to be used by JTable
+        private final JScrollPane delivery_tablePane = new JScrollPane();
+        //  JTable and TableModel for it
+        private final JTable delivery_table = new JTable() {
+            //  Disable direct editing of the table will need to implement it separately
+            public boolean isCellEditable(int row, int column){
+                return false;
+            }
+        };
+        private DefaultTableModel delivery_tableModel;
+        //  ArrayList for customers
+        private ArrayList<DB_Delivery> deliveries;
+
+        //  Constructor WIP
+        private deliveryTab() {
+            //  Set layout
+            setLayout(new BorderLayout());
+            //  Add both panes
+            add(searchPanel, BorderLayout.NORTH);
+            add(delivery_tablePane, BorderLayout.CENTER);
+            //  Search pane
+            searchPanel.add(button_search);
+            button_search.addActionListener(this);
+            //  Table pane
+            delivery_tablePane.getViewport().add(delivery_table);
+            buildTableModel();
+        }
+
+        //  Builds the table headers (columns)
+        private void buildTableModel() {
+            //  Table model
+            delivery_tableModel = new DefaultTableModel();
+            //  Do the headers
+            delivery_tableModel.addColumn("ID");
+            delivery_tableModel.addColumn("Delivery Date");
+            delivery_tableModel.addColumn("Delivery Status");
+            delivery_tableModel.addColumn("Customer ID");
+            delivery_tableModel.addColumn("Invoice ID");
+            //  set table to use the model
+            delivery_table.setModel(delivery_tableModel);
+            //  disable moving columns around
+            delivery_table.getTableHeader().setReorderingAllowed(false);
+        }
+
+        //  Populates data from deliveries ArrayList
+        private void updateTableModel() {
+            for (DB_Delivery del : deliveries) {
+                delivery_tableModel.addRow(del.getRowData());
+            }
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            //  If search button is pressed
+            if (e.getSource() == button_search) {
+                try {
+                    //  Get new data (no search criteria for now)
+                    deliveries = dao.getDeliveries(1);
+                    //  Update table
+                    updateTableModel();
+                } catch (DAOExceptionHandler exception) {
+                    exception.printStackTrace();
+                }
+            }
+        }
+    }
+
 
     //  ========================================================================================================================
     //  INVOICE TAB
