@@ -60,6 +60,9 @@ public class Tab {
         }
     }
 
+    //  ========================================================================================================================
+    //  CUSTOMER TAB
+    //  ========================================================================================================================
     private class customerTab extends JPanel implements ActionListener {
         private final JButton button_search = new JButton("Search");
         //  Top panel to put search functionality into
