@@ -764,11 +764,34 @@ public class DAO {
 
     //  ====================================================================================================
     // INVOICE
-    /** Issues update for customer. Creates if ID is = 0 or updates an existing entry.
-     * @param invoice object which to update / create.
-     * @return int number of lines changed
-     * @throws DAOExceptionHandler if an SQL error occurred or there was invoice_id misshandling.
-     */
+
+//    public ArrayList<DB_Invoice> getInvoices() throws DAOExceptionHandler {
+//        try {
+//            ArrayList<DB_Invoice> list = new ArrayList<>();
+//            Statement st = con.createStatement();
+//            ResultSet rs = st.executeQuery("SELECT * FROM invoice");
+//            if ( rs.next()) {
+//                do {
+//                    list.add(new DB_Invoice(
+//                            rs.getLong(Att_Invoice.invoice_id.column),
+//                            rs.getDate(Att_Invoice.issue_date.column),
+//                            rs.getBoolean(Att_Invoice.invoice_status.column),
+//                            rs.getDouble(Att_Invoice.invoice_total.column),
+//                            rs.getLong(Att_Invoice.customer.column)
+//                    ));
+//                } while (rs.next());
+//                rs.close();
+//                st.close();
+//                return list;
+//            } else {
+//                rs.close();
+//                st.close();
+//                return null;
+//            }
+//        } catch (SQLException | DB_InvoiceExceptionHandler e) {
+//            throw new DAOExceptionHandler(e.getMessage());
+//        }
+//    }
     public int updateInvoice(DB_Invoice invoice) throws DAOExceptionHandler {
 //        System.out.println();
         try {
