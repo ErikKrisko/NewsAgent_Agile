@@ -260,6 +260,9 @@ public class Tab {
         private DefaultTableModel delivery_tableModel;
         //  ArrayList for deliveries
         private ArrayList<DB_Delivery> deliveries;
+        //  Context menu items
+        private final JMenuItem menu_edit = new JMenuItem("Edit");
+        private int rowSelected;
         //Search Box with comboBox attribute selector
         JTextField search_box = new JTextField(10);
 
@@ -278,6 +281,10 @@ public class Tab {
             //  Table pane
             delivery_tablePane.getViewport().add(delivery_table);
             buildTableModel();
+            //  Table listener
+            tableListener();
+            //  Menu_edit listener
+            menu_edit.addActionListener(this);
         }
         private void buildSearchBox(){
             searchPanel.setLayout(new BorderLayout());
@@ -307,6 +314,22 @@ public class Tab {
             delivery_table.setModel(delivery_tableModel);
             //  disable moving columns around
             delivery_table.getTableHeader().setReorderingAllowed(false);
+        }
+
+        private void tableListener() {
+            delivery_table.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    super.mouseClicked(e);
+                    if (e.getButton() == MouseEvent.BUTTON3) {
+                        rowSelected = delivery_table.rowAtPoint(e.getPoint());
+                        delivery_table.setRowSelectionInterval(rowSelected, rowSelected);
+                        JPopupMenu pop = new JPopupMenu();
+                        pop.add(menu_edit);
+                        pop.show(delivery_tablePane, e.getX()+1, e.getY()+16);
+                    }
+                }
+            });
         }
 
         //  Populates data from deliveries ArrayList
@@ -359,6 +382,17 @@ public class Tab {
                         updateTableModel();
                 } catch (DAOExceptionHandler exception) {
                     exception.printStackTrace();
+                }
+            }else if (e.getSource() == menu_edit) {
+                //  Wild magic to get an integer out of a table field
+                int id = Integer.parseInt((String) delivery_table.getValueAt(rowSelected, 0));
+                try {
+                    parent = (JFrame) SwingUtilities.windowForComponent(this);
+
+                    JDialog memory = new Editor(dao).delivery(dao.getDelivery(id), parent);
+                    System.out.println();
+                } catch (DAOExceptionHandler exc) {
+                    exc.printStackTrace();
                 }
             }
         }
