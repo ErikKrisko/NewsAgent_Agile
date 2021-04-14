@@ -860,7 +860,6 @@ public class DAO {
 //        }
 //    }
 
-
 //    public ArrayList<DB_Invoice> getInvoices() throws DAOExceptionHandler {
 //        try {
 //            ArrayList<DB_Invoice> list = new ArrayList<>();
