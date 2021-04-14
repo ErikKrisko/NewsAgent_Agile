@@ -323,12 +323,63 @@ public class Editor {
             getContentPane().add(buttonBar, BorderLayout.SOUTH);
             JPanel view = new JPanel(new FlowLayout());
             getContentPane().add(view, BorderLayout.CENTER);
+
+            if (invoice.getInvoice_id() == 0) {
+                view.add(new JLabel("ID: "));
+                JTextField idField = new JTextField(2);
+                idField.setText("-");
+                idField.setEditable(false);
+                view.add(idField);
+                setTitle("New Invoice");
+                bUpdate.setText("Insert new");
+            } else {
+                view.add(new JLabel("ID: "));
+                JTextField idField = new JTextField(2);
+                idField.setText("" + invoice.getInvoice_id());
+                idField.setEditable(false);
+                view.add(idField);
+                setTitle("Edit Invoice");
+            }
+            view.add(new JLabel("Invoice Date: "));
+            view.add(Date);
+            Date.setText(String.valueOf(invoice.getIssue_date()));
+            view.add(new JLabel("Invoice Status: "));
+            view.add(Status);
+            if (invoice.getInvoice_status() == 1) {
+                Status.setText("true");
+            } else {
+                Status.setText("false");
+            }
+            view.add(new JLabel("Customer ID: "));
+            view.add(CustomerID);
+            InvoiceID.setText("" + invoice.getCustomer_id());
+            view.add(new JLabel("Invoice ID: "));
+            view.add(InvoiceID);
+            InvoiceID.setText("" + invoice.getInvoice_total());
+            view.add(new JLabel("Invoice Total: "));
+            view.add(InvoiceTotal);
+            InvoiceTotal.setText("" + invoice.getInvoice_total());
         }
 
         @Override
         public void actionPerformed(ActionEvent e) {
+            if (e.getSource() == bUpdate) {
+                try {
+                    dao.updateInvoice(invoice);
+                    this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+                } catch (DAOExceptionHandler ex) {
+                    JOptionPane.showMessageDialog(this, ex.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
+                }
+            } else if (e.getSource() == bDelete) {
+                try {
+                    dao.deleteInvoice(invoice);
+                    this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+                } catch (DAOExceptionHandler ex) {
+                    JOptionPane.showMessageDialog(this, ex.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
+                }
+            } else if (e.getSource() == bCancel) {
+                this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+            }
         }
     }
 }
-
-
