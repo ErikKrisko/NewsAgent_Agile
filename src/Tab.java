@@ -166,6 +166,15 @@ public class Tab {
             customer_table.setModel(customer_tableModel);
             //  disable moving columns around
             customer_table.getTableHeader().setReorderingAllowed(false);
+            //  Reorder widths
+            //  https://www.tutorialspoint.com/how-to-change-each-column-width-of-a-jtable-in-java#:~:text=By%20default%20the%20width%20of,()%20method%20of%20JTable%20class.
+            customer_table.getColumnModel().getColumn(0).setPreferredWidth(10);
+            customer_table.getColumnModel().getColumn(1).setPreferredWidth(80);
+            customer_table.getColumnModel().getColumn(2).setPreferredWidth(80);
+            customer_table.getColumnModel().getColumn(3).setPreferredWidth(80);
+            customer_table.getColumnModel().getColumn(4).setPreferredWidth(200);
+            customer_table.getColumnModel().getColumn(5).setPreferredWidth(50);
+            customer_table.getColumnModel().getColumn(6).setPreferredWidth(10);
         }
 
         private void tableListener() {
