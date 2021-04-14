@@ -87,7 +87,7 @@ public class Tab {
     //  CUSTOMER TAB
     //  ========================================================================================================================
     private class customerTab extends JPanel implements ActionListener {
-        private final JButton button_search = new JButton("Search");
+        private final JButton button_search = new JButton("Search"), button_add = new JButton("+");
         //  Top panel to put search functionality into
         private final JPanel searchPanel = new JPanel();
         //  ScrollPane to be used by JTable
@@ -134,6 +134,8 @@ public class Tab {
             //  Add search button
             searchPanel.add(button_search, BorderLayout.EAST);
             button_search.addActionListener(this);
+            searchPanel.add(button_add, BorderLayout.WEST);
+            button_add.addActionListener(this);
             //  Add search boxes
             JPanel sList = new JPanel(new FlowLayout());
             sList.add(new JLabel("ID: "));
@@ -164,6 +166,15 @@ public class Tab {
             customer_table.setModel(customer_tableModel);
             //  disable moving columns around
             customer_table.getTableHeader().setReorderingAllowed(false);
+            //  Reorder widths
+            //  https://www.tutorialspoint.com/how-to-change-each-column-width-of-a-jtable-in-java#:~:text=By%20default%20the%20width%20of,()%20method%20of%20JTable%20class.
+            customer_table.getColumnModel().getColumn(0).setPreferredWidth(10);
+            customer_table.getColumnModel().getColumn(1).setPreferredWidth(80);
+            customer_table.getColumnModel().getColumn(2).setPreferredWidth(80);
+            customer_table.getColumnModel().getColumn(3).setPreferredWidth(80);
+            customer_table.getColumnModel().getColumn(4).setPreferredWidth(200);
+            customer_table.getColumnModel().getColumn(5).setPreferredWidth(50);
+            customer_table.getColumnModel().getColumn(6).setPreferredWidth(10);
         }
 
         private void tableListener() {
@@ -176,7 +187,7 @@ public class Tab {
                         customer_table.setRowSelectionInterval(rowSelected, rowSelected);
                         JPopupMenu pop = new JPopupMenu();
                         pop.add(menu_edit);
-                        pop.show(customer_tablePane, e.getX()+1, e.getY()+16);
+                        pop.show(customer_table, e.getX(), e.getY());
                     }
                 }
             });
@@ -231,11 +242,13 @@ public class Tab {
                     //  https://stackoverflow.com/questions/9650874/java-swing-obtain-window-jframe-from-inside-a-jpanel
                     parent = (JFrame) SwingUtilities.windowForComponent(this);
 
-                    JDialog memory = new Editor(dao).customer(dao.getCustomer(id), parent);
-                    System.out.println();
+                    new Editor(dao).customer(dao.getCustomer(id), parent);
                 } catch (DAOExceptionHandler exc) {
                     exc.printStackTrace();
                 }
+            } else if (e.getSource() == button_add) {
+                parent = (JFrame) SwingUtilities.windowForComponent(this);
+                new Editor(dao).customer(new DB_Customer(), parent);
             }
         }
 
@@ -260,6 +273,9 @@ public class Tab {
         private DefaultTableModel delivery_tableModel;
         //  ArrayList for deliveries
         private ArrayList<DB_Delivery> deliveries;
+        //  Context menu items
+        private final JMenuItem menu_edit = new JMenuItem("Edit");
+        private int rowSelected;
         //Search Box with comboBox attribute selector
         JTextField search_box = new JTextField(10);
 
@@ -278,6 +294,10 @@ public class Tab {
             //  Table pane
             delivery_tablePane.getViewport().add(delivery_table);
             buildTableModel();
+            //  Table listener
+            tableListener();
+            //  Menu_edit listener
+            menu_edit.addActionListener(this);
         }
         private void buildSearchBox(){
             searchPanel.setLayout(new BorderLayout());
@@ -307,6 +327,22 @@ public class Tab {
             delivery_table.setModel(delivery_tableModel);
             //  disable moving columns around
             delivery_table.getTableHeader().setReorderingAllowed(false);
+        }
+
+        private void tableListener() {
+            delivery_table.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    super.mouseClicked(e);
+                    if (e.getButton() == MouseEvent.BUTTON3) {
+                        rowSelected = delivery_table.rowAtPoint(e.getPoint());
+                        delivery_table.setRowSelectionInterval(rowSelected, rowSelected);
+                        JPopupMenu pop = new JPopupMenu();
+                        pop.add(menu_edit);
+                        pop.show(delivery_tablePane, e.getX()+1, e.getY()+16);
+                    }
+                }
+            });
         }
 
         //  Populates data from deliveries ArrayList
@@ -359,6 +395,17 @@ public class Tab {
                         updateTableModel();
                 } catch (DAOExceptionHandler exception) {
                     exception.printStackTrace();
+                }
+            }else if (e.getSource() == menu_edit) {
+                //  Wild magic to get an integer out of a table field
+                int id = Integer.parseInt((String) delivery_table.getValueAt(rowSelected, 0));
+                try {
+                    parent = (JFrame) SwingUtilities.windowForComponent(this);
+
+                    JDialog memory = new Editor(dao).delivery(dao.getDelivery(id), parent);
+                    System.out.println();
+                } catch (DAOExceptionHandler exc) {
+                    exc.printStackTrace();
                 }
             }
         }

@@ -810,7 +810,6 @@ public class DAO {
                 Statement st = con.createStatement();
                 ResultSet rs = st.executeQuery("SELECT * FROM delivery WHERE delivery_id = " + delivery.getDelivery_id());
                 if(rs.next()){
-
                     String update = "UPDATE delivery SET ";
                     update += att_delivery.delivery_date.columnName + " = '" + delivery.getDelivery_date() + "', ";
                     update += att_delivery.delivery_status.columnName + " = " + delivery.getDelivery_status() + ", ";
@@ -818,7 +817,6 @@ public class DAO {
                     update += att_delivery.invoice.columnName + " = " + delivery.getInvoice_id() + ", ";
                     update += att_delivery.publication.columnName + " = " + delivery.getProd_id() + " ";
                     update += "WHERE " + att_delivery.delivery_id.columnName + " = " + delivery.getDelivery_id();
-
                     PreparedStatement pstmt = con.prepareStatement(update);
                     int lines = pstmt.executeUpdate();
                     return lines;
