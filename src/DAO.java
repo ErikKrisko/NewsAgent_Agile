@@ -980,7 +980,7 @@ public class DAO {
     //  ====================================================================================================
     // INVOICE
 
-    public ArrayList<DB_Invoice> getLatestInvoiceByDate(Date date) throws DAOExceptionHandler {
+    public ArrayList<DB_Invoice> getLatestInvoiceByDate() throws DAOExceptionHandler {
         try {
             ArrayList<DB_Invoice> list = new ArrayList<>();
             Statement st = con.createStatement();
@@ -1002,7 +1002,7 @@ public class DAO {
             } else {
                 rs.close();
                 st.close();
-                throw new DAOExceptionHandler("Invoice needs to be before this date= " + date);
+                throw new DAOExceptionHandler("Invoice needs to be before this date= ");
                 //return null;
             }
         } catch (SQLException | DB_InvoiceExceptionHandler | DB_CustomerExceptionHandler e) {
@@ -1032,7 +1032,6 @@ public class DAO {
                 rs.close();
                 st.close();
                 return null;
-                //throw new DAOExceptionHandler("No delivery with status " + status + " found.");
             }
         } catch (SQLException | DB_InvoiceExceptionHandler | DB_CustomerExceptionHandler e) {
             throw new DAOExceptionHandler(e.getMessage());
