@@ -622,6 +622,21 @@ public class DAO {
         }
     }
 
+    /**
+     * Confirmed speculation from
+     * https://stackoverflow.com/questions/44297412/mysql-insert-id-from-another-table/44297443
+     * for using a select query inside an insert query
+     * INSERT INTO delivery VALUES (null, 'DATE', #, #, (SELECT invoice_id FROM invoice WHERE customer_id = # ORDER BY issue_date LIMIT 1), #);
+     * @param sub_list
+     * @param date
+     * @param overwrite
+     * @return
+     * @throws DAOExceptionHandler
+     */
+    public ArrayList<DB_Delivery> getDeliveriesForSubscriptionDate(ArrayList<DB_Subscription> sub_list, Date date, boolean overwrite) throws DAOExceptionHandler {
+        throw new DAOExceptionHandler("NO CODE");
+    }
+
 
     public int updateDelivery(DB_Delivery delivery) throws DAOExceptionHandler {
         try{
@@ -685,6 +700,10 @@ public class DAO {
         catch(SQLException e) {
             throw new DAOExceptionHandler(e.getMessage());
         }
+    }
+
+    public int deleteDeliveryByDate(Date date) throws DAOExceptionHandler {
+        throw new DAOExceptionHandler("NO CODE");
     }
 
     private DB_Delivery populateDelivery(ResultSet rs) throws DAOExceptionHandler {
@@ -1400,6 +1419,14 @@ public class DAO {
             return 7;
         else
             return day-1;
+    }
+
+    public boolean isClosed() throws DAOExceptionHandler{
+        try {
+            return con.isClosed();
+        } catch (SQLException e) {
+            throw new DAOExceptionHandler(e.getMessage());
+        }
     }
 
     //  AUTO GENERATED getters and setters

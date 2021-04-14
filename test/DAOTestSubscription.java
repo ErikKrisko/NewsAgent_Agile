@@ -9,7 +9,7 @@ public class DAOTestSubscription extends TestCase {
     DB_Subscription subscription = new DB_Subscription();
 
     public DAOTestSubscription() {
-        try{
+        try {
             //Reset the Database
             JDBC connection = new JDBC("jdbc:mysql://localhost:3306/", "root", "admin");
             connection.executeScript("NewsAgent_Database.sql");
@@ -28,6 +28,10 @@ public class DAOTestSubscription extends TestCase {
      */
     private void initializeDatabase() {
         try {
+            //  Close any existing connection if it exists.
+            if (dao != null && !dao.isClosed()) {
+                dao.close();
+            }
             //  Reset Database
             JDBC connection = new JDBC("jdbc:mysql://localhost:3306/", "root", "admin");
             connection.executeScript("NewsAgent_Database.sql");

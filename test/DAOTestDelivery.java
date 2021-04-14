@@ -21,7 +21,33 @@ public class DAOTestDelivery extends TestCase {
             e.printStackTrace();
             fail("DAO initialization failed.");
         }
+    }
 
+    /** Initialize test environment.
+     *  ==========
+     *  Inputs: JDBC initialization and script execution
+     *          dao initialization
+     *  ==========
+     *  Expected Outputs:   None
+     */
+    public void initializeDatabase() {
+        try {
+            //  Close any existing connection if it exists.
+            if (dao != null && !dao.isClosed()) {
+                dao.close();
+            }
+            //  Reset Database
+            JDBC connection = new JDBC("jdbc:mysql://localhost:3306/", "root", "admin");
+            connection.executeScript("NewsAgent_Database.sql");
+            connection.setDbName("newsagent");
+            connection.executeScript("NewsAgent_Data_Extended.sql");
+            connection.close();
+            //  Initialize DAO
+            dao = new DAO("jdbc:mysql://localhost:3306/newsagent?useTimezone=true&serverTimezone=UTC", "root", "admin");
+        } catch (DAOExceptionHandler | JDBCExceptionHandler e) {
+            e.printStackTrace();
+            fail("Test initialization failed.");
+        }
     }
 
     /**DAO METHOD TESTS*/
@@ -405,6 +431,53 @@ public class DAOTestDelivery extends TestCase {
                 daoExceptionHandler.printStackTrace();
             }
         }
+    }
+
+    /** Test 006 - getDeliveriesForSubscriptionDate
+     *  Test for fail as an existing delivery for given date exists and overwriting is false
+     */
+    public void testGetDeliveriesForSubscriptionDate001() {
+        initializeDatabase();
+    }
+
+    /** Test 007 - getDeliveriesForSubscriptionDate
+     *  Test for existing delivery
+     */
+    public void testGetDeliveriesForSubscriptionDate002() {
+        initializeDatabase();
+
+    }
+
+    /** Test 008 - getDeliveriesForSubscriptionDate
+     *  Test for existing delivery by overwriting
+     */
+    public void testGetDeliveriesForSubscriptionDate003() {
+        initializeDatabase();
+
+    }
+
+    /** Test 009 - getDeliveriesForSubscriptionDate
+     *  Test for fail empty or null subscription list used
+     */
+    public void testGetDeliveriesForSubscriptionDate004() {
+        initializeDatabase();
+
+    }
+
+    /** Test 010 - deleteDeliveryByDate
+     *  Test for deletion fail (no given date found)
+     */
+    public void testDeleteDeliveryByDate001() {
+        initializeDatabase();
+
+    }
+
+    /** Test 010 - deleteDeliveryByDate
+     *  Test for deletion success
+     */
+    public void testDeleteDeliveryByDate002() {
+        initializeDatabase();
+
     }
 
 }

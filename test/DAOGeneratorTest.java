@@ -1,8 +1,5 @@
 import junit.framework.TestCase;
 
-import java.sql.Date;
-import java.util.ArrayList;
-
 public class DAOGeneratorTest extends TestCase {
     //  Global dao object reference
     private DAO dao;
@@ -16,6 +13,10 @@ public class DAOGeneratorTest extends TestCase {
      */
     public void initializeDatabase() {
         try {
+            //  Close any existing connection if it exists.
+            if (dao != null && !dao.isClosed()) {
+                dao.close();
+            }
             //  Reset Database
             JDBC connection = new JDBC("jdbc:mysql://localhost:3306/", "root", "admin");
             connection.executeScript("NewsAgent_Database.sql");
