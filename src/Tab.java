@@ -258,7 +258,7 @@ public class Tab {
     //  DELIVERY TAB
     //  ========================================================================================================================
     private class deliveryTab extends JPanel implements ActionListener{
-        private final JButton button_search = new JButton("Search");
+        private final JButton button_search = new JButton("Search"), button_add = new JButton("+");
         //  Top panel to put search functionality into
         private final JPanel searchPanel = new JPanel();
         //  ScrollPane to be used by JTable
@@ -301,9 +301,10 @@ public class Tab {
         }
         private void buildSearchBox(){
             searchPanel.setLayout(new BorderLayout());
-
             searchPanel.add(button_search, BorderLayout.EAST);
             button_search.addActionListener(this);
+            searchPanel.add(button_add, BorderLayout.WEST);
+            button_add.addActionListener(this);
 
             JPanel sList = new JPanel(new FlowLayout());
             sList.add(search_combobox);
@@ -361,26 +362,50 @@ public class Tab {
                 search = dao.getDeliveries();
             }
             if(search_combobox.getSelectedItem() == "ID"){
-                search1 = dao.getDelivery(Integer.parseInt(search_box.getText()));
-                search.clear();
-                search.add(search1);
+                try {
+                    search1 = dao.getDelivery(Integer.parseInt(search_box.getText()));
+                    search.clear();
+                    search.add(search1);
+                }catch(Exception e){
+                    JOptionPane.showMessageDialog(this, "Enter a numerical ID or ID doesn't exist", "ID Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
             if(search_combobox.getSelectedItem() == "Date"){
-                search = dao.getDeliveriesByDate(Date.valueOf(search_box.getText()));
+                try {
+                    search = dao.getDeliveriesByDate(Date.valueOf(search_box.getText()));
+                }catch(Exception e){
+                    JOptionPane.showMessageDialog(this, "Enter a Date yyyy-mm-dd", "Date Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
             if(search_combobox.getSelectedItem() == "Status"){
-                search = dao.getDeliveriesByStatus(Boolean.valueOf(search_box.getText()));
+                try {
+                    search = dao.getDeliveriesByStatus(Boolean.valueOf(search_box.getText()));
+                }catch(Exception e){
+                    JOptionPane.showMessageDialog(this, "Enter a status true/false", "Status Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
             if(search_combobox.getSelectedItem() == "Customer ID"){
-                search = dao.getDeliveriesByCustomer(Integer.parseInt(search_box.getText()));
+                try {
+                    search = dao.getDeliveriesByCustomer(Integer.parseInt(search_box.getText()));
+                }catch(Exception e){
+                    JOptionPane.showMessageDialog(this, "Enter a numerical ID or ID doesn't exist", "Customer ID Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
             if(search_combobox.getSelectedItem() == "Invoice ID"){
-                search = dao.getDeliveriesByInvoice(Integer.parseInt(search_box.getText()));
+                try {
+                    search = dao.getDeliveriesByInvoice(Integer.parseInt(search_box.getText()));
+                }catch(Exception e){
+                    JOptionPane.showMessageDialog(this, "Enter a numerical ID or ID doesn't exist", "Invoice ID Error", JOptionPane.ERROR_MESSAGE);
+                }
+
             }
             if(search_combobox.getSelectedItem() == "Prod ID"){
-                search = dao.getDeliveriesByPublication(Integer.parseInt(search_box.getText()));
+                try {
+                    search = dao.getDeliveriesByPublication(Integer.parseInt(search_box.getText()));
+                }catch(Exception e){
+                    JOptionPane.showMessageDialog(this, "Enter a numerical ID or ID doesn't exist", "Prod ID Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
-
             return search;
         }
 
@@ -407,6 +432,9 @@ public class Tab {
                 } catch (DAOExceptionHandler exc) {
                     exc.printStackTrace();
                 }
+            }else if (e.getSource() == button_add) {
+                parent = (JFrame) SwingUtilities.windowForComponent(this);
+                new Editor(dao).delivery(new DB_Delivery(), parent);
             }
         }
     }
