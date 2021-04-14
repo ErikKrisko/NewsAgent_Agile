@@ -1125,6 +1125,63 @@ public class DAO {
         }
     }
 
+    public ArrayList<DB_Invoice> getLatestInvoices() throws DAOExceptionHandler {
+        try {
+            ArrayList<DB_Invoice> list = new ArrayList<>();
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM invoice WHERE issue_date = (SELECT issue_date FROM invoice ORDER BY issue_date DESC LIMIT 1);");
+            if ( rs.next()) {
+                do {
+                    list.add(new DB_Invoice(
+                            rs.getLong(Att_Invoice.invoice_id.column),
+                            rs.getDate(Att_Invoice.issue_date.column),
+                            rs.getBoolean(Att_Invoice.invoice_status.column),
+                            rs.getDouble(Att_Invoice.invoice_total.column),
+                            rs.getLong(Att_Invoice.customer.column)
+                    ));
+                } while (rs.next());
+                rs.close();
+                st.close();
+                return list;
+            } else {
+                rs.close();
+                st.close();
+                return null;
+            }
+        } catch (SQLException | DB_CustomerExceptionHandler | DB_InvoiceExceptionHandler e) {
+            throw new DAOExceptionHandler(e.getMessage());
+        }
+    }
+    //https://stackoverflow.com/questions/11751030/perform-insert-for-each-row-taken-from-a-select
+    public ArrayList<DB_Invoice> createInvoicesForDate() throws DAOExceptionHandler {
+        try {
+            ArrayList<DB_Invoice> list = new ArrayList<>();
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery("INSERT INTO invoice (invoice_id, issue_date, invoice_status, invoice_total, customer_id) SELECT DISTINCT null, ' ', 0, 0, c.customer_id FROM customer AS c, subscription AS s WHERE c.customer_id = s.customer_id");
+            if ( rs.next()) {
+                do {
+                    list.add(new DB_Invoice(
+                            rs.getLong(Att_Invoice.invoice_id.column),
+                            rs.getDate(Att_Invoice.issue_date.column),
+                            rs.getBoolean(Att_Invoice.invoice_status.column),
+                            rs.getDouble(Att_Invoice.invoice_total.column),
+                            rs.getLong(Att_Invoice.customer.column)
+                    ));
+                } while (rs.next());
+                rs.close();
+                st.close();
+                return list;
+            } else {
+                rs.close();
+                st.close();
+                return null;
+            }
+        } catch (SQLException | DB_CustomerExceptionHandler | DB_InvoiceExceptionHandler e) {
+            throw new DAOExceptionHandler(e.getMessage());
+        }
+    }
+
+
     //Get Deliveries by issue_date
     public ArrayList<DB_Invoice> getinvoicesByDate(Date date) throws DAOExceptionHandler {
         try {
