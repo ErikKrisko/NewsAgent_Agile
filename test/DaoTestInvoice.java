@@ -1,7 +1,6 @@
-import junit.framework.TestCase;
-
 import java.sql.Date;
-import java.util.ArrayList;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class DaoTestInvoice extends DB_InvoiceTest {
     private DAO dao;
@@ -140,5 +139,3 @@ public class DaoTestInvoice extends DB_InvoiceTest {
     }
 
 }
-
-

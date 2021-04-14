@@ -822,6 +822,36 @@ public class DAO {
     //  ====================================================================================================
     // INVOICE
 
+//    public ArrayList<DB_Invoice> getInvoiceByDate(Date date) throws DAOExceptionHandler {
+//        try {
+//            ArrayList<DB_Invoice> list = new ArrayList<>();
+//            Statement st = con.createStatement();
+//            ResultSet rs = st.executeQuery("SELECT * FROM invoice WHERE issue_date = '" + date + "'");
+//            if (rs.next()) {
+//                do {
+//                    list.add(new DB_Invoice()(
+//                            rs.getDate(att_invoice.delivery_date.column),
+//                            rs.getBoolean(att_delivery.delivery_status.column),
+//                            rs.getLong(att_delivery.customer.column),
+//                            rs.getLong(att_delivery.invoice.column),
+//                            rs.getLong(att_delivery.publication.column)
+//                    ));
+//                } while (rs.next());
+//                rs.close();
+//                st.close();
+//                return list;
+//            } else {
+//                rs.close();
+//                st.close();
+//                throw new DAOExceptionHandler("Invoice needs to be before this date= " + date);
+//                //return null;
+//            }
+//        } catch (SQLException | DB_InvoiceExceptionHandler e) {
+//            throw new DAOExceptionHandler(e.getMessage());
+//        }
+//    }
+
+
 //    public ArrayList<DB_Invoice> getInvoices() throws DAOExceptionHandler {
 //        try {
 //            ArrayList<DB_Invoice> list = new ArrayList<>();
