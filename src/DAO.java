@@ -838,15 +838,12 @@ public class DAO {
 //        try {
 //            ArrayList<DB_Invoice> list = new ArrayList<>();
 //            Statement st = con.createStatement();
-//            ResultSet rs = st.executeQuery("SELECT * FROM invoice WHERE issue_date = '" + date + "'");
+//            ResultSet rs = st.executeQuery("SELECT * FROM invoice ORDER BY issue_date LIMIT 1;");
 //            if (rs.next()) {
 //                do {
 //                    list.add(new DB_Invoice()(
-//                            rs.getDate(att_invoice.delivery_date.column),
-//                            rs.getBoolean(att_delivery.delivery_status.column),
-//                            rs.getLong(att_delivery.customer.column),
-//                            rs.getLong(att_delivery.invoice.column),
-//                            rs.getLong(att_delivery.publication.column)
+//                            rs.getDate(Att_Invoice.issue_date.column),
+//
 //                    ));
 //                } while (rs.next());
 //                rs.close();
