@@ -16,7 +16,7 @@ public class Editor {
     //  Specific panel constructor
     public JDialog customer(DB_Customer customer, JFrame parent) { return new customerEdit(customer, parent); }
     public JDialog delivery(DB_Delivery delivery, JFrame parent) { return new deliveryEdit(delivery, parent); }
-
+    public JDialog subscription(DB_Subscription subscription, JFrame parent) { return new subscriptionEdit(subscription, parent);}
     private class customerEdit extends JDialog implements ActionListener {
         private DB_Customer customer;
         //  TextFields
@@ -275,6 +275,145 @@ public class Editor {
                 }
             } else if (e.getSource() == bCancel) {
                 this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+            }
+        }
+    }
+
+    private class subscriptionEdit extends JDialog implements ActionListener {
+        private DB_Subscription subscription;
+
+        //TextField
+        private final JTextField Count = new JTextField(2),
+                        CustomerID = new JTextField(2),
+                        PublicationID = new JTextField(2);
+
+        //Buttons
+        private final JButton buttonUpdate = new JButton("Update"),
+                        buttonDelete = new JButton("Delete"),
+                        buttonCancel = new JButton("Cancel");
+
+        //Constructor
+        private subscriptionEdit(DB_Subscription subscription, JFrame parentFrame){
+            this.subscription = subscription;
+            //This is disabling the main window when its used
+            parentFrame.setEnabled(false);
+            //Adding a window listener to activate window after closing it
+            this.addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosing(WindowEvent e) {
+                    parentFrame.setEnabled(true);
+                    super.windowClosing(e);
+                    dispose();
+                }
+            });
+
+            //Setting the border layout
+            getContentPane().setLayout(new BorderLayout());
+            //Adding the buttons to the bottom of it
+            JPanel barButton = new JPanel(new FlowLayout());
+            //Update button
+            barButton.add(buttonUpdate);
+            buttonUpdate.addActionListener(this);
+            //Adding the delete button to the layout
+            barButton.add(buttonDelete);
+            buttonDelete.addActionListener(this);
+            //Adding the cancel button to the layout
+            barButton.add(buttonCancel);
+            buttonCancel.addActionListener(this);
+            getContentPane().add(barButton, BorderLayout.SOUTH);
+
+            //Adding a main panel
+            JPanel view = new JPanel(new FlowLayout());
+            getContentPane().add(view, BorderLayout.CENTER);
+
+            //Populate the view
+            //If and else statements for customer so ID can't be changed
+            if(subscription.getCustomer_id() == 0){
+                view.add(new JLabel("Customer ID: "));
+                JTextField customerIdField = new JTextField(2);
+                customerIdField.setText("-");
+                customerIdField.setEditable(false);
+                view.add(customerIdField);
+                setTitle("New Subscription");
+                buttonUpdate.setText("Insert a new");
+            }else{
+                view.add(new JLabel("Customer ID: "));
+                JTextField customerIdField = new JTextField(2);
+                customerIdField.setText("" + subscription.getCustomer_id());
+                customerIdField.setEditable(false);
+                view.add(customerIdField);
+                setTitle("Edit Subscription");
+            }
+
+            if(subscription.getPublication_id() == 0) {
+                view.add(new JLabel("Publication ID: "));
+                JTextField publicationIdField = new JTextField(2);
+                publicationIdField.setText("-");
+                publicationIdField.setEditable(false);
+                view.add(publicationIdField);
+                setTitle("New Subscription");
+                buttonUpdate.setText("Insert a new");
+            }else{
+                view.add(new JLabel("Publication ID: "));
+                JTextField publicationIdField = new JTextField(2);
+                publicationIdField.setText("" + subscription.getCustomer_id());
+                publicationIdField.setEditable(false);
+                view.add(publicationIdField);
+                setTitle("Edit Subscription");
+            }
+            view.add(new JLabel("Count: "));
+            view.add(Count);
+            Count.setText(String.valueOf(subscription.getCount()));
+
+
+
+            setSize(800, 120);
+            setResizable(false);
+            setVisible(true);
+            setLocation(parentFrame.getLocation());
+        }
+
+        private boolean readSubscription(){
+            try{
+                subscription.setCustomer_id(Integer.parseInt(CustomerID.getText()));
+            }catch (Exception e){
+                JOptionPane.showMessageDialog(this, "Please enter a numerical customer ID", "Customer Error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+
+            try{
+                subscription.setPublication_id(Integer.parseInt(PublicationID.getText()));
+            }catch (Exception e){
+                JOptionPane.showMessageDialog(this, "Please enter a numerical Publication ID", "Publication Error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+
+            try{
+                subscription.setCount(Integer.parseInt(Count.getText()));
+            }catch (Exception e){
+                JOptionPane.showMessageDialog(this, "Please enter a numberical value for Count", "Count Error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+            return true;
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e){
+            if(e.getSource() == buttonUpdate && readSubscription()){
+                try{
+                    dao.updateSubscription(subscription);
+                    this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+                }catch (DAOExceptionHandler exception){
+                    JOptionPane.showMessageDialog(this, exception.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }else if (e.getSource() == buttonDelete){
+                try{
+                    dao.deleteSubscription(subscription);
+                    this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+                }catch (DAOExceptionHandler exception) {
+                    JOptionPane.showMessageDialog(this, exception.getMessage(),"Database Error", JOptionPane.ERROR_MESSAGE);
+                }}else if (e.getSource() == buttonCancel){
+                    this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
             }
         }
     }

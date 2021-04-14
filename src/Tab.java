@@ -578,7 +578,7 @@ public class Tab {
     //  SUBSCRIPTION TAB
     //  ========================================================================================================================
     private class subscriptionTab extends JPanel implements ActionListener{
-        private final JButton button_search = new JButton("Search");
+        private final JButton button_search = new JButton("Search"), button_add = new JButton("+");
         //  Top panel to put search functionality into
         private final JPanel searchPanel = new JPanel();
         //  ScrollPane to be used by JTable
@@ -610,15 +610,16 @@ public class Tab {
             add(searchPanel, BorderLayout.NORTH);
             add(subscription_tablePane, BorderLayout.CENTER);
             //  Search pane
-
             searchPanel.add(button_search);
+            buildSubscriptionSearch();
             button_search.addActionListener(this);
             //  Table pane
             subscription_tablePane.getViewport().add(subscription_table);
             //Table listener
             tableListens();
             buildTableModel();
-            buildSubscriptionSearch();
+            //Menu_edit listener
+            menu_edit.addActionListener(this);
         }
 
         private void buildSubscriptionSearch(){
@@ -626,6 +627,9 @@ public class Tab {
 
             searchPanel.add(button_search, BorderLayout.EAST);
             button_search.addActionListener(this);
+
+            searchPanel.add(button_add, BorderLayout.WEST);
+            button_add.addActionListener(this);
 
             JPanel listing = new JPanel(new FlowLayout());
             listing.add(search_comboBox);
@@ -681,11 +685,20 @@ public class Tab {
             }
 
             if (search_comboBox.getSelectedItem() == "Customer ID") {
-                search = dao.getSubscriptionByCustomer(Integer.parseInt(search_box.getText()));
+                try{
+                    search = dao.getSubscriptionByCustomer(Integer.parseInt(search_box.getText()));
+                }catch (Exception e){
+                    JOptionPane.showMessageDialog(this, "Please enter a numerical ID or an ID that does not exist", "Customer ID error", JOptionPane.ERROR_MESSAGE);
+                }
             }
 
             if (search_comboBox.getSelectedItem() == "Publication ID") {
-                search = dao.getSubscriptionByPublication(Integer.parseInt(search_box.getText()));
+                try {
+                    search = dao.getSubscriptionByPublication(Integer.parseInt(search_box.getText()));
+                }catch (Exception e){
+                    JOptionPane.showMessageDialog(this, "Please enter a numerical ID or an ID that does not exist", "Publication ID error", JOptionPane.ERROR_MESSAGE);
+
+                }
             }
             return search;
         }
@@ -698,19 +711,25 @@ public class Tab {
                 try {
                     //  Get new data (no search criteria for now)
                     subscriptions = constructionSearch();
-                            //dao.getSubscriptions();
                     //  Update table
                     updateTableModel();
                 } catch (DAOExceptionHandler exception) {
                     exception.printStackTrace();
                 }
-//            }else if(e.getSource() == menu_edit){
-//                int id = Integer.parseInt((String) subscription_table.getValueAt(rowSelected, 0));
-//                try{
-//                    parent = (JFrame) SwingUtilities.windowForComponent(this);
-//
-//                    JDialog memory = new Editor(dao).
-//                }
+            }else if(e.getSource() == menu_edit){
+                long id = Integer.parseInt((String) subscription_table.getValueAt(rowSelected, 0));
+                long id2 = Integer.parseInt((String) subscription_table.getValueAt(rowSelected, 1));
+                try{
+                    parent = (JFrame) SwingUtilities.windowForComponent(this);
+
+                    JDialog memory = new Editor(dao).subscription(dao.getSubscription(id, id2), parent);
+                    System.out.println();
+                }catch (DAOExceptionHandler exception){
+                    exception.printStackTrace();
+                }
+            }else if (e.getSource() == button_add){
+                parent = (JFrame) SwingUtilities.windowForComponent(this);
+                new Editor(dao).subscription(new DB_Subscription(), parent);
             }
         }
     }

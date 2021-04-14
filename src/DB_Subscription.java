@@ -14,7 +14,7 @@ public class DB_Subscription {
     }
 
 
-    public DB_Subscription(int count, long customer_id, long publication_id) throws DB_SubscriptionExceptionHandler {
+    public DB_Subscription(long customer_id, long publication_id, int count) throws DB_SubscriptionExceptionHandler {
         this.customer_id = customer_id;
         this.count = count;
         this.publication_id = publication_id;
@@ -22,7 +22,7 @@ public class DB_Subscription {
 
     public DB_Subscription(ResultSet rs) throws DB_SubscriptionExceptionHandler {
         try {
-            count = rs.getInt(2);
+            count = rs.getInt(3);
         } catch (SQLException e) {
             throw new DB_SubscriptionExceptionHandler(e.getMessage());
         }
@@ -44,8 +44,8 @@ public class DB_Subscription {
     public String toString() {
         return "DB_Subscription{" +
                 "customer=" + customer_id +
-                "count=" + count +
-        "publication=" + publication_id;
+                "publication=" + publication_id +
+                "count=" + count;
     }
     public String [] getRowData(){
         return new String[]{

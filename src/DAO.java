@@ -1271,9 +1271,9 @@ public class DAO {
             if(rs.next()){
                 do {
                     list.add(new DB_Subscription(
-                            rs.getInt(1),
+                            rs.getLong(1),
                             rs.getLong(2),
-                            rs.getLong(3)
+                            rs.getInt(3)
                     ));
                 } while (rs.next());
                 rs.close();
@@ -1319,8 +1319,8 @@ public class DAO {
             if ( rs.next()) {
                 do {
                     customerList.add(new DB_Subscription(
-                            rs.getInt(1),
-                            rs.getInt(2),
+                            rs.getLong(1),
+                            rs.getLong(2),
                             rs.getInt(3)
                     ));
 
@@ -1376,7 +1376,7 @@ public class DAO {
                 if (rs.next()) {
                     do {
                         sub_list.add(new DB_Subscription(
-                                rs.getInt(1),
+                                rs.getLong(1),
                                 rs.getLong(2),
                                 rs.getInt(3)
                         ));
@@ -1430,7 +1430,7 @@ public class DAO {
                 ArrayList<DB_Subscription> list = new ArrayList<>();
                 do {
                     list.add( new DB_Subscription(
-                            rs.getInt(1),
+                            rs.getLong(1),
                             rs.getLong(2),
                             rs.getInt(3)
                     ));
@@ -1459,7 +1459,7 @@ public class DAO {
             {
                 do{
                     publicationList.add(new DB_Subscription(
-                            rs.getInt(1),
+                            rs.getLong(1),
                             rs.getLong(2),
                             rs.getInt(3)
                     ));
@@ -1547,8 +1547,8 @@ public class DAO {
         try {
             DB_Subscription temp = new DB_Subscription(rs);
             temp.setCustomer_id(rs.getLong(1));
-            temp.setCount(rs.getInt(2));
-            temp.setPublication_id(rs.getLong(3));
+            temp.setPublication_id(rs.getLong(2));
+            temp.setCount(rs.getInt(3));
             return temp;
         }
         catch (SQLException | DB_SubscriptionExceptionHandler e)
