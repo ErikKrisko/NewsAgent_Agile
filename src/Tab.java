@@ -5,6 +5,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.lang.reflect.Array;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.regex.Pattern;
@@ -242,6 +244,11 @@ public class Tab {
         private DefaultTableModel delivery_tableModel;
         //  ArrayList for deliveries
         private ArrayList<DB_Delivery> deliveries;
+        //Search Box with comboBox attribute selector
+        JTextField search_box = new JTextField(10);
+
+        String[] strings = {"All", "ID", "Date"};
+        JComboBox search_combobox = new JComboBox(strings);
 
         //  Constructor WIP
         private deliveryTab() {
@@ -251,11 +258,22 @@ public class Tab {
             add(searchPanel, BorderLayout.NORTH);
             add(delivery_tablePane, BorderLayout.CENTER);
             //  Search pane
-            searchPanel.add(button_search);
-            button_search.addActionListener(this);
+            buildSearchBox();
             //  Table pane
             delivery_tablePane.getViewport().add(delivery_table);
             buildTableModel();
+        }
+        private void buildSearchBox(){
+            searchPanel.setLayout(new BorderLayout());
+
+            searchPanel.add(button_search, BorderLayout.EAST);
+            button_search.addActionListener(this);
+
+            JPanel sList = new JPanel(new FlowLayout());
+            sList.add(search_combobox);
+            sList.add(search_box);
+
+            searchPanel.add(sList);
         }
 
         //  Builds the table headers (columns)
@@ -283,13 +301,32 @@ public class Tab {
             }
         }
 
+        private ArrayList<DB_Delivery> constructSearch() throws DAOExceptionHandler {
+            ArrayList<DB_Delivery> search = new ArrayList<>();
+            DB_Delivery search1 = new DB_Delivery();
+
+            if(search_combobox.getSelectedItem() == "All"){
+                search = dao.getDeliveries();
+            }
+            if(search_combobox.getSelectedItem() == "ID"){
+                search1 = dao.getDelivery(Integer.parseInt(search_box.getText()));
+                search.clear();
+                search.add(search1);
+            }
+            if(search_combobox.getSelectedItem() == "Date"){
+                search = dao.getDeliveriesByDate(Date.valueOf(search_box.getText()));
+            }
+
+            return search;
+        }
+
         @Override
         public void actionPerformed(ActionEvent e) {
             //  If search button is pressed
             if (e.getSource() == button_search) {
                 try {
                         //  Get new data (no search criteria for now)
-                        deliveries = dao.getDeliveries();
+                        deliveries = constructSearch();
                         //  Update table
                         updateTableModel();
                 } catch (DAOExceptionHandler exception) {
