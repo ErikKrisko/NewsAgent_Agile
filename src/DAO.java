@@ -886,7 +886,7 @@ public class DAO {
 // =========================================================================================================
     // EMPLOYEE
 
-    public DB_Employee getEmployee(int ID) throws DAOExceptionHandler{
+    public DB_Employee getEmployee(int ID) throws DAOExceptionHandler {
         try{
             Statement st = con.createStatement();
             ResultSet rs = st.executeQuery("SELECT * FROM employee WHERE employee_id = " + ID);
@@ -895,6 +895,84 @@ public class DAO {
                 return temp;
             }else{
                 throw new DAOExceptionHandler("No employee with 'employee_id = " + ID + " found.");
+            }
+        } catch (SQLException | DAOExceptionHandler e) {
+            throw new DAOExceptionHandler(e.getMessage());
+        }
+    }
+
+    public ArrayList<DB_Employee> getEmployeesByFName(String s) throws DAOExceptionHandler {
+        try {
+            ArrayList<DB_Employee> list = new ArrayList<>();
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM employee WHERE first_name = '" + s + "'");
+            if ( rs.next()) {
+                do {
+                    list.add(new DB_Employee(
+                            rs.getLong(att_employee.employee_id.column),
+                            rs.getString(att_employee.first_name.column),
+                            rs.getString(att_employee.last_name.column)
+                    ));
+                } while (rs.next());
+                rs.close();
+                st.close();
+                return list;
+            } else {
+                rs.close();
+                st.close();
+                throw new DAOExceptionHandler("No employee with first name " + s + " found.");
+            }
+        } catch (SQLException e) {
+            throw new DAOExceptionHandler(e.getMessage());
+        }
+    }
+
+    public ArrayList<DB_Employee> getEmployeesByLName(String s) throws DAOExceptionHandler {
+        try {
+            ArrayList<DB_Employee> list = new ArrayList<>();
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM employee WHERE last_name = '" + s + "'");
+            if ( rs.next()) {
+                do {
+                    list.add(new DB_Employee(
+                            rs.getLong(att_employee.employee_id.column),
+                            rs.getString(att_employee.first_name.column),
+                            rs.getString(att_employee.last_name.column)
+                    ));
+                } while (rs.next());
+                rs.close();
+                st.close();
+                return list;
+            } else {
+                rs.close();
+                st.close();
+                throw new DAOExceptionHandler("No employee with last name " + s + " found.");
+            }
+        } catch (SQLException e) {
+            throw new DAOExceptionHandler(e.getMessage());
+        }
+    }
+
+    public ArrayList<DB_Employee> getEmployees() throws DAOExceptionHandler {
+        try {
+            ArrayList<DB_Employee> list = new ArrayList<>();
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM employee");
+            if ( rs.next()) {
+                do {
+                    list.add(new DB_Employee(
+                            rs.getLong(att_employee.employee_id.column),
+                            rs.getString(att_employee.first_name.column),
+                            rs.getString(att_employee.last_name.column)
+                    ));
+                } while (rs.next());
+                rs.close();
+                st.close();
+                return list;
+            } else {
+                rs.close();
+                st.close();
+                return null;
             }
         } catch (SQLException e) {
             throw new DAOExceptionHandler(e.getMessage());
@@ -980,7 +1058,7 @@ public class DAO {
     //  ====================================================================================================
     // INVOICE
 
-    public ArrayList<DB_Invoice> getLatestInvoiceByDate(Date date) throws DAOExceptionHandler {
+    public ArrayList<DB_Invoice> getLatestInvoiceByDate() throws DAOExceptionHandler {
         try {
             ArrayList<DB_Invoice> list = new ArrayList<>();
             Statement st = con.createStatement();
@@ -1002,7 +1080,7 @@ public class DAO {
             } else {
                 rs.close();
                 st.close();
-                throw new DAOExceptionHandler("Invoice needs to be before this date= " + date);
+                throw new DAOExceptionHandler("Invoice needs to be before this date= ");
                 //return null;
             }
         } catch (SQLException | DB_InvoiceExceptionHandler | DB_CustomerExceptionHandler e) {
@@ -1032,7 +1110,6 @@ public class DAO {
                 rs.close();
                 st.close();
                 return null;
-                //throw new DAOExceptionHandler("No delivery with status " + status + " found.");
             }
         } catch (SQLException | DB_InvoiceExceptionHandler | DB_CustomerExceptionHandler e) {
             throw new DAOExceptionHandler(e.getMessage());
@@ -1125,6 +1202,63 @@ public class DAO {
             throw new DAOExceptionHandler(e.getMessage());
         }
     }
+
+    public ArrayList<DB_Invoice> getLatestInvoices() throws DAOExceptionHandler {
+        try {
+            ArrayList<DB_Invoice> list = new ArrayList<>();
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM invoice WHERE issue_date = (SELECT issue_date FROM invoice ORDER BY issue_date DESC LIMIT 1);");
+            if ( rs.next()) {
+                do {
+                    list.add(new DB_Invoice(
+                            rs.getLong(Att_Invoice.invoice_id.column),
+                            rs.getDate(Att_Invoice.issue_date.column),
+                            rs.getBoolean(Att_Invoice.invoice_status.column),
+                            rs.getDouble(Att_Invoice.invoice_total.column),
+                            rs.getLong(Att_Invoice.customer.column)
+                    ));
+                } while (rs.next());
+                rs.close();
+                st.close();
+                return list;
+            } else {
+                rs.close();
+                st.close();
+                return null;
+            }
+        } catch (SQLException | DB_CustomerExceptionHandler | DB_InvoiceExceptionHandler e) {
+            throw new DAOExceptionHandler(e.getMessage());
+        }
+    }
+    //https://stackoverflow.com/questions/11751030/perform-insert-for-each-row-taken-from-a-select
+    public ArrayList<DB_Invoice> createInvoicesForDate() throws DAOExceptionHandler {
+        try {
+            ArrayList<DB_Invoice> list = new ArrayList<>();
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery("INSERT INTO invoice (invoice_id, issue_date, invoice_status, invoice_total, customer_id) SELECT DISTINCT null, ' ', 0, 0, c.customer_id FROM customer AS c, subscription AS s WHERE c.customer_id = s.customer_id");
+            if ( rs.next()) {
+                do {
+                    list.add(new DB_Invoice(
+                            rs.getLong(Att_Invoice.invoice_id.column),
+                            rs.getDate(Att_Invoice.issue_date.column),
+                            rs.getBoolean(Att_Invoice.invoice_status.column),
+                            rs.getDouble(Att_Invoice.invoice_total.column),
+                            rs.getLong(Att_Invoice.customer.column)
+                    ));
+                } while (rs.next());
+                rs.close();
+                st.close();
+                return list;
+            } else {
+                rs.close();
+                st.close();
+                return null;
+            }
+        } catch (SQLException | DB_CustomerExceptionHandler | DB_InvoiceExceptionHandler e) {
+            throw new DAOExceptionHandler(e.getMessage());
+        }
+    }
+
 
     //Get Deliveries by issue_date
     public ArrayList<DB_Invoice> getinvoicesByDate(Date date) throws DAOExceptionHandler {

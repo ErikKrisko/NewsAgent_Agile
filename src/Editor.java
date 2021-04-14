@@ -14,9 +14,22 @@ public class Editor {
     }
 
     //  Specific panel constructor
-    public JDialog customer(DB_Customer customer, JFrame parent) { return new customerEdit(customer, parent); }
-    public JDialog delivery(DB_Delivery delivery, JFrame parent) { return new deliveryEdit(delivery, parent); }
-    public JDialog subscription(DB_Subscription subscription, JFrame parent) { return new subscriptionEdit(subscription, parent);}
+    public JDialog customer(DB_Customer customer, JFrame parent) {
+        return new customerEdit(customer, parent);
+    }
+
+    public JDialog invoice(DB_Invoice invoice, JFrame parent) {
+        return new invoiceEdit(invoice, parent);
+    }
+
+    public JDialog delivery(DB_Delivery delivery, JFrame parent) {
+        return new deliveryEdit(delivery, parent);
+    }
+
+    public JDialog employee(DB_Employee employee, JFrame parent){
+        return new employeeEdit(employee, parent);
+    }
+
     private class customerEdit extends JDialog implements ActionListener {
         private DB_Customer customer;
         //  TextFields
@@ -86,12 +99,12 @@ public class Editor {
             phoneNo.setText(customer.getPhone_no());
             view.add(new JLabel("Address ID: "));
             view.add(addressID);
-            if (customer.getAddress()!= null)
+            if (customer.getAddress() != null)
                 addressID.setText("" + customer.getAddress().getAddress_id());
             else
                 addressID.setText("");
 
-            setSize(800,120);
+            setSize(800, 120);
             setResizable(false);
             setVisible(true);
             setLocation(parentFrame.getLocation());
@@ -139,7 +152,7 @@ public class Editor {
         }
     }
 
-    private class deliveryEdit extends  JDialog implements ActionListener{
+    private class deliveryEdit extends JDialog implements ActionListener {
         private DB_Delivery delivery;
         //  TextFields
         private final JTextField Date = new JTextField(10),
@@ -153,7 +166,7 @@ public class Editor {
                 bCancel = new JButton("Cancel");
 
         //Constructor
-        private deliveryEdit(DB_Delivery delivery, JFrame parentFrame){
+        private deliveryEdit(DB_Delivery delivery, JFrame parentFrame) {
             this.delivery = delivery;
             //  Disable main window when this is overplayed
             parentFrame.setEnabled(false);
@@ -189,7 +202,7 @@ public class Editor {
                 view.add(idField);
                 setTitle("New Delivery");
                 bUpdate.setText("Insert new");
-            }else {
+            } else {
                 view.add(new JLabel("ID: "));
                 JTextField idField = new JTextField(2);
                 idField.setText("" + delivery.getDelivery_id());
@@ -202,9 +215,9 @@ public class Editor {
             Date.setText(String.valueOf(delivery.getDelivery_date()));
             view.add(new JLabel("Delivery Status: "));
             view.add(Status);
-            if(delivery.getDelivery_status() == 1){
+            if (delivery.getDelivery_status() == 1) {
                 Status.setText("true");
-            }else{
+            } else {
                 Status.setText("false");
             }
             view.add(new JLabel("Customer ID: "));
@@ -217,40 +230,40 @@ public class Editor {
             view.add(ProdID);
             ProdID.setText("" + delivery.getProd_id());
 
-            setSize(800,120);
+            setSize(800, 120);
             setResizable(false);
             setVisible(true);
             setLocation(parentFrame.getLocation());
         }
 
-        private boolean readDelivery(){
-            try{
+        private boolean readDelivery() {
+            try {
                 delivery.setDelivery_date(java.sql.Date.valueOf(Date.getText()));
-            }catch(Exception e){
+            } catch (Exception e) {
                 JOptionPane.showMessageDialog(this, "Enter a Date yyyy-mm-dd", "Date Error", JOptionPane.ERROR_MESSAGE);
                 return false;
             }
-            try{
+            try {
                 delivery.setDelivery_status(Boolean.parseBoolean(Status.getText()));
-            }catch(Exception e){
+            } catch (Exception e) {
                 JOptionPane.showMessageDialog(this, "Enter a Status true/false", "Date Error", JOptionPane.ERROR_MESSAGE);
                 return false;
             }
-            try{
+            try {
                 delivery.setCustomer_id(Integer.parseInt(CustomerID.getText()));
-            }catch(Exception e){
+            } catch (Exception e) {
                 JOptionPane.showMessageDialog(this, "Enter a numerical ID", "Date Error", JOptionPane.ERROR_MESSAGE);
                 return false;
             }
-            try{
+            try {
                 delivery.setInvoice_id(Integer.parseInt(InvoiceID.getText()));
-            }catch(Exception e){
+            } catch (Exception e) {
                 JOptionPane.showMessageDialog(this, "Enter a numerical ID", "Date Error", JOptionPane.ERROR_MESSAGE);
                 return false;
             }
-            try{
+            try {
                 delivery.setProd_id(Integer.parseInt(ProdID.getText()));
-            }catch(Exception e){
+            } catch (Exception e) {
                 JOptionPane.showMessageDialog(this, "Enter a numerical ID", "Date Error", JOptionPane.ERROR_MESSAGE);
                 return false;
             }
@@ -414,6 +427,210 @@ public class Editor {
                     JOptionPane.showMessageDialog(this, exception.getMessage(),"Database Error", JOptionPane.ERROR_MESSAGE);
                 }}else if (e.getSource() == buttonCancel){
                     this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+            }
+        }
+    }
+
+    //===============Invoice============
+    private class invoiceEdit extends JDialog implements ActionListener {
+        private DB_Invoice invoice;
+        private final JTextField Date = new JTextField(10),
+                Status = new JTextField(10),
+                CustomerID = new JTextField(2),
+                InvoiceID = new JTextField(2),
+                InvoiceTotal = new JTextField(2);
+        private final JButton bUpdate = new JButton("Update"),
+                bDelete = new JButton("Delete"),
+                bCancel = new JButton("Cancel");
+
+        //Constructor
+        private invoiceEdit(DB_Invoice invoice, JFrame parentFrame) {
+            this.invoice = invoice;
+            parentFrame.setEnabled(false);
+            this.addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosing(WindowEvent e) {
+                    parentFrame.setEnabled(true);
+                    super.windowClosed(e);
+                    dispose();
+                }
+            });
+            getContentPane().setLayout(new BorderLayout());
+            JPanel buttonBar = new JPanel(new FlowLayout());
+            buttonBar.add(bUpdate);
+            bUpdate.addActionListener(this);
+            buttonBar.add(bDelete);
+            bDelete.addActionListener(this);
+            buttonBar.add(bCancel);
+            bCancel.addActionListener(this);
+            getContentPane().add(buttonBar, BorderLayout.SOUTH);
+            JPanel view = new JPanel(new FlowLayout());
+            getContentPane().add(view, BorderLayout.CENTER);
+
+            if (invoice.getInvoice_id() == 0) {
+                view.add(new JLabel("ID: "));
+                JTextField idField = new JTextField(2);
+                idField.setText("-");
+                idField.setEditable(false);
+                view.add(idField);
+                setTitle("New Invoice");
+                bUpdate.setText("Insert new");
+            } else {
+                view.add(new JLabel("ID: "));
+                JTextField idField = new JTextField(2);
+                idField.setText("" + invoice.getInvoice_id());
+                idField.setEditable(false);
+                view.add(idField);
+                setTitle("Edit Invoice");
+            }
+            view.add(new JLabel("Invoice Date: "));
+            view.add(Date);
+            Date.setText(String.valueOf(invoice.getIssue_date()));
+            view.add(new JLabel("Invoice Status: "));
+            view.add(Status);
+            if (invoice.getInvoice_status() == 1) {
+                Status.setText("true");
+            } else {
+                Status.setText("false");
+            }
+            view.add(new JLabel("Customer ID: "));
+            view.add(CustomerID);
+            InvoiceID.setText("" + invoice.getCustomer_id());
+            view.add(new JLabel("Invoice ID: "));
+            view.add(InvoiceID);
+            InvoiceID.setText("" + invoice.getInvoice_total());
+            view.add(new JLabel("Invoice Total: "));
+            view.add(InvoiceTotal);
+            InvoiceTotal.setText("" + invoice.getInvoice_total());
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (e.getSource() == bUpdate) {
+                try {
+                    dao.updateInvoice(invoice);
+                    this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+                } catch (DAOExceptionHandler ex) {
+                    JOptionPane.showMessageDialog(this, ex.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
+                }
+            } else if (e.getSource() == bDelete) {
+                try {
+                    dao.deleteInvoice(invoice);
+                    this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+                } catch (DAOExceptionHandler ex) {
+                    JOptionPane.showMessageDialog(this, ex.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
+                }
+            } else if (e.getSource() == bCancel) {
+                this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+            }
+        }
+    }
+
+////////////////////////////////////////////////////////////////////////////////////////
+//EMPLOYEE
+////////////////////////////////////////////////////////////////////////////////////////
+    private class employeeEdit extends JDialog implements ActionListener {
+        private DB_Employee employee;
+        //  TextFields
+        private final JTextField FName = new JTextField(10),
+                LName = new JTextField(10);
+        //  Buttons
+        private final JButton bUpdate = new JButton("Update"),
+                bDelete = new JButton("Delete"),
+                bCancel = new JButton("Cancel");
+
+        //Constructor
+        private employeeEdit(DB_Employee employee, JFrame parentFrame) {
+            this.employee = employee;
+            //  Disable main window when this is overplayed
+            parentFrame.setEnabled(false);
+            //  Add action listener to re-enable after closing
+            this.addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosing(WindowEvent e) {
+                    parentFrame.setEnabled(true);
+                    super.windowClosed(e);
+                    dispose();
+                }
+            });
+            //  set border layout
+            getContentPane().setLayout(new BorderLayout());
+            //  add buttons to SOUTH
+            JPanel buttonBar = new JPanel(new FlowLayout());
+            buttonBar.add(bUpdate);
+            bUpdate.addActionListener(this);
+            buttonBar.add(bDelete);
+            bDelete.addActionListener(this);
+            buttonBar.add(bCancel);
+            bCancel.addActionListener(this);
+            getContentPane().add(buttonBar, BorderLayout.SOUTH);
+            //  Add main panel
+            JPanel view = new JPanel(new FlowLayout());
+            getContentPane().add(view, BorderLayout.CENTER);
+            //  populate view
+            if (employee.getEmployee_id() == 0) {
+                view.add(new JLabel("ID: "));
+                JTextField idField = new JTextField(2);
+                idField.setText("-");
+                idField.setEditable(false);
+                view.add(idField);
+                setTitle("New Employee");
+                bUpdate.setText("Insert new");
+            } else {
+                view.add(new JLabel("ID: "));
+                JTextField idField = new JTextField(2);
+                idField.setText("" + employee.getEmployee_id());
+                idField.setEditable(false);
+                view.add(idField);
+                setTitle("Edit Employee");
+            }
+            view.add(new JLabel("First Name: "));
+            view.add(FName);
+            FName.setText(employee.getFirst_name());
+            view.add(new JLabel("Last Name: "));
+            view.add(LName);
+            LName.setText(employee.getLast_name());
+
+            setSize(800, 120);
+            setResizable(false);
+            setVisible(true);
+            setLocation(parentFrame.getLocation());
+        }
+
+        private boolean readEmployee() {
+            try {
+                employee.setFirst_name(FName.getText());
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Enter a first name", "First Name Error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+            try {
+                employee.setLast_name(LName.getText());
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Enter a last name", "Last Name Error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+            return true;
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (e.getSource() == bUpdate && readEmployee()) {
+                try {
+                    dao.updateEmployee(employee);
+                    this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+                } catch (DAOExceptionHandler ex) {
+                    JOptionPane.showMessageDialog(this, ex.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
+                }
+            } else if (e.getSource() == bDelete) {
+                try {
+                    dao.deleteEmployee(employee);
+                    this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+                } catch (DAOExceptionHandler ex) {
+                    JOptionPane.showMessageDialog(this, ex.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
+                }
+            } else if (e.getSource() == bCancel) {
+                this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
             }
         }
     }

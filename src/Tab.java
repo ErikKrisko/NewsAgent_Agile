@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 
 public class Tab {
     private final JTabbedPane pane;
-    private final JButton swap_customer = new JButton("Customer"), swap_invoice = new JButton("Invoice"), swap_delivery = new JButton("Delivery"), swap_subscription = new JButton("Subscription");
+    private final JButton swap_customer = new JButton("Customer"), swap_invoice = new JButton("Invoice"), swap_delivery = new JButton("Delivery"), swap_subscription = new JButton("Subscription"), swap_employee = new JButton("Employee");
     private JPanel component;
     private final DAO dao;
     private JFrame parent;
@@ -28,6 +28,7 @@ public class Tab {
     public JPanel customer() { return component = new customerTab(); }
     public JPanel invoice() throws DAOExceptionHandler { return component = new invoiceTab(); }
     public JPanel delivery(){ return component = new deliveryTab(); }
+    public JPanel employee(){ return component = new employeeTab(); }
 
 
     //  Number checker
@@ -58,6 +59,8 @@ public class Tab {
             add(swap_delivery);
             swap_subscription.addActionListener(this);
             add(swap_subscription);
+            swap_employee.addActionListener(this);
+            add(swap_employee);
         }
 
         @Override
@@ -83,6 +86,11 @@ public class Tab {
                 int pos = pane.indexOfComponent(component);
                 pane.setComponentAt(pos, new subscriptionTab());
                 pane.setTitleAt(pos, "Subscription");
+            }
+            else if(e.getSource() == swap_employee) {
+                int pos = pane.indexOfComponent(component);
+                pane.setComponentAt(pos, new employeeTab());
+                pane.setTitleAt(pos, "Employee");
             }
         }
     }
@@ -541,7 +549,7 @@ public class Tab {
                 search = dao.getinvoicesByDate(Date.valueOf(search_box.getText()));
             }
             if(search_combobox.getSelectedItem() == "Latest Date"){
-                search = dao.getLatestInvoiceByDate(Date.valueOf(search_box.getText()));
+                search = dao.getLatestInvoiceByDate();
             }
             if(search_combobox.getSelectedItem() == "Status"){
                 search = dao.getinvoicesByStatus(Boolean.valueOf(search_box.getText()));
@@ -563,7 +571,7 @@ public class Tab {
             if (e.getSource() == button_search) {
                 try {
                     //  Get new data (no search criteria for now)
-                    invoices = dao.getInvoices();
+                    invoices = constructSearch();
                     //  Update table
                     updateTableModel();
                 } catch (DAOExceptionHandler exception) {
@@ -730,6 +738,166 @@ public class Tab {
             }else if (e.getSource() == button_add){
                 parent = (JFrame) SwingUtilities.windowForComponent(this);
                 new Editor(dao).subscription(new DB_Subscription(), parent);
+            }
+        }
+    }
+
+    //  ========================================================================================================================
+    //  Employee TAB
+    //  ========================================================================================================================
+    private class employeeTab extends JPanel implements ActionListener{
+        private final JButton button_search = new JButton("Search"), button_add = new JButton("+");
+        //  Top panel to put search functionality into
+        private final JPanel searchPanel = new JPanel();
+        //  ScrollPane to be used by JTable
+        private final JScrollPane employee_tablePane = new JScrollPane();
+        //  JTable and TableModel for it
+        private final JTable employee_table = new JTable() {
+            //  Disable direct editing of the table will need to implement it separately
+            public boolean isCellEditable(int row, int column){
+                return false;
+            }
+        };
+        private DefaultTableModel employee_tableModel;
+        //  ArrayList for employees
+        private ArrayList<DB_Employee> employees;
+        //  Context menu items
+        private final JMenuItem menu_edit = new JMenuItem("Edit");
+        private int rowSelected;
+        //Search Box with comboBox attribute selector
+        JTextField search_box = new JTextField(10);
+
+        String[] strings = {"All", "ID", "First Name", "Last Name"};
+        JComboBox search_combobox = new JComboBox(strings);
+
+        //  Constructor WIP
+        private employeeTab() {
+            //  Set layout
+            setLayout(new BorderLayout());
+            //  Add both panes
+            add(searchPanel, BorderLayout.NORTH);
+            add(employee_tablePane, BorderLayout.CENTER);
+            //  Search pane
+            buildSearchBox();
+            //  Table pane
+            employee_tablePane.getViewport().add(employee_table);
+            buildTableModel();
+            //  Table listener
+            tableListener();
+            //  Menu_edit listener
+            menu_edit.addActionListener(this);
+        }
+        private void buildSearchBox(){
+            searchPanel.setLayout(new BorderLayout());
+            searchPanel.add(button_search, BorderLayout.EAST);
+            button_search.addActionListener(this);
+            searchPanel.add(button_add, BorderLayout.WEST);
+            button_add.addActionListener(this);
+
+            JPanel sList = new JPanel(new FlowLayout());
+            sList.add(search_combobox);
+            sList.add(search_box);
+
+            searchPanel.add(sList);
+        }
+
+        //  Builds the table headers (columns)
+        private void buildTableModel() {
+            //  Table model
+            employee_tableModel = new DefaultTableModel();
+            //  Do the headers
+            employee_tableModel.addColumn("ID");
+            employee_tableModel.addColumn("First Name");
+            employee_tableModel.addColumn("Last Name");
+            //  set table to use the model
+            employee_table.setModel(employee_tableModel);
+            //  disable moving columns around
+            employee_table.getTableHeader().setReorderingAllowed(false);
+        }
+
+        private void tableListener() {
+            employee_table.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    super.mouseClicked(e);
+                    if (e.getButton() == MouseEvent.BUTTON3) {
+                        rowSelected = employee_table.rowAtPoint(e.getPoint());
+                        employee_table.setRowSelectionInterval(rowSelected, rowSelected);
+                        JPopupMenu pop = new JPopupMenu();
+                        pop.add(menu_edit);
+                        pop.show(employee_tablePane, e.getX()+1, e.getY()+16);
+                    }
+                }
+            });
+        }
+
+        //  Populates data from deliveries ArrayList
+        private void updateTableModel() {
+            employee_tableModel.setRowCount(0);
+            for (DB_Employee emp : employees) {
+                employee_tableModel.addRow(emp.getRowData());
+            }
+        }
+
+        private ArrayList<DB_Employee> constructSearch() throws DAOExceptionHandler {
+            ArrayList<DB_Employee> search = new ArrayList<>();
+            DB_Employee search1;
+
+            if(search_combobox.getSelectedItem() == "All"){
+                search = dao.getEmployees();
+            }
+            if(search_combobox.getSelectedItem() == "ID"){
+                try {
+                    search1 = dao.getEmployee(Integer.parseInt(search_box.getText()));
+                    search.clear();
+                    search.add(search1);
+                }catch(Exception e){
+                    JOptionPane.showMessageDialog(this, "Enter a numerical ID or ID doesn't exist", "ID Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+            if(search_combobox.getSelectedItem() == "First Name"){
+                try {
+                    search = dao.getEmployeesByFName(search_box.getText());
+                }catch(Exception e){
+                    JOptionPane.showMessageDialog(this, "Enter a valid first name", "First Name Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+            if(search_combobox.getSelectedItem() == "Last Name"){
+                try {
+                    search = dao.getEmployeesByLName(search_box.getText());
+                }catch(Exception e){
+                    JOptionPane.showMessageDialog(this, "Enter a valid last name", "Last Name Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+            return search;
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            //  If search button is pressed
+            if (e.getSource() == button_search) {
+                try {
+                    //  Get new data (no search criteria for now)
+                    employees = constructSearch();
+                    //  Update table
+                    updateTableModel();
+                } catch (DAOExceptionHandler exception) {
+                    exception.printStackTrace();
+                }
+            }else if (e.getSource() == menu_edit) {
+                //  Wild magic to get an integer out of a table field
+                int id = Integer.parseInt((String) employee_table.getValueAt(rowSelected, 0));
+                try {
+                    parent = (JFrame) SwingUtilities.windowForComponent(this);
+
+                    JDialog memory = new Editor(dao).employee(dao.getEmployee(id), parent);
+                    System.out.println();
+                } catch (DAOExceptionHandler exc) {
+                    exc.printStackTrace();
+                }
+            }else if (e.getSource() == button_add) {
+                parent = (JFrame) SwingUtilities.windowForComponent(this);
+                new Editor(dao).employee(new DB_Employee(), parent);
             }
         }
     }
