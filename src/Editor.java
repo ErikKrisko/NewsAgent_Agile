@@ -30,6 +30,12 @@ public class Editor {
         return new employeeEdit(employee, parent);
     }
 
+    public JDialog subscription(DB_Subscription subscription, JFrame parent){
+        return new subscriptionEdit(subscription, parent);
+    }
+
+
+
     private class customerEdit extends JDialog implements ActionListener {
         private DB_Customer customer;
         //  TextFields
