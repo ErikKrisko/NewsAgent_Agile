@@ -7,21 +7,6 @@ public class DAOTestDelivery extends TestCase {
     DB_Delivery delivery = new DB_Delivery();
     private DAO dao;
 
-    public void DAOTestDelivery() {
-        try {
-            //  Reset Database
-            JDBC connection = new JDBC("jdbc:mysql://localhost:3306/", "root", "admin");
-            connection.executeScript("NewsAgent_Database.sql");
-            connection.setDbName("newsagent");
-            connection.executeScript("NewsAgent_Data_Extended.sql");
-            connection.close();
-            //  Initialize DAO
-            dao = new DAO("jdbc:mysql://localhost:3306/newsagent?useTimezone=true&serverTimezone=UTC", "root", "admin");
-        } catch (DAOExceptionHandler | JDBCExceptionHandler e) {
-            e.printStackTrace();
-            fail("DAO initialization failed.");
-        }
-    }
 
     /** Initialize test environment.
      *  ==========
@@ -62,7 +47,7 @@ public class DAOTestDelivery extends TestCase {
      */
     public void testDB_Delivery015() {
         try {
-            DAOTestDelivery();
+            initializeDatabase();
             delivery = dao.getDelivery(1);
             assertEquals(1, delivery.getDelivery_id());
             assertEquals(Date.valueOf("2022-01-05"), delivery.getDelivery_date());
@@ -88,7 +73,7 @@ public class DAOTestDelivery extends TestCase {
     public void testDB_Delivery016() {
         int ID = 12;
         try {
-            DAOTestDelivery();
+            initializeDatabase();
             delivery = dao.getDelivery(ID);
             fail("Exception expected.");
         } catch (DAOExceptionHandler e) {
@@ -113,7 +98,7 @@ public class DAOTestDelivery extends TestCase {
     //
     public void testDB_Delivery017() {
         try {
-            DAOTestDelivery();
+            initializeDatabase();
             delivery.setDelivery_id(0);
             delivery.setDelivery_date(Date.valueOf(String.valueOf(new Date(System.currentTimeMillis()))));
             delivery.setDelivery_status(true);
@@ -143,7 +128,7 @@ public class DAOTestDelivery extends TestCase {
     //
     public void testDB_Delivery018() {
         try {
-            DAOTestDelivery();
+            initializeDatabase();
             delivery = dao.getDelivery(1);
             delivery.setDelivery_date(Date.valueOf("2022-08-24"));
             delivery.setDelivery_status(false);
@@ -180,7 +165,7 @@ public class DAOTestDelivery extends TestCase {
     //
     public void testDB_Delivery019() {
         try {
-            DAOTestDelivery();
+            initializeDatabase();
             delivery.setDelivery_id(12);
             delivery.setDelivery_date(Date.valueOf("2022-08-24"));
             delivery.setDelivery_status(false);
@@ -213,7 +198,7 @@ public class DAOTestDelivery extends TestCase {
     //
     public void testDB_Delivery020() {
         try {
-            DAOTestDelivery();
+            initializeDatabase();
             delivery.setDelivery_id(14);
 
             dao.deleteDelivery(delivery);
@@ -241,7 +226,7 @@ public class DAOTestDelivery extends TestCase {
     //
     public void testDB_Delivery021() {
         try {
-            DAOTestDelivery();
+            initializeDatabase();
             delivery.setDelivery_id(5);
             dao.deleteDelivery(delivery);
 
@@ -268,7 +253,7 @@ public class DAOTestDelivery extends TestCase {
      */
     public void testDB_getDeliveriesByDate001(){
         try {
-            DAOTestDelivery();
+            initializeDatabase();
             Date date = Date.valueOf("2022-01-05");
 
             ArrayList<DB_Delivery> del_list = dao.getDeliveriesByDate(date);
@@ -307,7 +292,7 @@ public class DAOTestDelivery extends TestCase {
      */
     public void testDB_getDeliveriesByDate002(){
         try {
-            DAOTestDelivery();
+            initializeDatabase();
             Date date = Date.valueOf("2022-01-05");
 
             ArrayList<DB_Delivery> del_list = dao.getDeliveriesByDate(date);
@@ -345,7 +330,7 @@ public class DAOTestDelivery extends TestCase {
      */
     public void testDB_getDeliveriesByDate003(){
         try {
-            DAOTestDelivery();
+            initializeDatabase();
             Date date = Date.valueOf("2022-01-05");
 
             ArrayList<DB_Delivery> del_list = dao.getDeliveriesByDate(date);
@@ -383,7 +368,7 @@ public class DAOTestDelivery extends TestCase {
      */
     public void testDB_getDeliveriesByDate004(){
         try {
-            DAOTestDelivery();
+            initializeDatabase();
             Date date = Date.valueOf("2022-01-05");
 
             ArrayList<DB_Delivery> del_list = dao.getDeliveriesByDate(date);
@@ -416,7 +401,7 @@ public class DAOTestDelivery extends TestCase {
      */
     public void testDB_getDeliveriesByDate005(){
         try {
-            DAOTestDelivery();
+            initializeDatabase();
             Date date = Date.valueOf("2021-01-05");
 
             ArrayList<DB_Delivery> del_list = dao.getDeliveriesByDate(date);
