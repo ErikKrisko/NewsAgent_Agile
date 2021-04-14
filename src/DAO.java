@@ -621,6 +621,126 @@ public class DAO {
             throw new DAOExceptionHandler(e.getMessage());
         }
     }
+    //Get Deliveries by delivery_status
+    public ArrayList<DB_Delivery> getDeliveriesByStatus(Boolean status) throws DAOExceptionHandler {
+        try {
+            ArrayList<DB_Delivery> list = new ArrayList<>();
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM delivery WHERE delivery_status = " + status);
+            if (rs.next()) {
+                do {
+                    list.add(new DB_Delivery(
+                            rs.getLong(att_delivery.delivery_id.column),
+                            rs.getDate(att_delivery.delivery_date.column),
+                            rs.getBoolean(att_delivery.delivery_status.column),
+                            rs.getLong(att_delivery.customer.column),
+                            rs.getLong(att_delivery.invoice.column),
+                            rs.getLong(att_delivery.publication.column)
+                    ));
+                } while (rs.next());
+                rs.close();
+                st.close();
+                return list;
+            } else {
+                rs.close();
+                st.close();
+                return null;
+                //throw new DAOExceptionHandler("No delivery with status " + status + " found.");
+            }
+        } catch (SQLException | DB_DeliveryExceptionHandler e) {
+            throw new DAOExceptionHandler(e.getMessage());
+        }
+    }
+
+    //Get Deliveries by customer_id
+    public ArrayList<DB_Delivery> getDeliveriesByCustomer(int id) throws DAOExceptionHandler {
+        try {
+            ArrayList<DB_Delivery> list = new ArrayList<>();
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM delivery WHERE customer_id=" + id );
+            if ( rs.next()) {
+                do {
+                    list.add(new DB_Delivery(
+                            rs.getLong(att_delivery.delivery_id.column),
+                            rs.getDate(att_delivery.delivery_date.column),
+                            rs.getBoolean(att_delivery.delivery_status.column),
+                            rs.getLong(att_delivery.customer.column),
+                            rs.getLong(att_delivery.invoice.column),
+                            rs.getLong(att_delivery.publication.column)
+                    ));
+                } while (rs.next());
+                rs.close();
+                st.close();
+                return list;
+            } else {
+                rs.close();
+                st.close();
+                throw new DAOExceptionHandler("No Deliveries with customer_id = " + id);
+            }
+        } catch (SQLException | DB_DeliveryExceptionHandler e) {
+            throw new DAOExceptionHandler(e.getMessage());
+        }
+    }
+
+    //Get Deliveries by invoice_id
+    public ArrayList<DB_Delivery> getDeliveriesByInvoice(int id) throws DAOExceptionHandler {
+        try {
+            ArrayList<DB_Delivery> list = new ArrayList<>();
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM delivery WHERE invoice_id=" + id );
+            if ( rs.next()) {
+                do {
+                    list.add(new DB_Delivery(
+                            rs.getLong(att_delivery.delivery_id.column),
+                            rs.getDate(att_delivery.delivery_date.column),
+                            rs.getBoolean(att_delivery.delivery_status.column),
+                            rs.getLong(att_delivery.customer.column),
+                            rs.getLong(att_delivery.invoice.column),
+                            rs.getLong(att_delivery.publication.column)
+                    ));
+                } while (rs.next());
+                rs.close();
+                st.close();
+                return list;
+            } else {
+                rs.close();
+                st.close();
+                throw new DAOExceptionHandler("No Deliveries with invoice_id = " + id);
+            }
+        } catch (SQLException | DB_DeliveryExceptionHandler e) {
+            throw new DAOExceptionHandler(e.getMessage());
+        }
+    }
+
+    //Get Deliveries by prod_id
+    public ArrayList<DB_Delivery> getDeliveriesByPublication(int id) throws DAOExceptionHandler {
+        try {
+            ArrayList<DB_Delivery> list = new ArrayList<>();
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM delivery WHERE prod_id=" + id );
+            if ( rs.next()) {
+                do {
+                    list.add(new DB_Delivery(
+                            rs.getLong(att_delivery.delivery_id.column),
+                            rs.getDate(att_delivery.delivery_date.column),
+                            rs.getBoolean(att_delivery.delivery_status.column),
+                            rs.getLong(att_delivery.customer.column),
+                            rs.getLong(att_delivery.invoice.column),
+                            rs.getLong(att_delivery.publication.column)
+                    ));
+                } while (rs.next());
+                rs.close();
+                st.close();
+                return list;
+            } else {
+                rs.close();
+                st.close();
+                throw new DAOExceptionHandler("No Deliveries with prod_id = " + id);
+            }
+        } catch (SQLException | DB_DeliveryExceptionHandler e) {
+            throw new DAOExceptionHandler(e.getMessage());
+        }
+    }
 
     /** Creates deliveries for given criteria, populates the database and returns newly created deliveries.
      * Confirmed speculation from

@@ -247,7 +247,7 @@ public class Tab {
         //Search Box with comboBox attribute selector
         JTextField search_box = new JTextField(10);
 
-        String[] strings = {"All", "ID", "Date"};
+        String[] strings = {"All", "ID", "Date", "Status", "Customer ID", "Invoice ID", "Prod ID"};
         JComboBox search_combobox = new JComboBox(strings);
 
         //  Constructor WIP
@@ -315,6 +315,18 @@ public class Tab {
             }
             if(search_combobox.getSelectedItem() == "Date"){
                 search = dao.getDeliveriesByDate(Date.valueOf(search_box.getText()));
+            }
+            if(search_combobox.getSelectedItem() == "Status"){
+                search = dao.getDeliveriesByStatus(Boolean.valueOf(search_box.getText()));
+            }
+            if(search_combobox.getSelectedItem() == "Customer ID"){
+                search = dao.getDeliveriesByCustomer(Integer.parseInt(search_box.getText()));
+            }
+            if(search_combobox.getSelectedItem() == "Invoice ID"){
+                search = dao.getDeliveriesByInvoice(Integer.parseInt(search_box.getText()));
+            }
+            if(search_combobox.getSelectedItem() == "Prod ID"){
+                search = dao.getDeliveriesByPublication(Integer.parseInt(search_box.getText()));
             }
 
             return search;
