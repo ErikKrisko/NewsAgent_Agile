@@ -12,7 +12,8 @@ public class DB_Invoice
 
     public DB_Invoice() { }
 
-    public DB_Invoice(Date issue_date, boolean invoice_status, double invoice_total, long customer_id) throws DB_InvoiceExceptionHandler, DB_CustomerExceptionHandler {
+    public DB_Invoice(  long invoice_id, Date issue_date, boolean invoice_status, double invoice_total, long customer_id) throws DB_InvoiceExceptionHandler, DB_CustomerExceptionHandler {
+       this.invoice_id = validateId(invoice_id);
         this.issue_date = validateDate( issue_date);
         this.invoice_status = invoice_status;
         this.invoice_total = validateTotal( invoice_total);

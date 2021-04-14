@@ -355,7 +355,7 @@ public class Tab {
         };
         private DefaultTableModel invoice_tableModel;
         //  ArrayList for customers
-        private ArrayList<DB_Invoice> invoice;
+        private ArrayList<DB_Invoice> invoices;
 
         //  Constructor WIP
         private invoiceTab() {
@@ -391,7 +391,7 @@ public class Tab {
         //  Populates data from invoice ArrayList
         private void updateTableModel() {
             invoice_tableModel.setRowCount(0);
-            for (DB_Invoice invoice : invoice) {
+            for (DB_Invoice invoice : invoices) {
 //                invoice_tableModel.addRow(inv.getRowData());
             }
         }
@@ -399,19 +399,19 @@ public class Tab {
         @Override
         public void actionPerformed(ActionEvent e) {
             //  If search button is pressed
-            //  MAKE ACTUAL INVOICE SEARCH USING INVOICE METHODS that are developed.
             if (e.getSource() == button_search) {
-//                try {
-//                    //  Get new data (no search criteria for now)
-//                    invoice = dao.getInvoice(new Search_Invoice()[0]);
-//                    //  Update table
-//                    updateTableModel();
-//                } catch (DAOExceptionHandler exc) {
-//                    exc.printStackTrace();
-//                }
+                try {
+                    //  Get new data (no search criteria for now)
+                    invoices = dao.getInvoices();
+                    //  Update table
+                    updateTableModel();
+                } catch (DAOExceptionHandler exception) {
+                    exception.printStackTrace();
+                }
             }
         }
     }
+
 
     //  ========================================================================================================================
     //  SUBSCRIPTION TAB
