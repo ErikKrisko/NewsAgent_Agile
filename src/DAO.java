@@ -828,7 +828,7 @@ public class DAO {
 //                            rs.getDate(Att_Invoice.issue_date.column),
 //                            rs.getBoolean(Att_Invoice.invoice_status.column),
 //                            rs.getDouble(Att_Invoice.invoice_total.column),
-//                            rs.getLong(Att_Invoice.customer.column)
+//                            rs.getLong(Att_Invoice.customer_id.column)
 //                    ));
 //                } while (rs.next());
 //                rs.close();
