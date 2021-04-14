@@ -65,6 +65,7 @@ public class Editor {
                 idField.setEditable(false);
                 view.add(idField);
                 setTitle("New Customer");
+                bUpdate.setText("Insert new");
             } else {
                 view.add(new JLabel("ID: "));
                 JTextField idField = new JTextField(2);
@@ -84,7 +85,10 @@ public class Editor {
             phoneNo.setText(customer.getPhone_no());
             view.add(new JLabel("Address ID: "));
             view.add(addressID);
-            addressID.setText("" + customer.getAddress().getAddress_id());
+            if (customer.getAddress()!= null)
+                addressID.setText("" + customer.getAddress().getAddress_id());
+            else
+                addressID.setText("");
 
             setSize(800,120);
             setResizable(false);
