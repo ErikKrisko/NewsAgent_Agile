@@ -1,6 +1,7 @@
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -16,6 +17,7 @@ public class Tab {
     private final JButton swap_customer = new JButton("Customer"), swap_invoice = new JButton("Invoice"), swap_delivery = new JButton("Delivery"), swap_subscription = new JButton("Subscription");
     private JPanel component;
     private final DAO dao;
+    private JFrame parent;
 
     public Tab(JTabbedPane pane, DAO dao) {
         this.pane = pane;
@@ -122,6 +124,9 @@ public class Tab {
             buildTableModel();
             //  Table listener
             tableListener();
+
+            //  Menu_edit listener
+            menu_edit.addActionListener(this);
         }
 
         private void buildSearchBox() {
@@ -219,7 +224,18 @@ public class Tab {
                     exc.printStackTrace();
                 }
             } else if (e.getSource() == menu_edit) {
-                System.out.println("To edit "+rowSelected);
+                //  Wild magic to get an integer out of a table field
+                int id = Integer.parseInt((String) customer_table.getValueAt(rowSelected, 0));
+                try {
+                    //  Got this here
+                    //  https://stackoverflow.com/questions/9650874/java-swing-obtain-window-jframe-from-inside-a-jpanel
+                    parent = (JFrame) SwingUtilities.windowForComponent(this);
+
+                    JDialog memory = new Editor(dao).customer(dao.getCustomer(id), parent);
+                    System.out.println();
+                } catch (DAOExceptionHandler exc) {
+                    exc.printStackTrace();
+                }
             }
         }
 
