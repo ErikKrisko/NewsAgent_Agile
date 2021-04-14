@@ -26,6 +26,10 @@ public class Editor {
         return new deliveryEdit(delivery, parent);
     }
 
+    public JDialog employee(DB_Employee employee, JFrame parent){
+        return new employeeEdit(employee, parent);
+    }
+
     private class customerEdit extends JDialog implements ActionListener {
         private DB_Customer customer;
         //  TextFields
@@ -373,6 +377,115 @@ public class Editor {
             } else if (e.getSource() == bDelete) {
                 try {
                     dao.deleteInvoice(invoice);
+                    this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+                } catch (DAOExceptionHandler ex) {
+                    JOptionPane.showMessageDialog(this, ex.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
+                }
+            } else if (e.getSource() == bCancel) {
+                this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+            }
+        }
+    }
+
+////////////////////////////////////////////////////////////////////////////////////////
+//EMPLOYEE
+////////////////////////////////////////////////////////////////////////////////////////
+    private class employeeEdit extends JDialog implements ActionListener {
+        private DB_Employee employee;
+        //  TextFields
+        private final JTextField FName = new JTextField(10),
+                LName = new JTextField(10);
+        //  Buttons
+        private final JButton bUpdate = new JButton("Update"),
+                bDelete = new JButton("Delete"),
+                bCancel = new JButton("Cancel");
+
+        //Constructor
+        private employeeEdit(DB_Employee employee, JFrame parentFrame) {
+            this.employee = employee;
+            //  Disable main window when this is overplayed
+            parentFrame.setEnabled(false);
+            //  Add action listener to re-enable after closing
+            this.addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosing(WindowEvent e) {
+                    parentFrame.setEnabled(true);
+                    super.windowClosed(e);
+                    dispose();
+                }
+            });
+            //  set border layout
+            getContentPane().setLayout(new BorderLayout());
+            //  add buttons to SOUTH
+            JPanel buttonBar = new JPanel(new FlowLayout());
+            buttonBar.add(bUpdate);
+            bUpdate.addActionListener(this);
+            buttonBar.add(bDelete);
+            bDelete.addActionListener(this);
+            buttonBar.add(bCancel);
+            bCancel.addActionListener(this);
+            getContentPane().add(buttonBar, BorderLayout.SOUTH);
+            //  Add main panel
+            JPanel view = new JPanel(new FlowLayout());
+            getContentPane().add(view, BorderLayout.CENTER);
+            //  populate view
+            if (employee.getEmployee_id() == 0) {
+                view.add(new JLabel("ID: "));
+                JTextField idField = new JTextField(2);
+                idField.setText("-");
+                idField.setEditable(false);
+                view.add(idField);
+                setTitle("New Employee");
+                bUpdate.setText("Insert new");
+            } else {
+                view.add(new JLabel("ID: "));
+                JTextField idField = new JTextField(2);
+                idField.setText("" + employee.getEmployee_id());
+                idField.setEditable(false);
+                view.add(idField);
+                setTitle("Edit Employee");
+            }
+            view.add(new JLabel("First Name: "));
+            view.add(FName);
+            FName.setText(employee.getFirst_name());
+            view.add(new JLabel("Last Name: "));
+            view.add(LName);
+            LName.setText(employee.getLast_name());
+
+            setSize(800, 120);
+            setResizable(false);
+            setVisible(true);
+            setLocation(parentFrame.getLocation());
+        }
+
+        private boolean readEmployee() {
+            try {
+                employee.setFirst_name(FName.getText());
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Enter a first name", "First Name Error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+            try {
+                employee.setLast_name(LName.getText());
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Enter a last name", "Last Name Error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+            return true;
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (e.getSource() == bUpdate && readEmployee()) {
+                try {
+                    dao.updateEmployee(employee);
+                    this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+                } catch (DAOExceptionHandler ex) {
+                    JOptionPane.showMessageDialog(this, ex.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
+                }
+            } else if (e.getSource() == bDelete) {
+                try {
+                    dao.deleteEmployee(employee);
                     this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
                 } catch (DAOExceptionHandler ex) {
                     JOptionPane.showMessageDialog(this, ex.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);

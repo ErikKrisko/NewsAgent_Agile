@@ -420,8 +420,8 @@ public class DAOTestDelivery extends TestCase {
      *  Test for fail empty / null subscription list provided
      */
     public void testCreateDeliveriesForSubscriptionDate001() {
-        initializeDatabase();
         try {
+            initializeDatabase();
             dao.createDeliveriesForSubscriptionDate(null, Date.valueOf("2021-04-14"));
             fail("Exception expected");
         } catch (DAOExceptionHandler e) {
@@ -433,8 +433,8 @@ public class DAOTestDelivery extends TestCase {
      *  Test for existing delivery
      */
     public void testCreateDeliveriesForSubscriptionDate002() {
-        initializeDatabase();
         try {
+            initializeDatabase();
             Date date = Date.valueOf("2021-04-14");
             ArrayList<DB_Subscription> subscriptions = dao.getSubscriptionsForDate(date, true, true);
             ArrayList<DB_Delivery> deliveries = dao.createDeliveriesForSubscriptionDate(subscriptions, date);
@@ -449,8 +449,8 @@ public class DAOTestDelivery extends TestCase {
      *  Test for null date
      */
     public void testGetDeliveriesForSubscriptionDate003() {
-        initializeDatabase();
         try {
+            initializeDatabase();
             ArrayList<DB_Subscription> subscriptions = dao.getSubscriptionsForDate(Date.valueOf("2021-04-14"), true, true);
             dao.createDeliveriesForSubscriptionDate(subscriptions, null);
             fail("Exception expected");
@@ -463,8 +463,8 @@ public class DAOTestDelivery extends TestCase {
      *  Test for deletion fail (no given date found)
      */
     public void testDeleteDeliveryByDate001() {
-        initializeDatabase();
         try {
+            initializeDatabase();
             dao.deleteDeliveriesByDate(Date.valueOf("2021-04-14"));
             fail("Exception expected");
         } catch (DAOExceptionHandler e) {
@@ -476,8 +476,8 @@ public class DAOTestDelivery extends TestCase {
      *  Test for deletion success
      */
     public void testDeleteDeliveryByDate002() {
-        initializeDatabase();
         try {
+            initializeDatabase();
             assertEquals(5, dao.deleteDeliveriesByDate(Date.valueOf("2022-01-05")));
             dao.getDeliveriesByDate(Date.valueOf("2022-01-05"));
             fail("Exception expected");
@@ -864,12 +864,12 @@ public class DAOTestDelivery extends TestCase {
      * Inputs: Publication_id=8
      * ==========
      * Expected Outputs:
-     *                          delivery_list.get(0).getDelivery_id() = 3
-     *                          delivery_list.get(0).getDelivery_date() = 2022-07-18
-     *                          delivery_list.get(0).getDelivery_status() = 1
-     *                          delivery_list.get(0).getCustomer_id() = 3
-     *                          delivery_list.get(0).getPublication_id() = 3
-     *                          delivery_list.get(0).getPublication_id() = 8
+     *                          del_list.get(0).getDelivery_id() = 3
+     *                          del_list.get(0).getDelivery_date() = 2022-07-18
+     *                          del_list.get(0).getDelivery_status() = 1
+     *                          del_list.get(0).getCustomer_id() = 3
+     *                          del_list.get(0).getPublication_id() = 3
+     *                          del_list.get(0).getPublication_id() = 8
      */
     public void testDB_getDeliveriesByPublication003(){
         try {
