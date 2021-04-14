@@ -614,7 +614,7 @@ public class DAO {
             } else {
                 rs.close();
                 st.close();
-                throw new DAOExceptionHandler("No delivery with date " + date + " found");
+                throw new DAOExceptionHandler("No delivery with date " + date + " found.");
                 //return null;
             }
         } catch (SQLException | DB_DeliveryExceptionHandler e) {
@@ -709,7 +709,19 @@ public class DAO {
      * @throws DAOExceptionHandler If there are no deliveries found or an Error occurs
      */
     public int deleteDeliveriesByDate(Date date) throws DAOExceptionHandler {
-        throw new DAOExceptionHandler("NO CODE");
+        try {
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM delivery WHERE delivery_date = '" + date + "'");
+            if(rs.next()){
+                PreparedStatement pstmt = con.prepareStatement("DELETE FROM delivery WHERE delivery_date = '" + date + "'");
+                int lines = pstmt.executeUpdate();
+                return lines;
+            }else{
+                throw new DAOExceptionHandler("No delivery with date " + date + " found.");
+            }
+        }catch(SQLException e){
+            throw new DAOExceptionHandler("No entries for given date found.");
+        }
     }
 
     private DB_Delivery populateDelivery(ResultSet rs) throws DAOExceptionHandler {
