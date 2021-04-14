@@ -416,43 +416,60 @@ public class DAOTestDelivery extends TestCase {
         }
     }
 
-    /** Test 006 - getDeliveriesForSubscriptionDate
-     *  Test for fail as an existing delivery for given date exists and overwriting is false
+    /** Test 006 - createDeliveriesForSubscriptionDate
+     *  Test for fail empty / null subscription list provided
      */
-    public void testGetDeliveriesForSubscriptionDate001() {
+    public void testCreateDeliveriesForSubscriptionDate001() {
         initializeDatabase();
+        try {
+            dao.createDeliveriesForSubscriptionDate(null, Date.valueOf("2021-04-14"));
+            fail("Exception expected");
+        } catch (DAOExceptionHandler e) {
+            assertEquals("Provided subscription list is empty.", e.getMessage());
+        }
     }
 
-    /** Test 007 - getDeliveriesForSubscriptionDate
+    /** Test 007 - createDeliveriesForSubscriptionDate
      *  Test for existing delivery
      */
-    public void testGetDeliveriesForSubscriptionDate002() {
+    public void testCreateDeliveriesForSubscriptionDate002() {
         initializeDatabase();
-
+        try {
+            Date date = Date.valueOf("2021-04-14");
+            ArrayList<DB_Subscription> subscriptions = dao.getSubscriptionsForDate(date, true, true);
+            ArrayList<DB_Delivery> deliveries = dao.createDeliveriesForSubscriptionDate(subscriptions, date);
+            //  Tests individual entries to confirm
+        } catch (DAOExceptionHandler e) {
+            e.printStackTrace();
+            fail("Exception not expected");
+        }
     }
 
-    /** Test 008 - getDeliveriesForSubscriptionDate
-     *  Test for existing delivery by overwriting
+    /** Test 008 - createDeliveriesForSubscriptionDate
+     *  Test for null date
      */
     public void testGetDeliveriesForSubscriptionDate003() {
         initializeDatabase();
-
+        try {
+            ArrayList<DB_Subscription> subscriptions = dao.getSubscriptionsForDate(Date.valueOf("2021-04-14"), true, true);
+            dao.createDeliveriesForSubscriptionDate(subscriptions, null);
+            fail("Exception expected");
+        } catch (DAOExceptionHandler e) {
+            assertEquals("Provided date was invalid.", e.getMessage());
+        }
     }
 
-    /** Test 009 - getDeliveriesForSubscriptionDate
-     *  Test for fail empty or null subscription list used
-     */
-    public void testGetDeliveriesForSubscriptionDate004() {
-        initializeDatabase();
-
-    }
-
-    /** Test 010 - deleteDeliveryByDate
+    /** Test 009 - deleteDeliveryByDate
      *  Test for deletion fail (no given date found)
      */
     public void testDeleteDeliveryByDate001() {
         initializeDatabase();
-
+        try {
+            dao.deleteDeliveriesByDate(Date.valueOf("2021-04-14"));
+            fail("Exception expected");
+        } catch (DAOExceptionHandler e) {
+            assertEquals("No entries for given date found.", e.getMessage());
+        }
     }
 
     /** Test 010 - deleteDeliveryByDate
@@ -460,7 +477,13 @@ public class DAOTestDelivery extends TestCase {
      */
     public void testDeleteDeliveryByDate002() {
         initializeDatabase();
-
+        try {
+            assertEquals(5, dao.deleteDeliveriesByDate(Date.valueOf("2022-01-05")));
+            dao.getDeliveriesByDate(Date.valueOf("2022-01-05"));
+            fail("Exception expected");
+        } catch (DAOExceptionHandler e) {
+            assertEquals("No delivery with date 2022-01-05 found", e.getMessage());
+        }
     }
 
 }
