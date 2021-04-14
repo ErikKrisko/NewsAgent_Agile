@@ -610,7 +610,6 @@ public class Tab {
             add(searchPanel, BorderLayout.NORTH);
             add(subscription_tablePane, BorderLayout.CENTER);
             //  Search pane
-
             searchPanel.add(button_search);
             button_search.addActionListener(this);
             //  Table pane
@@ -674,7 +673,7 @@ public class Tab {
 
         private ArrayList<DB_Subscription> constructionSearch() throws DAOExceptionHandler {
             ArrayList<DB_Subscription> search = new ArrayList<>();
-            DB_Subscription search1 = new DB_Subscription();
+
 
             if (search_comboBox.getSelectedItem() == "All") {
                 search = dao.getSubscriptions();
