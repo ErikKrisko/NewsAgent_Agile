@@ -188,6 +188,7 @@ public class Editor {
                 idField.setEditable(false);
                 view.add(idField);
                 setTitle("New Delivery");
+                bUpdate.setText("Insert new");
             }else {
                 view.add(new JLabel("ID: "));
                 JTextField idField = new JTextField(2);
@@ -225,15 +226,35 @@ public class Editor {
         private boolean readDelivery(){
             try{
                 delivery.setDelivery_date(java.sql.Date.valueOf(Date.getText()));
-                delivery.setDelivery_status(Boolean.parseBoolean(Status.getText()));
-                delivery.setCustomer_id(Integer.parseInt(CustomerID.getText()));
-                delivery.setInvoice_id(Integer.parseInt(InvoiceID.getText()));
-                delivery.setProd_id(Integer.parseInt(ProdID.getText()));
-                return true;
-            }catch(DB_DeliveryExceptionHandler e){
-                JOptionPane.showMessageDialog(this, e.getMessage(), "Information Error", JOptionPane.ERROR_MESSAGE);
+            }catch(Exception e){
+                JOptionPane.showMessageDialog(this, "Enter a Date yyyy-mm-dd", "Date Error", JOptionPane.ERROR_MESSAGE);
                 return false;
             }
+            try{
+                delivery.setDelivery_status(Boolean.parseBoolean(Status.getText()));
+            }catch(Exception e){
+                JOptionPane.showMessageDialog(this, "Enter a Status true/false", "Date Error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+            try{
+                delivery.setCustomer_id(Integer.parseInt(CustomerID.getText()));
+            }catch(Exception e){
+                JOptionPane.showMessageDialog(this, "Enter a numerical ID", "Date Error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+            try{
+                delivery.setInvoice_id(Integer.parseInt(InvoiceID.getText()));
+            }catch(Exception e){
+                JOptionPane.showMessageDialog(this, "Enter a numerical ID", "Date Error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+            try{
+                delivery.setProd_id(Integer.parseInt(ProdID.getText()));
+            }catch(Exception e){
+                JOptionPane.showMessageDialog(this, "Enter a numerical ID", "Date Error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+            return true;
         }
 
         @Override
@@ -243,14 +264,14 @@ public class Editor {
                     dao.updateDelivery(delivery);
                     this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
                 } catch (DAOExceptionHandler ex) {
-                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(this, ex.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
                 }
             } else if (e.getSource() == bDelete) {
                 try {
                     dao.deleteDelivery(delivery);
                     this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
                 } catch (DAOExceptionHandler ex) {
-                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(this, ex.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
                 }
             } else if (e.getSource() == bCancel) {
                 this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
