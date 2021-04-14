@@ -87,7 +87,7 @@ public class Tab {
     //  CUSTOMER TAB
     //  ========================================================================================================================
     private class customerTab extends JPanel implements ActionListener {
-        private final JButton button_search = new JButton("Search");
+        private final JButton button_search = new JButton("Search"), button_add = new JButton("+");
         //  Top panel to put search functionality into
         private final JPanel searchPanel = new JPanel();
         //  ScrollPane to be used by JTable
@@ -134,6 +134,8 @@ public class Tab {
             //  Add search button
             searchPanel.add(button_search, BorderLayout.EAST);
             button_search.addActionListener(this);
+            searchPanel.add(button_add, BorderLayout.WEST);
+            button_add.addActionListener(this);
             //  Add search boxes
             JPanel sList = new JPanel(new FlowLayout());
             sList.add(new JLabel("ID: "));
@@ -176,7 +178,7 @@ public class Tab {
                         customer_table.setRowSelectionInterval(rowSelected, rowSelected);
                         JPopupMenu pop = new JPopupMenu();
                         pop.add(menu_edit);
-                        pop.show(customer_tablePane, e.getX()+1, e.getY()+16);
+                        pop.show(customer_table, e.getX(), e.getY());
                     }
                 }
             });
@@ -231,11 +233,13 @@ public class Tab {
                     //  https://stackoverflow.com/questions/9650874/java-swing-obtain-window-jframe-from-inside-a-jpanel
                     parent = (JFrame) SwingUtilities.windowForComponent(this);
 
-                    JDialog memory = new Editor(dao).customer(dao.getCustomer(id), parent);
-                    System.out.println();
+                    new Editor(dao).customer(dao.getCustomer(id), parent);
                 } catch (DAOExceptionHandler exc) {
                     exc.printStackTrace();
                 }
+            } else if (e.getSource() == button_add) {
+                parent = (JFrame) SwingUtilities.windowForComponent(this);
+                new Editor(dao).customer(new DB_Customer(), parent);
             }
         }
 
