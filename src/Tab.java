@@ -408,7 +408,7 @@ public class Tab {
         private void updateTableModel() {
             invoice_tableModel.setRowCount(0);
             for (DB_Invoice invoice : invoices) {
-//                invoice_tableModel.addRow(inv.getRowData());
+                invoice_tableModel.addRow(invoice.getRowData());
             }
         }
 
