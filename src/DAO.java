@@ -886,7 +886,7 @@ public class DAO {
 // =========================================================================================================
     // EMPLOYEE
 
-    public DB_Employee getEmployee(int ID) throws DAOExceptionHandler{
+    public DB_Employee getEmployee(int ID) throws DAOExceptionHandler {
         try{
             Statement st = con.createStatement();
             ResultSet rs = st.executeQuery("SELECT * FROM employee WHERE employee_id = " + ID);
@@ -895,6 +895,84 @@ public class DAO {
                 return temp;
             }else{
                 throw new DAOExceptionHandler("No employee with 'employee_id = " + ID + " found.");
+            }
+        } catch (SQLException | DAOExceptionHandler e) {
+            throw new DAOExceptionHandler(e.getMessage());
+        }
+    }
+
+    public ArrayList<DB_Employee> getEmployeesByFName(String s) throws DAOExceptionHandler {
+        try {
+            ArrayList<DB_Employee> list = new ArrayList<>();
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM employee WHERE first_name = '" + s + "'");
+            if ( rs.next()) {
+                do {
+                    list.add(new DB_Employee(
+                            rs.getLong(att_employee.employee_id.column),
+                            rs.getString(att_employee.first_name.column),
+                            rs.getString(att_employee.last_name.column)
+                    ));
+                } while (rs.next());
+                rs.close();
+                st.close();
+                return list;
+            } else {
+                rs.close();
+                st.close();
+                throw new DAOExceptionHandler("No employee with first name " + s + " found.");
+            }
+        } catch (SQLException e) {
+            throw new DAOExceptionHandler(e.getMessage());
+        }
+    }
+
+    public ArrayList<DB_Employee> getEmployeesByLName(String s) throws DAOExceptionHandler {
+        try {
+            ArrayList<DB_Employee> list = new ArrayList<>();
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM employee WHERE last_name = '" + s + "'");
+            if ( rs.next()) {
+                do {
+                    list.add(new DB_Employee(
+                            rs.getLong(att_employee.employee_id.column),
+                            rs.getString(att_employee.first_name.column),
+                            rs.getString(att_employee.last_name.column)
+                    ));
+                } while (rs.next());
+                rs.close();
+                st.close();
+                return list;
+            } else {
+                rs.close();
+                st.close();
+                throw new DAOExceptionHandler("No employee with last name " + s + " found.");
+            }
+        } catch (SQLException e) {
+            throw new DAOExceptionHandler(e.getMessage());
+        }
+    }
+
+    public ArrayList<DB_Employee> getEmployees() throws DAOExceptionHandler {
+        try {
+            ArrayList<DB_Employee> list = new ArrayList<>();
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM employee");
+            if ( rs.next()) {
+                do {
+                    list.add(new DB_Employee(
+                            rs.getLong(att_employee.employee_id.column),
+                            rs.getString(att_employee.first_name.column),
+                            rs.getString(att_employee.last_name.column)
+                    ));
+                } while (rs.next());
+                rs.close();
+                st.close();
+                return list;
+            } else {
+                rs.close();
+                st.close();
+                return null;
             }
         } catch (SQLException e) {
             throw new DAOExceptionHandler(e.getMessage());
