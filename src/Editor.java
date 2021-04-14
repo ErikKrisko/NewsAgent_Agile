@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.sql.Date;
 
 public class Editor {
     private final DAO dao;
@@ -177,7 +178,11 @@ public class Editor {
             Date.setText(String.valueOf(delivery.getDelivery_date()));
             view.add(new JLabel("Delivery Status: "));
             view.add(Status);
-            Status.setText(String.valueOf(delivery.getDelivery_status()));
+            if(delivery.getDelivery_status() == 1){
+                Status.setText("true");
+            }else{
+                Status.setText("false");
+            }
             view.add(new JLabel("Customer ID: "));
             view.add(CustomerID);
             CustomerID.setText("" + delivery.getCustomer_id());
@@ -198,9 +203,14 @@ public class Editor {
         public void actionPerformed(ActionEvent e) {
             if (e.getSource() == bUpdate) {
                 try {
+                    delivery.setDelivery_date(java.sql.Date.valueOf(Date.getText()));
+                    delivery.setDelivery_status(Boolean.parseBoolean(Status.getText()));
+                    delivery.setCustomer_id(Integer.parseInt(CustomerID.getText()));
+                    delivery.setInvoice_id(Integer.parseInt(InvoiceID.getText()));
+                    delivery.setProd_id(Integer.parseInt(ProdID.getText()));
                     dao.updateDelivery(delivery);
                     this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
-                } catch (DAOExceptionHandler exc) {
+                } catch (DAOExceptionHandler | DB_DeliveryExceptionHandler exc) {
                     exc.printStackTrace();
                 }
             } else if (e.getSource() == bDelete) {
