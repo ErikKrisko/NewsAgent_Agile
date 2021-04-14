@@ -126,7 +126,7 @@ public class DB_Invoice
 
 /** List of customer attributes */
 enum Att_Invoice {
-    //  Customer table attributes
+    //  Invoice table attributes
     invoice_id(1, "invoice_id"),
     issue_date(2, "issue_date"),
     invoice_status(3, "invoice_status"),

@@ -351,10 +351,10 @@ public class Tab {
             invoice_table.getTableHeader().setReorderingAllowed(false);
         }
 
-        //  Populates data from customers ArrayList
+        //  Populates data from invoice ArrayList
         private void updateTableModel() {
             invoice_tableModel.setRowCount(0);
-            for (DB_Invoice inv : invoice) {
+            for (DB_Invoice invoice : invoice) {
 //                invoice_tableModel.addRow(inv.getRowData());
             }
         }
