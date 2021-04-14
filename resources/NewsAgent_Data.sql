@@ -19,10 +19,10 @@ INSERT INTO invoice VALUES (null, '2019-04-18', 1, 19.20, 3);
 INSERT INTO invoice VALUES (null, '2019-07-01', 0, 30.60, 4);
 INSERT INTO invoice VALUES (null, '2019-09-10', 1, 50.40, 5);
 INSERT INTO invoice VALUES (null, '2019-06-11', 1, 30.40, 6);
-INSERT INTO invoice VALUES (null, '2019-07-17', 1, 35.20, 7);
-INSERT INTO invoice VALUES (null, '2019-07-17', 1, 31.60, 8);
+INSERT INTO invoice VALUES (null, '2019-07-17', 0, 35.20, 7);
+INSERT INTO invoice VALUES (null, '2019-07-17', 0, 31.60, 8);
 INSERT INTO invoice VALUES (null, '2019-09-10', 1, 55.70, 9);
-INSERT INTO invoice VALUES (null, '2019-06-06', 1, 15.20, 10);
+INSERT INTO invoice VALUES (null, '2019-06-06', 0, 15.20, 10);
 
 /*holiday Table*/
 INSERT INTO holiday VALUES (null, '2021-02-10', '2021-02-15', 1);
