@@ -1259,6 +1259,43 @@ public class DAO {
         }
     }
 
+    /** !!! NOT FULLY WORKING. Forgot to implement subscription count multiplication.
+     * Will update invoices total for given date by taking the last month of deliveries.
+     * To be clear, this is absolute craftsmanship and I will not spend extra time developing tests for this method, the query has taken long enough as is.
+     * Query mockup (though slightly tweaked in the method)
+     *  UPDATE invoice AS item set item.invoice_total = (SELECT SUM(p.prod_price) FROM publication AS p
+       JOIN (SELECT delivery.prod_id, delivery.invoice_id FROM delivery, invoice WHERE delivery.invoice_id = delivery.invoice_id
+       AND (delivery_date BETWEEN '2020-02-06' AND '2020-03-05') AND delivery_status = 1 GROUP BY delivery_id) AS mess ON p.prod_id = mess.prod_id
+       WHERE mess.invoice_id = item.invoice_id) WHERE (item.issue_date BETWEEN '2020-02-06' AND '2020-03-05');
+     * @param date date of the invoices
+     * @return lines changed
+     * @throws DAOExceptionHandler
+     */
+    public int updateInvoiceTotalForDate(Date date) throws DAOExceptionHandler {
+        try {
+            //  Calendar manipulation
+            //  https://stackoverflow.com/questions/212321/how-to-subtract-x-days-from-a-date-using-java-calendar
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(date);
+            cal.add(Calendar.MONTH, -1);
+            Date startDate = new Date(cal.getTimeInMillis());
+            cal.setTime(date);
+            cal.add(Calendar.DAY_OF_MONTH, -1);
+            Date endDate = new Date(cal.getTimeInMillis());
+            String statement = "UPDATE invoice AS item set item.invoice_total = (SELECT SUM(p.prod_price) FROM publication AS p ";
+            statement += "JOIN (SELECT delivery.prod_id, delivery.invoice_id FROM delivery, invoice WHERE delivery.invoice_id = delivery.invoice_id AND (delivery_date ";
+            statement += "BETWEEN ? AND ?) AND delivery_status = 1 GROUP BY delivery_id) AS mess ON p.prod_id = mess.prod_id ";
+            statement += "WHERE mess.invoice_id = item.invoice_id) WHERE item.issue_date = ?";
+            PreparedStatement ps = con.prepareStatement(statement);
+            ps.setDate(1, startDate);
+            ps.setDate(2, endDate);
+            ps.setDate(3, date);
+            return ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new DAOExceptionHandler(e.getMessage());
+        }
+    }
+
 
     //Get Deliveries by issue_date
     public ArrayList<DB_Invoice> getinvoicesByDate(Date date) throws DAOExceptionHandler {
