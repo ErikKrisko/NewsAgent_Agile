@@ -466,7 +466,7 @@ public class Tab {
         //Search Box with comboBox attribute selector
         JTextField search_box = new JTextField(10);
 
-        String[] strings = {"All", "ID", "Date", "Latest Date","Status", "Customer ID", "Invoice ID", "Prod ID"};
+        String[] strings = {"All", "ID", "Date", "Latest Date","Status", "Customer ID"};
         JComboBox search_combobox = new JComboBox(strings);
 
 
