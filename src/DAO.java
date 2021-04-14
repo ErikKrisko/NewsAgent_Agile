@@ -1625,7 +1625,7 @@ public class DAO {
             ResultSet rs = st.executeQuery("SELECT * FROM subscription WHERE customer_id ="+ subscription.getCustomer_id() + " and prod_id = " + subscription.getPublication_id());
             if(rs.next())
             {
-                String update = "UPDATE subscription SET count =" + subscription.getCount() + "WHERE customer_id ="+ subscription.getCustomer_id() + " and prod_id = " +  subscription.getPublication_id();
+                String update = "UPDATE subscription SET count = " + subscription.getCount() + " WHERE customer_id = "+ subscription.getCustomer_id() + " and prod_id = " +  subscription.getPublication_id();
                 PreparedStatement ps = con.prepareStatement(update);
                 int lines = ps.executeUpdate();
                 return lines;

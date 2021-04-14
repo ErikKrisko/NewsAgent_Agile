@@ -636,9 +636,6 @@ public class Tab {
             searchPanel.add(button_search, BorderLayout.EAST);
             button_search.addActionListener(this);
 
-            searchPanel.add(button_add, BorderLayout.WEST);
-            button_add.addActionListener(this);
-
             JPanel listing = new JPanel(new FlowLayout());
             listing.add(search_comboBox);
             listing.add(search_box);
@@ -735,9 +732,6 @@ public class Tab {
                 }catch (DAOExceptionHandler exception){
                     exception.printStackTrace();
                 }
-            }else if (e.getSource() == button_add){
-                parent = (JFrame) SwingUtilities.windowForComponent(this);
-                new Editor(dao).subscription(new DB_Subscription(), parent);
             }
         }
     }
