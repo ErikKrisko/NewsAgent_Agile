@@ -459,6 +459,12 @@ public class Tab {
         private DefaultTableModel invoice_tableModel;
         //  ArrayList for customers
         private ArrayList<DB_Invoice> invoices;
+        //Search Box with comboBox attribute selector
+        JTextField search_box = new JTextField(10);
+
+        String[] strings = {"All", "ID", "Date", "Status", "Customer ID", "Invoice ID", "Prod ID"};
+        JComboBox search_combobox = new JComboBox(strings);
+
 
         //  Constructor WIP
         private invoiceTab() {
@@ -481,10 +487,10 @@ public class Tab {
             invoice_tableModel = new DefaultTableModel();
             //  Do the headers
             invoice_tableModel.addColumn("ID");
+            invoice_tableModel.addColumn("Customer ID");
             invoice_tableModel.addColumn("Issue Date");
             invoice_tableModel.addColumn("Invoice Status");
             invoice_tableModel.addColumn("Invoice Total");
-            invoice_tableModel.addColumn("Customer");
             //  set table to use the model
             invoice_table.setModel(invoice_tableModel);
             //  disable moving columns around
@@ -497,6 +503,48 @@ public class Tab {
             for (DB_Invoice invoice : invoices) {
                 invoice_tableModel.addRow(invoice.getRowData());
             }
+        }
+
+        private void buildSearchBox(){
+            searchPanel.setLayout(new BorderLayout());
+
+            searchPanel.add(button_search, BorderLayout.EAST);
+            button_search.addActionListener(this);
+
+            JPanel sList = new JPanel(new FlowLayout());
+            sList.add(search_combobox);
+            sList.add(search_box);
+
+            searchPanel.add(sList);
+        }
+
+        private ArrayList<DB_Invoice> constructSearch() throws DAOExceptionHandler {
+            ArrayList<DB_Invoice> search = new ArrayList<>();
+            DB_Invoice search2 = new DB_Invoice();
+
+            if(search_combobox.getSelectedItem() == "All"){
+                search = dao.getInvoices();
+            }
+            if(search_combobox.getSelectedItem() == "ID"){
+                search2 = dao.getInvoice(Integer.parseInt(search_box.getText()));
+                search.clear();
+                search.add(search2);
+            }
+            if(search_combobox.getSelectedItem() == "Date"){
+                search = dao.getinvoicesByDate(Date.valueOf(search_box.getText()));
+            }
+            if(search_combobox.getSelectedItem() == "Status"){
+                search = dao.getinvoicesByStatus(Boolean.valueOf(search_box.getText()));
+            }
+            if(search_combobox.getSelectedItem() == "Invoice total"){
+                search = dao.getinvoicesByTotal(Double.valueOf(search_box.getText()));
+            }
+            if(search_combobox.getSelectedItem() == "Customer ID"){
+                search = dao.getinvoicesByCustomer(Integer.parseInt(search_box.getText()));
+            }
+
+
+            return search;
         }
 
         @Override
