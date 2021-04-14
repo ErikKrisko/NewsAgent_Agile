@@ -30,6 +30,10 @@ public class Editor {
         return new employeeEdit(employee, parent);
     }
 
+    public JDialog subscription(DB_Subscription subscription, JFrame parent){
+        return new subscriptionEdit(subscription, parent);
+    }
+
     private class customerEdit extends JDialog implements ActionListener {
         private DB_Customer customer;
         //  TextFields
@@ -296,9 +300,10 @@ public class Editor {
         private DB_Subscription subscription;
 
         //TextField
-        private final JTextField Count = new JTextField(2),
+        private final JTextField
                         CustomerID = new JTextField(2),
-                        PublicationID = new JTextField(2);
+                        PublicationID = new JTextField(2),
+                        Count = new JTextField(2);
 
         //Buttons
         private final JButton buttonUpdate = new JButton("Update"),
@@ -340,45 +345,32 @@ public class Editor {
             getContentPane().add(view, BorderLayout.CENTER);
 
             //Populate the view
-            //If and else statements for customer so ID can't be changed
-            if(subscription.getCustomer_id() == 0){
-                view.add(new JLabel("Customer ID: "));
-                JTextField customerIdField = new JTextField(2);
-                customerIdField.setText("-");
-                customerIdField.setEditable(false);
-                view.add(customerIdField);
-                setTitle("New Subscription");
-                buttonUpdate.setText("Insert a new");
-            }else{
-                view.add(new JLabel("Customer ID: "));
-                JTextField customerIdField = new JTextField(2);
-                customerIdField.setText("" + subscription.getCustomer_id());
-                customerIdField.setEditable(false);
-                view.add(customerIdField);
-                setTitle("Edit Subscription");
-            }
+//                view.add(new JLabel("Customer ID: "));
+//                JTextField customerIdField = new JTextField(2);
+//                customerIdField.setText("" + subscription.getCustomer_id());
+//                customerIdField.setEditable(true);
+//                view.add(customerIdField);
+//                view.add(new JLabel("Publication ID: "));
+//                JTextField publicationIdField = new JTextField(2);
+//                publicationIdField.setText("" + subscription.getPublication_id());
+//                publicationIdField.setEditable(true);
+//                view.add(publicationIdField);
 
-            if(subscription.getPublication_id() == 0) {
-                view.add(new JLabel("Publication ID: "));
-                JTextField publicationIdField = new JTextField(2);
-                publicationIdField.setText("-");
-                publicationIdField.setEditable(false);
-                view.add(publicationIdField);
-                setTitle("New Subscription");
-                buttonUpdate.setText("Insert a new");
-            }else{
-                view.add(new JLabel("Publication ID: "));
-                JTextField publicationIdField = new JTextField(2);
-                publicationIdField.setText("" + subscription.getCustomer_id());
-                publicationIdField.setEditable(false);
-                view.add(publicationIdField);
-                setTitle("Edit Subscription");
-            }
+
+            view.add(new JLabel("Customer ID: "));
+            view.add(CustomerID);
+            CustomerID.setText((String.valueOf(subscription.getCustomer_id())));
+
+            view.add(new JLabel("Publication ID: "));
+            view.add(PublicationID);
+            PublicationID.setText((String.valueOf(subscription.getPublication_id())));
+
             view.add(new JLabel("Count: "));
             view.add(Count);
             Count.setText(String.valueOf(subscription.getCount()));
 
-
+            setTitle("Subscription");
+            buttonUpdate.setText("Update");
 
             setSize(800, 120);
             setResizable(false);
@@ -390,6 +382,7 @@ public class Editor {
             try{
                 subscription.setCustomer_id(Integer.parseInt(CustomerID.getText()));
             }catch (Exception e){
+                e.printStackTrace();
                 JOptionPane.showMessageDialog(this, "Please enter a numerical customer ID", "Customer Error", JOptionPane.ERROR_MESSAGE);
                 return false;
             }
