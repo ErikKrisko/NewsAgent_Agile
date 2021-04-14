@@ -645,7 +645,6 @@ public class DAO {
                 rs.close();
                 st.close();
                 return null;
-                //throw new DAOExceptionHandler("No delivery with status " + status + " found.");
             }
         } catch (SQLException | DB_DeliveryExceptionHandler e) {
             throw new DAOExceptionHandler(e.getMessage());

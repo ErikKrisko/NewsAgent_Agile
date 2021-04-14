@@ -262,7 +262,7 @@ public class Tab {
     //  DELIVERY TAB
     //  ========================================================================================================================
     private class deliveryTab extends JPanel implements ActionListener{
-        private final JButton button_search = new JButton("Search");
+        private final JButton button_search = new JButton("Search"), button_add = new JButton("+");
         //  Top panel to put search functionality into
         private final JPanel searchPanel = new JPanel();
         //  ScrollPane to be used by JTable
@@ -305,9 +305,10 @@ public class Tab {
         }
         private void buildSearchBox(){
             searchPanel.setLayout(new BorderLayout());
-
             searchPanel.add(button_search, BorderLayout.EAST);
             button_search.addActionListener(this);
+            searchPanel.add(button_add, BorderLayout.WEST);
+            button_add.addActionListener(this);
 
             JPanel sList = new JPanel(new FlowLayout());
             sList.add(search_combobox);
@@ -365,26 +366,50 @@ public class Tab {
                 search = dao.getDeliveries();
             }
             if(search_combobox.getSelectedItem() == "ID"){
-                search1 = dao.getDelivery(Integer.parseInt(search_box.getText()));
-                search.clear();
-                search.add(search1);
+                try {
+                    search1 = dao.getDelivery(Integer.parseInt(search_box.getText()));
+                    search.clear();
+                    search.add(search1);
+                }catch(Exception e){
+                    JOptionPane.showMessageDialog(this, "Enter a numerical ID or ID doesn't exist", "ID Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
             if(search_combobox.getSelectedItem() == "Date"){
-                search = dao.getDeliveriesByDate(Date.valueOf(search_box.getText()));
+                try {
+                    search = dao.getDeliveriesByDate(Date.valueOf(search_box.getText()));
+                }catch(Exception e){
+                    JOptionPane.showMessageDialog(this, "Enter a Date yyyy-mm-dd", "Date Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
             if(search_combobox.getSelectedItem() == "Status"){
-                search = dao.getDeliveriesByStatus(Boolean.valueOf(search_box.getText()));
+                try {
+                    search = dao.getDeliveriesByStatus(Boolean.valueOf(search_box.getText()));
+                }catch(Exception e){
+                    JOptionPane.showMessageDialog(this, "Enter a status true/false", "Status Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
             if(search_combobox.getSelectedItem() == "Customer ID"){
-                search = dao.getDeliveriesByCustomer(Integer.parseInt(search_box.getText()));
+                try {
+                    search = dao.getDeliveriesByCustomer(Integer.parseInt(search_box.getText()));
+                }catch(Exception e){
+                    JOptionPane.showMessageDialog(this, "Enter a numerical ID or ID doesn't exist", "Customer ID Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
             if(search_combobox.getSelectedItem() == "Invoice ID"){
-                search = dao.getDeliveriesByInvoice(Integer.parseInt(search_box.getText()));
+                try {
+                    search = dao.getDeliveriesByInvoice(Integer.parseInt(search_box.getText()));
+                }catch(Exception e){
+                    JOptionPane.showMessageDialog(this, "Enter a numerical ID or ID doesn't exist", "Invoice ID Error", JOptionPane.ERROR_MESSAGE);
+                }
+
             }
             if(search_combobox.getSelectedItem() == "Prod ID"){
-                search = dao.getDeliveriesByPublication(Integer.parseInt(search_box.getText()));
+                try {
+                    search = dao.getDeliveriesByPublication(Integer.parseInt(search_box.getText()));
+                }catch(Exception e){
+                    JOptionPane.showMessageDialog(this, "Enter a numerical ID or ID doesn't exist", "Prod ID Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
-
             return search;
         }
 
@@ -411,6 +436,9 @@ public class Tab {
                 } catch (DAOExceptionHandler exc) {
                     exc.printStackTrace();
                 }
+            }else if (e.getSource() == button_add) {
+                parent = (JFrame) SwingUtilities.windowForComponent(this);
+                new Editor(dao).delivery(new DB_Delivery(), parent);
             }
         }
     }
@@ -554,7 +582,7 @@ public class Tab {
         //  Top panel to put search functionality into
         private final JPanel searchPanel = new JPanel();
         //  ScrollPane to be used by JTable
-        private final JScrollPane susbcription_tablePane = new JScrollPane();
+        private final JScrollPane subscription_tablePane = new JScrollPane();
         //  JTable and TableModel for it
         private final JTable subscription_table = new JTable() {
             //  Disable direct editing of the table will need to implement it separately
@@ -565,6 +593,14 @@ public class Tab {
         private DefaultTableModel subscription_tableModel;
         //  ArrayList for subscription
         private ArrayList<DB_Subscription> subscriptions;
+        //Content menu items
+        private final JMenuItem menu_edit = new JMenuItem("Edit");
+        private int rowSelected;
+        //Search Box with comboBox for attribute selection
+        JTextField search_box = new JTextField(10);
+
+        String[] titles = {"All", "Customer ID", "Publication ID"};
+        JComboBox search_comboBox = new JComboBox(titles);
 
         //  Constructor WIP
         private subscriptionTab() {
@@ -572,13 +608,30 @@ public class Tab {
             setLayout(new BorderLayout());
             //  Add both panes
             add(searchPanel, BorderLayout.NORTH);
-            add(susbcription_tablePane, BorderLayout.CENTER);
+            add(subscription_tablePane, BorderLayout.CENTER);
             //  Search pane
+
             searchPanel.add(button_search);
             button_search.addActionListener(this);
             //  Table pane
-            susbcription_tablePane.getViewport().add(subscription_table);
+            subscription_tablePane.getViewport().add(subscription_table);
+            //Table listener
+            tableListens();
             buildTableModel();
+            buildSubscriptionSearch();
+        }
+
+        private void buildSubscriptionSearch(){
+            searchPanel.setLayout(new BorderLayout());
+
+            searchPanel.add(button_search, BorderLayout.EAST);
+            button_search.addActionListener(this);
+
+            JPanel listing = new JPanel(new FlowLayout());
+            listing.add(search_comboBox);
+            listing.add(search_box);
+
+            searchPanel.add(listing);
         }
 
         //  Builds the table headers (columns)
@@ -595,6 +648,22 @@ public class Tab {
             subscription_table.getTableHeader().setReorderingAllowed(false);
         }
 
+        private void tableListens(){
+            subscription_table.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e){
+                   super.mouseClicked(e);
+                   if(e.getButton() == MouseEvent.BUTTON3){
+                       rowSelected = subscription_table.rowAtPoint(e.getPoint());
+                       subscription_table.setRowSelectionInterval(rowSelected, rowSelected);
+                       JPopupMenu popup = new JPopupMenu();
+                       popup.add(menu_edit);
+                       popup.show(subscription_tablePane, e.getX()+1, e.getY()+16);
+                   }
+                }
+            });
+        }
+
         //  Populates data from subscriptions ArrayList
         private void updateTableModel() {
             subscription_tableModel.setRowCount(0);
@@ -603,19 +672,45 @@ public class Tab {
             }
         }
 
+        private ArrayList<DB_Subscription> constructionSearch() throws DAOExceptionHandler {
+            ArrayList<DB_Subscription> search = new ArrayList<>();
+            DB_Subscription search1 = new DB_Subscription();
+
+            if (search_comboBox.getSelectedItem() == "All") {
+                search = dao.getSubscriptions();
+            }
+
+            if (search_comboBox.getSelectedItem() == "Customer ID") {
+                search = dao.getSubscriptionByCustomer(Integer.parseInt(search_box.getText()));
+            }
+
+            if (search_comboBox.getSelectedItem() == "Publication ID") {
+                search = dao.getSubscriptionByPublication(Integer.parseInt(search_box.getText()));
+            }
+            return search;
+        }
+
+
         @Override
         public void actionPerformed(ActionEvent e) {
             //  If search button is pressed
             if (e.getSource() == button_search) {
                 try {
                     //  Get new data (no search criteria for now)
-                    subscriptions = dao.getSubscriptions();
+                    subscriptions = constructionSearch();
+                            //dao.getSubscriptions();
                     //  Update table
                     updateTableModel();
-
                 } catch (DAOExceptionHandler exception) {
                     exception.printStackTrace();
                 }
+//            }else if(e.getSource() == menu_edit){
+//                int id = Integer.parseInt((String) subscription_table.getValueAt(rowSelected, 0));
+//                try{
+//                    parent = (JFrame) SwingUtilities.windowForComponent(this);
+//
+//                    JDialog memory = new Editor(dao).
+//                }
             }
         }
     }
