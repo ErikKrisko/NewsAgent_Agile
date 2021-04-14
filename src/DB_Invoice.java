@@ -55,7 +55,7 @@ public class DB_Invoice
 
     public Date validateDate(Date entry) throws DB_InvoiceExceptionHandler
     {
-        if (entry.after(new Date(System.currentTimeMillis() - 86400000))) //86400000 one day in milli seconds
+        if (entry.after(Date.valueOf("2000-01-01"))/*entry.after(new Date(System.currentTimeMillis() - 86400000))*/) //86400000 one day in milli seconds
         {
             return entry;
         }
