@@ -13,11 +13,16 @@ INSERT INTO customer VALUES (null, 'Mimi', 'Goloba', '0591078341', 4);
 INSERT INTO customer VALUES (null, 'Conor', 'Demain', '0725014729', 5);
 
 /*invoice Table*/
-INSERT INTO invoice VALUES (null, '2021-02-10', 1, 20.20, 1);
-INSERT INTO invoice VALUES (null, '2021-04-14', 0, 18.36, 2);
-INSERT INTO invoice VALUES (null, '2021-04-18', 1, 19.20, 3);
-INSERT INTO invoice VALUES (null, '2021-07-01', 0, 30.60, 4);
-INSERT INTO invoice VALUES (null, '2021-09-10', 1, 50.40, 5);
+INSERT INTO invoice VALUES (null, '2019-02-10', 1, 20.20, 1);
+INSERT INTO invoice VALUES (null, '2019-04-14', 0, 18.36, 2);
+INSERT INTO invoice VALUES (null, '2019-04-18', 1, 19.20, 3);
+INSERT INTO invoice VALUES (null, '2019-07-01', 0, 30.60, 4);
+INSERT INTO invoice VALUES (null, '2019-09-10', 1, 50.40, 5);
+INSERT INTO invoice VALUES (null, '2019-06-11', 1, 30.40, 6);
+INSERT INTO invoice VALUES (null, '2019-07-17', 0, 35.20, 7);
+INSERT INTO invoice VALUES (null, '2019-07-17', 0, 31.60, 8);
+INSERT INTO invoice VALUES (null, '2019-09-10', 1, 55.70, 9);
+INSERT INTO invoice VALUES (null, '2019-06-06', 0, 15.20, 10);
 
 /*holiday Table*/
 INSERT INTO holiday VALUES (null, '2021-02-10', '2021-02-15', 1);

@@ -541,7 +541,7 @@ public class Tab {
                 search = dao.getinvoicesByDate(Date.valueOf(search_box.getText()));
             }
             if(search_combobox.getSelectedItem() == "Latest Date"){
-                search = dao.getLatestInvoiceByDate(Date.valueOf(search_box.getText()));
+                search = dao.getLatestInvoiceByDate();
             }
             if(search_combobox.getSelectedItem() == "Status"){
                 search = dao.getinvoicesByStatus(Boolean.valueOf(search_box.getText()));
@@ -563,7 +563,7 @@ public class Tab {
             if (e.getSource() == button_search) {
                 try {
                     //  Get new data (no search criteria for now)
-                    invoices = dao.getInvoices();
+                    invoices = constructSearch();
                     //  Update table
                     updateTableModel();
                 } catch (DAOExceptionHandler exception) {
