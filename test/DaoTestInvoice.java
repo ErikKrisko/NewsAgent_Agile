@@ -82,7 +82,7 @@ public class DaoTestInvoice extends DB_InvoiceTest {
 //    public void testUpdateInvoice002() {
 //        try {
 //            //  Create new Invoice
-//            DB_Invoice test_Invoice = new DB_Invoice(Date.valueOf("2021-03-01"), true , 11.1, dao.getCustomer_ID(6));
+//            DB_Invoice test_Invoice = new DB_Invoice(Date.valueOf("2021-03-01"), true , 11.1, dao.getCustomer_Id(6));
 //            //  Issue update
 //            dao.updateInvoice(test_Invoice);
 //            //  Asses the new ID

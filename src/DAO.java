@@ -1013,6 +1013,94 @@ public class DAO {
         }
     }
 
+    public ArrayList<DB_Invoice> getinvoicesByStatus(Boolean status) throws DAOExceptionHandler {
+        try {
+            ArrayList<DB_Invoice> list = new ArrayList<>();
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM invoice WHERE invoice_status = " + status);
+            if (rs.next()) {
+                do {
+                    list.add(new DB_Invoice(
+                            rs.getLong(Att_Invoice.invoice_id.column),
+                            rs.getDate(Att_Invoice.issue_date.column),
+                            rs.getBoolean(Att_Invoice.invoice_status.column),
+                            rs.getDouble(Att_Invoice.invoice_total.column),
+                            rs.getLong(Att_Invoice.customer.column)
+                    ));
+                } while (rs.next());
+                rs.close();
+                st.close();
+                return list;
+            } else {
+                rs.close();
+                st.close();
+                return null;
+                //throw new DAOExceptionHandler("No delivery with status " + status + " found.");
+            }
+        } catch (SQLException | DB_InvoiceExceptionHandler | DB_CustomerExceptionHandler e) {
+            throw new DAOExceptionHandler(e.getMessage());
+        }
+    }
+
+    public ArrayList<DB_Invoice> getinvoicesByTotal(Double total) throws DAOExceptionHandler {
+        try {
+            ArrayList<DB_Invoice> list = new ArrayList<>();
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM invoice WHERE invoice_total = " + total);
+            if (rs.next()) {
+                do {
+                    list.add(new DB_Invoice(
+                            rs.getLong(Att_Invoice.invoice_id.column),
+                            rs.getDate(Att_Invoice.issue_date.column),
+                            rs.getBoolean(Att_Invoice.invoice_status.column),
+                            rs.getDouble(Att_Invoice.invoice_total.column),
+                            rs.getLong(Att_Invoice.customer.column)
+                    ));
+                } while (rs.next());
+                rs.close();
+                st.close();
+                return list;
+            } else {
+                rs.close();
+                st.close();
+                return null;
+                //throw new DAOExceptionHandler("No delivery with status " + status + " found.");
+            }
+        } catch (SQLException | DB_InvoiceExceptionHandler | DB_CustomerExceptionHandler e) {
+            throw new DAOExceptionHandler(e.getMessage());
+        }
+    }
+
+    public ArrayList<DB_Invoice> getinvoicesByCustomer(long cus) throws DAOExceptionHandler {
+        try {
+            ArrayList<DB_Invoice> list = new ArrayList<>();
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM invoice WHERE customer_id = " + cus);
+            if (rs.next()) {
+                do {
+                    list.add(new DB_Invoice(
+                            rs.getLong(Att_Invoice.invoice_id.column),
+                            rs.getDate(Att_Invoice.issue_date.column),
+                            rs.getBoolean(Att_Invoice.invoice_status.column),
+                            rs.getDouble(Att_Invoice.invoice_total.column),
+                            rs.getLong(Att_Invoice.customer.column)
+                    ));
+                } while (rs.next());
+                rs.close();
+                st.close();
+                return list;
+            } else {
+                rs.close();
+                st.close();
+                return null;
+                //throw new DAOExceptionHandler("No delivery with status " + status + " found.");
+            }
+        } catch (SQLException | DB_InvoiceExceptionHandler | DB_CustomerExceptionHandler e) {
+            throw new DAOExceptionHandler(e.getMessage());
+        }
+    }
+
+
     public ArrayList<DB_Invoice> getInvoices() throws DAOExceptionHandler {
         try {
             ArrayList<DB_Invoice> list = new ArrayList<>();
@@ -1040,6 +1128,37 @@ public class DAO {
             throw new DAOExceptionHandler(e.getMessage());
         }
     }
+
+    //Get Deliveries by issue_date
+    public ArrayList<DB_Invoice> getinvoicesByDate(Date date) throws DAOExceptionHandler {
+        try {
+            ArrayList<DB_Invoice> list = new ArrayList<>();
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM invoice WHERE issue_date = '" + date + "'");
+            if (rs.next()) {
+                do {
+                    list.add(new DB_Invoice(
+                            rs.getLong(Att_Invoice.invoice_id.column),
+                            rs.getDate(Att_Invoice.issue_date.column),
+                            rs.getBoolean(Att_Invoice.invoice_status.column),
+                            rs.getDouble(Att_Invoice.invoice_total.column),
+                            rs.getLong(Att_Invoice.customer.column)
+                    ));
+                } while (rs.next());
+                rs.close();
+                st.close();
+                return list;
+            } else {
+                rs.close();
+                st.close();
+                throw new DAOExceptionHandler("No delivery with date " + date + " found.");
+                //return null;
+            }
+        } catch (SQLException | DB_InvoiceExceptionHandler | DB_CustomerExceptionHandler e) {
+            throw new DAOExceptionHandler(e.getMessage());
+        }
+    }
+
     public int updateInvoice(DB_Invoice invoice) throws DAOExceptionHandler {
 //        System.out.println();
         try {
