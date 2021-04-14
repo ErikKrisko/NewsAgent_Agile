@@ -94,7 +94,7 @@ public class Editor {
         }
 
         //  Read textFields and put them into customer, if an error occurs show an error message
-        private boolean readDelivery() {
+        private boolean readCustomer() {
             try {
                 customer.setFirst_name(fName.getText());
                 customer.setLast_name(lName.getText());
@@ -115,7 +115,7 @@ public class Editor {
         @Override
         public void actionPerformed(ActionEvent e) {
             //  Make sure the button press goes through after reading the data
-            if (e.getSource() == bUpdate && readDelivery()) {
+            if (e.getSource() == bUpdate && readCustomer()) {
                 try {
                     dao.updateCustomer(customer);
                     this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
