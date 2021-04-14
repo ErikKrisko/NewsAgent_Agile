@@ -674,7 +674,6 @@ public class Tab {
 
         private ArrayList<DB_Subscription> constructionSearch() throws DAOExceptionHandler {
             ArrayList<DB_Subscription> search = new ArrayList<>();
-            DB_Subscription search1 = new DB_Subscription();
 
             if (search_comboBox.getSelectedItem() == "All") {
                 search = dao.getSubscriptions();
