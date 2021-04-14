@@ -93,22 +93,41 @@ public class Editor {
             setLocation(parentFrame.getLocation());
         }
 
+        //  Read textFields and put them into customer, if an error occurs show an error message
+        private boolean readDelivery() {
+            try {
+                customer.setFirst_name(fName.getText());
+                customer.setLast_name(lName.getText());
+                customer.setPhone_no(phoneNo.getText());
+                try {
+                    customer.setAddress(dao.getAddress(Integer.parseInt(addressID.getText())));
+                } catch (DAOExceptionHandler daoExceptionHandler) {
+                    JOptionPane.showMessageDialog(this, daoExceptionHandler.getMessage(), "Address Error", JOptionPane.ERROR_MESSAGE);
+                    return false;
+                }
+                return true;
+            } catch (DB_CustomerExceptionHandler exc) {
+                JOptionPane.showMessageDialog(this, exc.getMessage(), "Information Error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+        }
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            if (e.getSource() == bUpdate) {
+            //  Make sure the button press goes through after reading the data
+            if (e.getSource() == bUpdate && readDelivery()) {
                 try {
                     dao.updateCustomer(customer);
                     this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
                 } catch (DAOExceptionHandler exc) {
-                    exc.printStackTrace();
+                    JOptionPane.showMessageDialog(this, exc.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
                 }
             } else if (e.getSource() == bDelete) {
                 try {
                     dao.deleteCustomer(customer);
                     this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
                 } catch (DAOExceptionHandler exc) {
-                    exc.printStackTrace();
+                    JOptionPane.showMessageDialog(this, exc.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
                 }
             } else if (e.getSource() == bCancel) {
                 this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
