@@ -26,7 +26,7 @@ public class Tab {
 
     public JPanel blank(){ return component = new blankTab(); }
     public JPanel customer() { return component = new customerTab(); }
-    public JPanel invoice() { return component = new invoiceTab(); }
+    public JPanel invoice() throws DAOExceptionHandler { return component = new invoiceTab(); }
     public JPanel delivery(){ return component = new deliveryTab(); }
 
 
@@ -69,7 +69,11 @@ public class Tab {
                 pane.setTitleAt(pos, "Customer");
             } else if (e.getSource() == swap_invoice) {
                 int pos = pane.indexOfComponent(component);
-                pane.setComponentAt(pos, new invoiceTab());
+                try {
+                    pane.setComponentAt(pos, new invoiceTab());
+                } catch (DAOExceptionHandler daoExceptionHandler) {
+                    daoExceptionHandler.printStackTrace();
+                }
                 pane.setTitleAt(pos, "Invoice");
             } else if(e.getSource() == swap_delivery){
                 int pos = pane.indexOfComponent(component);
@@ -434,12 +438,12 @@ public class Tab {
         //Search Box with comboBox attribute selector
         JTextField search_box = new JTextField(10);
 
-        String[] strings = {"All", "ID", "Date", "Status", "Customer ID", "Invoice ID", "Prod ID"};
+        String[] strings = {"All", "ID", "Date", "Latest Date","Status", "Customer ID", "Invoice ID", "Prod ID"};
         JComboBox search_combobox = new JComboBox(strings);
 
 
         //  Constructor WIP
-        private invoiceTab() {
+        private invoiceTab() throws DAOExceptionHandler {
             //  Set layout
             setLayout(new BorderLayout());
             //  Add both panes
@@ -451,6 +455,9 @@ public class Tab {
             //  Table pane
             invoice_tablePane.getViewport().add(invoice_table);
             buildTableModel();
+            // CONSTRUCT SEARCH
+            constructSearch();
+            buildSearchBox();
         }
 
         //  Builds the table headers (columns)
@@ -504,6 +511,9 @@ public class Tab {
             }
             if(search_combobox.getSelectedItem() == "Date"){
                 search = dao.getinvoicesByDate(Date.valueOf(search_box.getText()));
+            }
+            if(search_combobox.getSelectedItem() == "Latest Date"){
+                search = dao.getLatestInvoiceByDate(Date.valueOf(search_box.getText()));
             }
             if(search_combobox.getSelectedItem() == "Status"){
                 search = dao.getinvoicesByStatus(Boolean.valueOf(search_box.getText()));
