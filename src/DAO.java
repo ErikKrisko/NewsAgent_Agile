@@ -622,18 +622,19 @@ public class DAO {
         }
     }
 
-    /**
+    /** Creates deliveries for given criteria, populates the database and returns newly created deliveries.
      * Confirmed speculation from
      * https://stackoverflow.com/questions/44297412/mysql-insert-id-from-another-table/44297443
-     * for using a select query inside an insert query
+     * for using a select query inside an insert query And
+     * https://stackoverflow.com/questions/3784197/efficient-way-to-do-batch-inserts-with-jdbc
+     * For using batch insert
      * INSERT INTO delivery VALUES (null, 'DATE', #, #, (SELECT invoice_id FROM invoice WHERE customer_id = # ORDER BY issue_date LIMIT 1), #);
-     * @param sub_list
-     * @param date
-     * @param overwrite
-     * @return
-     * @throws DAOExceptionHandler
+     * @param sub_list list of subscription items to use for populating the table
+     * @param date date to use as identifier for creation
+     * @return ArrayList of newly created deliveries
+     * @throws DAOExceptionHandler If sub_list was empty / null , date invalid or an Error occurred
      */
-    public ArrayList<DB_Delivery> getDeliveriesForSubscriptionDate(ArrayList<DB_Subscription> sub_list, Date date, boolean overwrite) throws DAOExceptionHandler {
+    public ArrayList<DB_Delivery> createDeliveriesForSubscriptionDate(ArrayList<DB_Subscription> sub_list, Date date) throws DAOExceptionHandler {
         throw new DAOExceptionHandler("NO CODE");
     }
 
@@ -702,7 +703,12 @@ public class DAO {
         }
     }
 
-    public int deleteDeliveryByDate(Date date) throws DAOExceptionHandler {
+    /** Deletes all deliveries for given date and returns number of rows deleted
+     * @param date to use for identifying deletable deliveries
+     * @return Number of lines changes / entries deleted
+     * @throws DAOExceptionHandler If there are no deliveries found or an Error occurs
+     */
+    public int deleteDeliveriesByDate(Date date) throws DAOExceptionHandler {
         throw new DAOExceptionHandler("NO CODE");
     }
 
