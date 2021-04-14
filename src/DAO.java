@@ -635,7 +635,36 @@ public class DAO {
      * @throws DAOExceptionHandler If sub_list was empty / null , date invalid or an Error occurred
      */
     public ArrayList<DB_Delivery> createDeliveriesForSubscriptionDate(ArrayList<DB_Subscription> sub_list, Date date) throws DAOExceptionHandler {
-        throw new DAOExceptionHandler("NO CODE");
+        try{
+            ArrayList<DB_Delivery> new_list = new ArrayList<>();
+            DB_Delivery temp_del = new DB_Delivery();
+            if(sub_list != null){
+                if(date != null && date.after(Date.valueOf("2000-01-01"))){
+                    PreparedStatement pstmt = con.prepareStatement("INSERT INTO delivery VALUES(null, ?, ?, ?, (SELECT invoice_id FROM invoice WHERE customer_id = ? ORDER BY issue_date LIMIT 1), ?)", Statement.RETURN_GENERATED_KEYS);
+                    for(int i=0; i<sub_list.size(); i++){
+                        pstmt.setDate(1, date);
+                        pstmt.setBoolean(2, false);
+                        pstmt.setLong(3, sub_list.get(i).getCustomer_id());
+                        pstmt.setLong(4, sub_list.get(i).getCustomer_id() );
+                        pstmt.setLong(5, sub_list.get(i).getPublication_id());
+
+                        pstmt.addBatch();
+                        pstmt.clearParameters();
+                    }
+                    pstmt.executeBatch();
+                    pstmt.close();
+
+                    new_list = getDeliveriesByDate(date);
+                    return new_list;
+                }else{
+                    throw new DAOExceptionHandler("Date has to be after '2000-01-01' and cannot be null.");
+                }
+            }else{
+                throw new DAOExceptionHandler("Subscription list cannot be empty.");
+            }
+        }catch(SQLException e){
+            throw new DAOExceptionHandler(e.getMessage());
+        }
     }
 
 

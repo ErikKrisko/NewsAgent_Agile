@@ -425,7 +425,7 @@ public class DAOTestDelivery extends TestCase {
             dao.createDeliveriesForSubscriptionDate(null, Date.valueOf("2021-04-14"));
             fail("Exception expected");
         } catch (DAOExceptionHandler e) {
-            assertEquals("Provided subscription list is empty.", e.getMessage());
+            assertEquals("Subscription list cannot be empty.", e.getMessage());
         }
     }
 
@@ -455,7 +455,7 @@ public class DAOTestDelivery extends TestCase {
             dao.createDeliveriesForSubscriptionDate(subscriptions, null);
             fail("Exception expected");
         } catch (DAOExceptionHandler e) {
-            assertEquals("Provided date was invalid.", e.getMessage());
+            assertEquals("Date has to be after '2000-01-01' and cannot be null.", e.getMessage());
         }
     }
 
