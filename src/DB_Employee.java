@@ -71,6 +71,14 @@ public class DB_Employee
                 '}';
     }
 
+    public String[] getRowData() {
+        return new String[] {
+                String.valueOf(employee_id),
+                String.valueOf(first_name),
+                String.valueOf(last_name)
+        };
+    }
+
     /** Auto Generated Getters and Setters  */
     public long getEmployee_id() { return employee_id; }
     public void setEmployee_id(long employee_id) throws DB_EmployeeExceptionHandler { this.employee_id = validateEmpID(employee_id); }
