@@ -614,7 +614,7 @@ public class DAO {
             } else {
                 rs.close();
                 st.close();
-                throw new DAOExceptionHandler("No delivery with date " + date + " found");
+                throw new DAOExceptionHandler("No delivery with date " + date + " found.");
                 //return null;
             }
         } catch (SQLException | DB_DeliveryExceptionHandler e) {
@@ -635,7 +635,36 @@ public class DAO {
      * @throws DAOExceptionHandler If sub_list was empty / null , date invalid or an Error occurred
      */
     public ArrayList<DB_Delivery> createDeliveriesForSubscriptionDate(ArrayList<DB_Subscription> sub_list, Date date) throws DAOExceptionHandler {
-        throw new DAOExceptionHandler("NO CODE");
+        try{
+            ArrayList<DB_Delivery> new_list = new ArrayList<>();
+            DB_Delivery temp_del = new DB_Delivery();
+            if(sub_list != null){
+                if(date != null && date.after(Date.valueOf("2000-01-01"))){
+                    PreparedStatement pstmt = con.prepareStatement("INSERT INTO delivery VALUES(null, ?, ?, ?, (SELECT invoice_id FROM invoice WHERE customer_id = ? ORDER BY issue_date LIMIT 1), ?)", Statement.RETURN_GENERATED_KEYS);
+                    for(int i=0; i<sub_list.size(); i++){
+                        pstmt.setDate(1, date);
+                        pstmt.setBoolean(2, false);
+                        pstmt.setLong(3, sub_list.get(i).getCustomer_id());
+                        pstmt.setLong(4, sub_list.get(i).getCustomer_id() );
+                        pstmt.setLong(5, sub_list.get(i).getPublication_id());
+
+                        pstmt.addBatch();
+                        pstmt.clearParameters();
+                    }
+                    pstmt.executeBatch();
+                    pstmt.close();
+
+                    new_list = getDeliveriesByDate(date);
+                    return new_list;
+                }else{
+                    throw new DAOExceptionHandler("Date has to be after '2000-01-01' and cannot be null.");
+                }
+            }else{
+                throw new DAOExceptionHandler("Subscription list cannot be empty.");
+            }
+        }catch(SQLException e){
+            throw new DAOExceptionHandler(e.getMessage());
+        }
     }
 
 
@@ -709,7 +738,19 @@ public class DAO {
      * @throws DAOExceptionHandler If there are no deliveries found or an Error occurs
      */
     public int deleteDeliveriesByDate(Date date) throws DAOExceptionHandler {
-        throw new DAOExceptionHandler("NO CODE");
+        try {
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM delivery WHERE delivery_date = '" + date + "'");
+            if(rs.next()){
+                PreparedStatement pstmt = con.prepareStatement("DELETE FROM delivery WHERE delivery_date = '" + date + "'");
+                int lines = pstmt.executeUpdate();
+                return lines;
+            }else{
+                throw new DAOExceptionHandler("No delivery with date " + date + " found.");
+            }
+        }catch(SQLException e){
+            throw new DAOExceptionHandler("No entries for given date found.");
+        }
     }
 
     private DB_Delivery populateDelivery(ResultSet rs) throws DAOExceptionHandler {
@@ -822,33 +863,63 @@ public class DAO {
     //  ====================================================================================================
     // INVOICE
 
-//    public ArrayList<DB_Invoice> getInvoices() throws DAOExceptionHandler {
-//        try {
-//            ArrayList<DB_Invoice> list = new ArrayList<>();
-//            Statement st = con.createStatement();
-//            ResultSet rs = st.executeQuery("SELECT * FROM invoice");
-//            if ( rs.next()) {
-//                do {
-//                    list.add(new DB_Invoice(
-//                            rs.getLong(Att_Invoice.invoice_id.column),
-//                            rs.getDate(Att_Invoice.issue_date.column),
-//                            rs.getBoolean(Att_Invoice.invoice_status.column),
-//                            rs.getDouble(Att_Invoice.invoice_total.column),
-//                            rs.getLong(Att_Invoice.customer.column)
-//                    ));
-//                } while (rs.next());
-//                rs.close();
-//                st.close();
-//                return list;
-//            } else {
-//                rs.close();
-//                st.close();
-//                return null;
-//            }
-//        } catch (SQLException | DB_CustomerExceptionHandler | DB_InvoiceExceptionHandler e) {
-//            throw new DAOExceptionHandler(e.getMessage());
-//        }
-//    }
+    public ArrayList<DB_Invoice> getLatestInvoiceByDate(Date date) throws DAOExceptionHandler {
+        try {
+            ArrayList<DB_Invoice> list = new ArrayList<>();
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM invoice ORDER BY issue_date LIMIT 1;");
+            if (rs.next()) {
+                do {
+                    list.add(new DB_Invoice(
+
+                            rs.getLong(Att_Invoice.invoice_id.column),
+                            rs.getDate(Att_Invoice.issue_date.column),
+                            rs.getBoolean(Att_Invoice.invoice_status.column),
+                            rs.getDouble(Att_Invoice.invoice_total.column),
+                            rs.getLong(Att_Invoice.customer.column)
+                    ));
+                } while (rs.next());
+                rs.close();
+                st.close();
+                return list;
+            } else {
+                rs.close();
+                st.close();
+                throw new DAOExceptionHandler("Invoice needs to be before this date= " + date);
+                //return null;
+            }
+        } catch (SQLException | DB_InvoiceExceptionHandler | DB_CustomerExceptionHandler e) {
+            throw new DAOExceptionHandler(e.getMessage());
+        }
+    }
+
+    public ArrayList<DB_Invoice> getInvoices() throws DAOExceptionHandler {
+        try {
+            ArrayList<DB_Invoice> list = new ArrayList<>();
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM invoice");
+            if ( rs.next()) {
+                do {
+                    list.add(new DB_Invoice(
+                            rs.getLong(Att_Invoice.invoice_id.column),
+                            rs.getDate(Att_Invoice.issue_date.column),
+                            rs.getBoolean(Att_Invoice.invoice_status.column),
+                            rs.getDouble(Att_Invoice.invoice_total.column),
+                            rs.getLong(Att_Invoice.customer.column)
+                    ));
+                } while (rs.next());
+                rs.close();
+                st.close();
+                return list;
+            } else {
+                rs.close();
+                st.close();
+                return null;
+            }
+        } catch (SQLException | DB_CustomerExceptionHandler | DB_InvoiceExceptionHandler e) {
+            throw new DAOExceptionHandler(e.getMessage());
+        }
+    }
     public int updateInvoice(DB_Invoice invoice) throws DAOExceptionHandler {
 //        System.out.println();
         try {

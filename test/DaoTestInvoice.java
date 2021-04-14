@@ -1,7 +1,6 @@
-import junit.framework.TestCase;
-
 import java.sql.Date;
-import java.util.ArrayList;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class DaoTestInvoice extends DB_InvoiceTest {
     private DAO dao;
@@ -131,8 +130,8 @@ public class DaoTestInvoice extends DB_InvoiceTest {
     public void testDeleteInvoice002() {
         try {
             DB_Invoice test_Invoice = new DB_Invoice();
-            test_Invoice.setInvoice_id( 8);
-            dao.deleteInvoice( test_Invoice);
+            test_Invoice.setInvoice_id(8);
+            dao.deleteInvoice(test_Invoice);
             fail("Exception expected.");
         } catch (DAOExceptionHandler e) {
             assertEquals( "No invoice with Invoice id = 8 found.", e.getMessage());
@@ -140,5 +139,3 @@ public class DaoTestInvoice extends DB_InvoiceTest {
     }
 
 }
-
-

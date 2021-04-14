@@ -406,7 +406,7 @@ public class DAOTestDelivery extends TestCase {
 
             fail("Exception Expected");
         }catch(DAOExceptionHandler e){
-            assertEquals("No delivery with date " + "2021-01-05" + " found", e.getMessage());
+            assertEquals("No delivery with date " + "2021-01-05" + " found.", e.getMessage());
             //  Close the DAO
             try {
                 dao.close();
@@ -425,7 +425,7 @@ public class DAOTestDelivery extends TestCase {
             dao.createDeliveriesForSubscriptionDate(null, Date.valueOf("2021-04-14"));
             fail("Exception expected");
         } catch (DAOExceptionHandler e) {
-            assertEquals("Provided subscription list is empty.", e.getMessage());
+            assertEquals("Subscription list cannot be empty.", e.getMessage());
         }
     }
 
@@ -455,7 +455,7 @@ public class DAOTestDelivery extends TestCase {
             dao.createDeliveriesForSubscriptionDate(subscriptions, null);
             fail("Exception expected");
         } catch (DAOExceptionHandler e) {
-            assertEquals("Provided date was invalid.", e.getMessage());
+            assertEquals("Date has to be after '2000-01-01' and cannot be null.", e.getMessage());
         }
     }
 
@@ -468,7 +468,7 @@ public class DAOTestDelivery extends TestCase {
             dao.deleteDeliveriesByDate(Date.valueOf("2021-04-14"));
             fail("Exception expected");
         } catch (DAOExceptionHandler e) {
-            assertEquals("No entries for given date found.", e.getMessage());
+            assertEquals("No delivery with date " + "2021-04-14" + " found.", e.getMessage());
         }
     }
 
@@ -482,7 +482,7 @@ public class DAOTestDelivery extends TestCase {
             dao.getDeliveriesByDate(Date.valueOf("2022-01-05"));
             fail("Exception expected");
         } catch (DAOExceptionHandler e) {
-            assertEquals("No delivery with date 2022-01-05 found", e.getMessage());
+            assertEquals("No delivery with date " + "2022-01-05" + " found.", e.getMessage());
         }
     }
 
