@@ -35,8 +35,6 @@ public class DAOTestDelivery extends TestCase {
         }
     }
 
-    /**DAO METHOD TESTS*/
-
     /**
      * Test 015
      * Test for DAO getDelivery method successful
@@ -51,7 +49,7 @@ public class DAOTestDelivery extends TestCase {
             delivery = dao.getDelivery(1);
             assertEquals(1, delivery.getDelivery_id());
             assertEquals(Date.valueOf("2022-01-05"), delivery.getDelivery_date());
-            assertEquals(true, delivery.isDelivery_status());
+            assertTrue(delivery.isDelivery_status());
             assertEquals(1, delivery.getCustomer_id());
             assertEquals(1, delivery.getInvoice_id());
             //  Close the DAO
@@ -108,7 +106,7 @@ public class DAOTestDelivery extends TestCase {
             dao.updateDelivery(delivery);
             assertEquals(12, delivery.getDelivery_id());
             assertEquals(Date.valueOf(String.valueOf(new Date(System.currentTimeMillis()))), delivery.getDelivery_date());
-            assertEquals(true, delivery.isDelivery_status());
+            assertTrue(delivery.isDelivery_status());
             //  Close the DAO
             dao.close();
         } catch (DAOExceptionHandler | DB_DeliveryExceptionHandler e) {
@@ -404,7 +402,7 @@ public class DAOTestDelivery extends TestCase {
             initializeDatabase();
             Date date = Date.valueOf("2021-01-05");
 
-            ArrayList<DB_Delivery> del_list = dao.getDeliveriesByDate(date);
+            dao.getDeliveriesByDate(date);
 
             fail("Exception Expected");
         }catch(DAOExceptionHandler e){
