@@ -54,6 +54,14 @@ public class DeliveryDocket {
         return null;
     }
 
+    public String getDeliveryStatsString() {
+        StringBuilder result = new StringBuilder();
+        for (String s : deliveryStats) {
+            result.append(s);
+        }
+        return result.toString();
+    }
+
     //  AUTO GENERATED getters and setters
     public ArrayList<DB_Subscription> getSubscriptions() { return subscriptions; }
     public void setSubscriptions(ArrayList<DB_Subscription> subscriptions) { this.subscriptions = subscriptions; }

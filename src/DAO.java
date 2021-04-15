@@ -239,6 +239,7 @@ public class DAO {
     //  ====================================================================================================
     //  ADDRESS
 
+    //  Could be made smaller by using customerIds found within delivery
     public int[] getAreasForDeliveries(ArrayList<DB_Delivery> deliveries) throws DAOExceptionHandler {
         try {
             if (deliveries != null && deliveries.size() > 0) {
@@ -253,7 +254,7 @@ public class DAO {
                     }
                     if (!contains) {
                         delIDs = Arrays.copyOf(delIDs, delIDs.length + 1);
-                        delIDs[delIDs.length - 1] = del.getCustomer_id();
+                        delIDs[delIDs.length - 1] = del.getDelivery_id();
                     }
                 }
                 String statement = "SELECT DISTINCT address.area_code FROM address, customer, delivery WHERE delivery_id IN (";

@@ -14,7 +14,12 @@ import java.util.regex.Pattern;
 
 public class Tab {
     private final JTabbedPane pane;
-    private final JButton swap_customer = new JButton("Customer"), swap_invoice = new JButton("Invoice"), swap_delivery = new JButton("Delivery"), swap_subscription = new JButton("Subscription"), swap_employee = new JButton("Employee");
+    private final JButton swap_customer = new JButton("Customer"),
+            swap_invoice = new JButton("Invoice"),
+            swap_delivery = new JButton("Delivery"),
+            swap_subscription = new JButton("Subscription"),
+            swap_employee = new JButton("Employee"),
+            swap_docket = new JButton("Docket");
     private JPanel component;
     private final DAO dao;
     private JFrame parent;
@@ -61,6 +66,8 @@ public class Tab {
             add(swap_subscription);
             swap_employee.addActionListener(this);
             add(swap_employee);
+            swap_docket.addActionListener(this);
+            add(swap_docket);
         }
 
         @Override
@@ -91,6 +98,10 @@ public class Tab {
                 int pos = pane.indexOfComponent(component);
                 pane.setComponentAt(pos, new employeeTab());
                 pane.setTitleAt(pos, "Employee");
+            } else if (e.getSource() == swap_docket) {
+                int pos = pane.indexOfComponent(component);
+                pane.setComponentAt(pos, new docketTab());
+                pane.setTitleAt(pos, "Delivery Docket");
             }
         }
     }
@@ -261,6 +272,86 @@ public class Tab {
             } else if (e.getSource() == button_add) {
                 parent = (JFrame) SwingUtilities.windowForComponent(this);
                 new Editor(dao).customer(new DB_Customer(), parent);
+            }
+        }
+
+    }
+
+    //  ========================================================================================================================
+    //  DOCKET TAB
+    //  ========================================================================================================================
+    private class docketTab extends JPanel implements ActionListener {
+        private final JButton button_search = new JButton("New");
+        //  Top panel to put search functionality into
+        private final JPanel searchPanel = new JPanel();
+        //  ScrollPane to be used by JTable
+        private JPanel mainPane;
+        private final JScrollPane scrollPane = new JScrollPane();
+        private final JTextField docketDate = new JTextField(10);
+        private TextArea[] docketStats;
+        private Docket docket;
+
+        //  Constructor
+        private docketTab() {
+            //  Set layout
+            setLayout(new BorderLayout());
+            //  Add both panes
+            add(searchPanel, BorderLayout.NORTH);
+            add(scrollPane, BorderLayout.CENTER);
+            mainPane = new JPanel();
+            mainPane.setLayout(new BoxLayout(mainPane, BoxLayout.Y_AXIS));
+            scrollPane.getViewport().add(mainPane);
+            //  Search pane
+            buildSearchBox();
+        }
+
+        private void buildSearchBox() {
+            searchPanel.setLayout(new BorderLayout());
+            //  Add search button
+            searchPanel.add(button_search, BorderLayout.EAST);
+            button_search.addActionListener(this);
+            //  Add search boxes
+            JPanel sList = new JPanel(new FlowLayout());
+            sList.add(new JLabel("Docket Date: "));
+            sList.add(docketDate);
+            searchPanel.add(sList);
+        }
+
+        //  Builds the table headers (columns)
+        private void buildDeliveryDockets() {
+            //  Remove old set
+            scrollPane.getViewport().remove(mainPane);
+            //  Create new Pane
+            mainPane = new JPanel();
+            mainPane.setLayout(new BoxLayout(mainPane, BoxLayout.Y_AXIS));
+            //  Create text areas
+            docketStats = new TextArea[docket.getDeliveryDockets().size()];
+            for (int i = 0; i < docketStats.length; i++) {
+                docketStats[i] = new TextArea();
+                mainPane.add(new JLabel("Deliveries for area "+docket.getDeliveryDockets().get(i).getArea_code()));
+                mainPane.add(docketStats[i]);
+                docketStats[i].setText(docket.getDeliveryDockets().get(i).getDeliveryStatsString());
+                System.out.println(docket.getDeliveryDockets().get(i).getDeliveryStatsString());
+            }
+            scrollPane.getViewport().add(mainPane);
+            System.out.println("DONE");
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            //  If NEW button is pressed
+            if (e.getSource() == button_search) {
+                try {
+                    DAOGenerator dg = new DAOGenerator(dao);
+                    docket = dg.GenDocket(Date.valueOf(docketDate.getText()), true);
+                    docket.setDeliveryDockets(dg.splitDocket(docket));
+                    for (DeliveryDocket docket : docket.getDeliveryDockets()) {
+                        docket.setDeliveryStats(dg.genStats(docket));
+                    }
+                    buildDeliveryDockets();
+                } catch (DAOGeneratorExceptionHandler exc) {
+                    JOptionPane.showMessageDialog(this, exc.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
         }
 
