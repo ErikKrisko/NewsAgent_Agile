@@ -1368,11 +1368,11 @@ public class DAO {
             cal.setTime(date);
             cal.add(Calendar.DAY_OF_MONTH, -1);
             Date endDate = new Date(cal.getTimeInMillis());
-            String statement = "UPDATE invoice AS item set item.invoice_total = (SELECT SUM(p.prod_price*IFNULL(s.count,1)) FROM publication AS p ";
+            String statement = "UPDATE invoice AS item set item.invoice_total = IFNULL((SELECT SUM(p.prod_price*IFNULL(s.count,1)) FROM publication AS p ";
             statement += "JOIN (SELECT delivery.prod_id, delivery.invoice_id, delivery.customer_id FROM delivery, invoice WHERE delivery.invoice_id = delivery.invoice_id ";
             statement += "AND (delivery_date BETWEEN ? AND ?) AND delivery_status = 1 GROUP BY delivery_id) AS mess ON p.prod_id = mess.prod_id ";
             statement += "LEFT JOIN subscription AS s ON CASE WHEN s.prod_id = p.prod_id AND mess.customer_id = s.customer_id THEN s.prod_id = p.prod_id AND mess.customer_id = s.customer_id END = 1 ";
-            statement += "WHERE mess.invoice_id = item.invoice_id) WHERE item.issue_date = ?";
+            statement += "WHERE mess.invoice_id = item.invoice_id),0) WHERE item.issue_date = ?";
             System.out.println(startDate);
             System.out.println(endDate);
             PreparedStatement ps = con.prepareStatement(statement);

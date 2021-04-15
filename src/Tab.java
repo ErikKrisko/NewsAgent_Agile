@@ -547,10 +547,10 @@ public class Tab {
     //  INVOICE TAB
     //  ========================================================================================================================
     private class invoiceTab extends JPanel implements ActionListener {
-        private final JButton button_search = new JButton("Search"), buttonadd = new JButton("+");
+        private final JButton button_search = new JButton("Search"), button_update = new JButton("Update");
         private int rowSelected;
         //  Top panel to put search functionality into
-        private final JPanel searchPanel = new JPanel();
+        private final JPanel searchPanel = new JPanel(new BorderLayout());
         //  ScrollPane to be used by JTable
         private final JScrollPane invoice_tablePane = new JScrollPane();
         //  JTable and TableModel for it
@@ -578,9 +578,6 @@ public class Tab {
             //  Add both panes
             add(searchPanel, BorderLayout.NORTH);
             add(invoice_tablePane, BorderLayout.CENTER);
-            //  Search pane
-            searchPanel.add(button_search);
-            button_search.addActionListener(this);
             //  Table pane
             invoice_tablePane.getViewport().add(invoice_table);
             buildTableModel();
@@ -631,10 +628,12 @@ public class Tab {
         }
 
         private void buildSearchBox(){
-            searchPanel.setLayout(new BorderLayout());
 
             searchPanel.add(button_search, BorderLayout.EAST);
             button_search.addActionListener(this);
+            ;
+            searchPanel.add(button_update, BorderLayout.WEST);
+            button_update.addActionListener(this);
 
             JPanel sList = new JPanel(new FlowLayout());
             sList.add(search_combobox);
@@ -684,7 +683,7 @@ public class Tab {
                 } catch (DAOExceptionHandler exception) {
                     exception.printStackTrace();
                 }
-            }else if (e.getSource() == menuedit) {
+            } else if (e.getSource() == menuedit) {
                 int id = Integer.parseInt((String) invoice_table.getValueAt(rowSelected, 0));
                 try {
                     parent = (JFrame) SwingUtilities.windowForComponent(this);
@@ -693,12 +692,19 @@ public class Tab {
                 } catch (DAOExceptionHandler exc) {
                     exc.printStackTrace();
                 }
-            }else if (e.getSource() == buttonadd) {
-                parent = (JFrame) SwingUtilities.windowForComponent(this);
-                new Editor(dao).invoice(new DB_Invoice(), parent);
+            } else if (e.getSource() == button_update) {
+                String date = JOptionPane.showInputDialog(this, "Specify Date", "Title", JOptionPane.INFORMATION_MESSAGE);
+                if (date != null) {
+                    try {
+                        int updates = dao.updateInvoiceTotalForDate(Date.valueOf(date));
+                        JOptionPane.showMessageDialog(this, updates + " records were updated.", "Invoice update", JOptionPane.INFORMATION_MESSAGE);
+                    } catch (DAOExceptionHandler exc) {
+                        JOptionPane.showMessageDialog(this, exc.getMessage(), "Invoice update error", JOptionPane.ERROR_MESSAGE);
+                    }
                 }
             }
         }
+    }
 
 
 
