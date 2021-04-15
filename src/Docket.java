@@ -5,7 +5,7 @@ public class Docket {
     private ArrayList<DB_Subscription> subscriptions;
     private ArrayList<DB_Delivery> deliveries;
     private Date date;
-    private DeliveryDocket deliveryDockets;
+    private ArrayList<DeliveryDocket> deliveryDockets;
 
     //  Blank constructor
     public Docket() {}
@@ -15,6 +15,22 @@ public class Docket {
         this.subscriptions = subscriptions;
         this.date = date;
         this.deliveries = validateDeliveries(deliveries);
+    }
+
+    public DB_Subscription getMatch(DB_Delivery del) {
+        for (DB_Subscription sub : subscriptions) {
+            if (sub.getCustomer_id() == del.getCustomer_id() && sub.getPublication_id() == del.getProd_id())
+                return sub;
+        }
+        return null;
+    }
+
+    public DB_Delivery getMatch(DB_Subscription sub) {
+        for (DB_Delivery del : deliveries) {
+            if (sub.getCustomer_id() == del.getCustomer_id() && sub.getPublication_id() == del.getProd_id())
+                return del;
+        }
+        return null;
     }
 
     //  Validate date comparing to existing delivery list
@@ -71,6 +87,8 @@ public class Docket {
     public void setDate(Date date) throws DocketExceptionHandler { this.date = validateDate(date); }
     public ArrayList<DB_Subscription> getSubscriptions() { return subscriptions; }
     public void setSubscriptions(ArrayList<DB_Subscription> subscriptions) { this.subscriptions = subscriptions; }
+    public ArrayList<DeliveryDocket> getDeliveryDockets() { return deliveryDockets; }
+    public void setDeliveryDockets(ArrayList<DeliveryDocket> deliveryDockets) { this.deliveryDockets = deliveryDockets; }
 }
 
 class DocketExceptionHandler extends Exception {
