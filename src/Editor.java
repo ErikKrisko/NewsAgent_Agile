@@ -489,13 +489,45 @@ public class Editor {
             view.add(new JLabel("Customer ID: "));
             view.add(CustomerID);
             InvoiceID.setText("" + invoice.getCustomer_id());
-            view.add(new JLabel("Invoice ID: "));
-            view.add(InvoiceID);
             InvoiceID.setText("" + invoice.getInvoice_total());
             view.add(new JLabel("Invoice Total: "));
             view.add(InvoiceTotal);
             InvoiceTotal.setText("" + invoice.getInvoice_total());
+
+            setSize(800, 120);
+            setResizable(false);
+            setVisible(true);
+            setLocation(parentFrame.getLocation());
         }
+
+        private boolean readDelivery() {
+            try {
+                invoice.setIssue_date(java.sql.Date.valueOf(Date.getText()));
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Enter a Date yyyy-mm-dd", "Date Error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+            try {
+                invoice.setInvoice_status(Boolean.parseBoolean(Status.getText()));
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Enter a Status true/false", "Date Error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+            try {
+                invoice.setCustomer_id(Integer.parseInt(CustomerID.getText()));
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Enter a numerical ID", "Date Error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+            try {
+                invoice.setInvoice_total(Integer.parseInt(InvoiceTotal.getText()));
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Enter a Total", "Date Error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+            return true;
+        }
+
 
         @Override
         public void actionPerformed(ActionEvent e) {
