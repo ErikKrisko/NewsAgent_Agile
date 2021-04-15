@@ -239,6 +239,82 @@ public class DAO {
     //  ====================================================================================================
     //  ADDRESS
 
+    public int[] getAreasForDeliveries(ArrayList<DB_Delivery> deliveries) throws DAOExceptionHandler {
+        try {
+            if (deliveries != null && deliveries.size() > 0) {
+                long[] delIDs = new long[0];
+                for (DB_Delivery del : deliveries) {
+                    boolean contains = false;
+                    for (long i : delIDs) {
+                        if (i == del.getDelivery_id()) {
+                            contains = true;
+                            break;
+                        }
+                    }
+                    if (!contains) {
+                        delIDs = Arrays.copyOf(delIDs, delIDs.length + 1);
+                        delIDs[delIDs.length - 1] = del.getCustomer_id();
+                    }
+                }
+                String statement = "SELECT DISTINCT address.area_code FROM address, customer, delivery WHERE delivery_id IN (";
+                //  Add numbers to the list
+                for (long i : delIDs)
+                    statement += i + ",";
+                //  Cut the last comma and add closing parentheses
+                statement = statement.substring(0, statement.length() - 1);
+                statement += ") AND delivery.customer_id = customer.customer_id AND customer.address_id = address.address_id";
+                //  Execute query
+                Statement st = con.createStatement();
+                ResultSet rs = st.executeQuery(statement);
+                int[] areaList = new int[0];
+                if (rs.next()) {
+                    do {
+                        areaList = Arrays.copyOf(areaList, areaList.length + 1);
+                        areaList[areaList.length - 1] = rs.getInt(1);
+                    } while (rs.next());
+                }
+                return areaList;
+            } else {
+                throw new DAOExceptionHandler("No deliveries provided");
+            }
+        } catch (SQLException e) {
+            throw new DAOExceptionHandler(e.getMessage());
+        }
+    }
+
+    public int getDeliveryArea(DB_Delivery delivery) throws DAOExceptionHandler {
+        try {
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery("SELECT a.area_code FROM address AS a, customer AS c ,delivery AS d WHERE delivery_id = "+ delivery.getDelivery_id() +" AND d.customer_id = c.customer_id AND c.address_id = a.address_id;");
+            if (rs.next()) {
+                return rs.getInt(1);
+            } else {
+                throw new DAOExceptionHandler("No area could be found for delivery_id = "+delivery.getDelivery_id());
+            }
+        } catch (SQLException e) {
+            throw new DAOExceptionHandler(e.getMessage());
+        }
+    }
+
+    public DB_Address getAddressByDelivery(DB_Delivery delivery) throws DAOExceptionHandler {
+        try {
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery("SELECT a.address_id, a.full_address, a.area_code, a.eir_code FROM address AS a, customer AS c, delivery AS d WHERE delivery_id = "+ delivery.getDelivery_id() +" AND d.customer_id = c.customer_id AND c.address_id = a.address_id;");
+            if (rs.next()) {
+                return new DB_Address(
+                        rs.getInt( Att_Address.address_id.column),
+                        rs.getString( Att_Address.full_address.column),
+                        rs.getInt( Att_Address.area_code.column),
+                        rs.getString( Att_Address.eir_code.column)
+                );
+            } else {
+                throw new DAOExceptionHandler("No address found for delivery_id = "+delivery.getDelivery_id());
+            }
+        } catch (SQLException | DB_AddressExceptionHandler e) {
+            throw new DAOExceptionHandler(e.getMessage());
+        }
+    }
+
     /** Returns address with given address_id.
      * @param ID for address_id.
      * @return populated DB_Address object.
@@ -614,8 +690,9 @@ public class DAO {
             } else {
                 rs.close();
                 st.close();
-                throw new DAOExceptionHandler("No delivery with date " + date + " found.");
-                //return null;
+                //  STOP IT please, get some help. Honestly, you copy paste a template yet you impose random exceptions. WHY ?
+//                throw new DAOExceptionHandler("No delivery with date " + date + " found.");
+                return null;
             }
         } catch (SQLException | DB_DeliveryExceptionHandler e) {
             throw new DAOExceptionHandler(e.getMessage());
@@ -759,7 +836,7 @@ public class DAO {
             DB_Delivery temp_del = new DB_Delivery();
             if(sub_list != null){
                 if(date != null && date.after(Date.valueOf("2000-01-01"))){
-                    PreparedStatement pstmt = con.prepareStatement("INSERT INTO delivery VALUES(null, ?, ?, ?, (SELECT invoice_id FROM invoice WHERE customer_id = ? ORDER BY issue_date LIMIT 1), ?)", Statement.RETURN_GENERATED_KEYS);
+                    PreparedStatement pstmt = con.prepareStatement("INSERT INTO delivery VALUES(null, ?, ?, ?, (SELECT invoice_id FROM invoice WHERE customer_id = ? ORDER BY issue_date LIMIT 1), ?)");
                     for(int i=0; i<sub_list.size(); i++){
                         pstmt.setDate(1, date);
                         pstmt.setBoolean(2, false);
@@ -768,7 +845,7 @@ public class DAO {
                         pstmt.setLong(5, sub_list.get(i).getPublication_id());
 
                         pstmt.addBatch();
-                        pstmt.clearParameters();
+//                        pstmt.clearParameters();
                     }
                     pstmt.executeBatch();
                     pstmt.close();
@@ -1230,12 +1307,20 @@ public class DAO {
             throw new DAOExceptionHandler(e.getMessage());
         }
     }
+
     //https://stackoverflow.com/questions/11751030/perform-insert-for-each-row-taken-from-a-select
-    public ArrayList<DB_Invoice> createInvoicesForDate() throws DAOExceptionHandler {
+    //  SOMEONE cant read for shit ? literally it says invoices for DATE, the method signature provided even specified to use a DATE ! how incompetent can you BE ?
+    //  ACTUALLY no. Jesus fucking christ. have you ever seen an insert method. THERE is like 10 of them in the whole of DAO all it takes is a small scroll you buffoon.
+    //  An alpaca is mor capable of doing this than you at this stage. WHy do I have to fix everything ?
+    public ArrayList<DB_Invoice> createInvoicesForDate(Date date) throws DAOExceptionHandler {
         try {
             ArrayList<DB_Invoice> list = new ArrayList<>();
+            PreparedStatement ps = con.prepareStatement("INSERT INTO invoice (invoice_id, issue_date, invoice_status, invoice_total, customer_id) SELECT DISTINCT null, ?, 0, 0, c.customer_id FROM customer AS c, subscription AS s WHERE c.customer_id = s.customer_id");
+            ps.setDate(1, date);
+            //  Execute update and get generated ID
+            int lines = ps.executeUpdate();
             Statement st = con.createStatement();
-            ResultSet rs = st.executeQuery("INSERT INTO invoice (invoice_id, issue_date, invoice_status, invoice_total, customer_id) SELECT DISTINCT null, ' ', 0, 0, c.customer_id FROM customer AS c, subscription AS s WHERE c.customer_id = s.customer_id");
+            ResultSet rs = st.executeQuery("SELECT * FROM invoice WHERE issue_date = '" + date.toString() +"'");
             if ( rs.next()) {
                 do {
                     list.add(new DB_Invoice(
@@ -1282,10 +1367,13 @@ public class DAO {
             cal.setTime(date);
             cal.add(Calendar.DAY_OF_MONTH, -1);
             Date endDate = new Date(cal.getTimeInMillis());
-            String statement = "UPDATE invoice AS item set item.invoice_total = (SELECT SUM(p.prod_price) FROM publication AS p ";
-            statement += "JOIN (SELECT delivery.prod_id, delivery.invoice_id FROM delivery, invoice WHERE delivery.invoice_id = delivery.invoice_id AND (delivery_date ";
-            statement += "BETWEEN ? AND ?) AND delivery_status = 1 GROUP BY delivery_id) AS mess ON p.prod_id = mess.prod_id ";
+            String statement = "UPDATE invoice AS item set item.invoice_total = (SELECT SUM(p.prod_price*IFNULL(s.count,1)) FROM publication AS p ";
+            statement += "JOIN (SELECT delivery.prod_id, delivery.invoice_id, delivery.customer_id FROM delivery, invoice WHERE delivery.invoice_id = delivery.invoice_id ";
+            statement += "AND (delivery_date BETWEEN ? AND ?) AND delivery_status = 1 GROUP BY delivery_id) AS mess ON p.prod_id = mess.prod_id ";
+            statement += "LEFT JOIN subscription AS s ON CASE WHEN s.prod_id = p.prod_id AND mess.customer_id = s.customer_id THEN s.prod_id = p.prod_id AND mess.customer_id = s.customer_id END = 1 ";
             statement += "WHERE mess.invoice_id = item.invoice_id) WHERE item.issue_date = ?";
+            System.out.println(startDate);
+            System.out.println(endDate);
             PreparedStatement ps = con.prepareStatement(statement);
             ps.setDate(1, startDate);
             ps.setDate(2, endDate);
@@ -1302,7 +1390,7 @@ public class DAO {
         try {
             ArrayList<DB_Invoice> list = new ArrayList<>();
             Statement st = con.createStatement();
-            ResultSet rs = st.executeQuery("SELECT * FROM invoice WHERE issue_date = '" + date + "'");
+            ResultSet rs = st.executeQuery("SELECT * FROM invoice WHERE issue_date = '" + date.toString() + "'");
             if (rs.next()) {
                 do {
                     list.add(new DB_Invoice(
@@ -1319,8 +1407,9 @@ public class DAO {
             } else {
                 rs.close();
                 st.close();
-                throw new DAOExceptionHandler("No delivery with date " + date + " found.");
-                //return null;
+                //  NO, DO NOT THROW AN ERROR. THIS BREAK ABSOLUTE EVERY BIT OF WORKFLOW POSSIBLE.
+//                throw new DAOExceptionHandler("No delivery with date " + date + " found.");
+                return null;
             }
         } catch (SQLException | DB_InvoiceExceptionHandler | DB_CustomerExceptionHandler e) {
             throw new DAOExceptionHandler(e.getMessage());
