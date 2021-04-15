@@ -10,7 +10,9 @@ public class Window extends JFrame implements MouseListener, ActionListener {
     private int popup_close_id = -1;
     private final Container contentPane = this.getContentPane();
     private final JTabbedPane tabbedPane = new JTabbedPane();
-    private final JMenuItem menu_file_exit = new JMenuItem("Exit"), menu_debug_database = new JMenuItem("Reset DB");
+    private final JMenuItem menu_file_exit = new JMenuItem("Exit"),
+            menu_debug_database = new JMenuItem("Reset DB"),
+            menu_debug_clearData = new JMenuItem("Clear DB");
 
     public Window() {
         //  connect DAO
@@ -42,6 +44,8 @@ public class Window extends JFrame implements MouseListener, ActionListener {
         menu_file_exit.addActionListener(this);
         menu_debug.add(menu_debug_database);
         menu_debug_database.addActionListener(this);
+        menu_debug.add(menu_debug_clearData);
+        menu_debug_clearData.addActionListener(this);
 
 
         //  Populate menuBar
@@ -80,6 +84,17 @@ public class Window extends JFrame implements MouseListener, ActionListener {
                 //  Re-establish dao connection
                 dao = new DAO("jdbc:mysql://localhost:3306/newsagent?useTimezone=true&serverTimezone=UTC","root","admin");
             } catch (Exception exc) {
+                exc.printStackTrace();
+            }
+        } else if (e.getSource() == menu_debug_clearData) {
+            try {
+                JDBC connection = new JDBC("jdbc:mysql://localhost:3306/", "root", "admin");
+                connection.setDbName("newsagent");
+                connection.executeScript("NewsAgent_Data_Clean.sql");
+                connection.close();
+                //  Re-establish dao connection
+                dao = new DAO("jdbc:mysql://localhost:3306/newsagent?useTimezone=true&serverTimezone=UTC", "root", "admin");
+            } catch (JDBCExceptionHandler | DAOExceptionHandler exc) {
                 exc.printStackTrace();
             }
         }
