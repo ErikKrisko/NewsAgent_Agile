@@ -520,12 +520,6 @@ public class Editor {
                 return false;
             }
             try {
-                invoice.setInvoice_id(Integer.parseInt(InvoiceID.getText()));
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(this, "Enter a numerical ID", "Date Error", JOptionPane.ERROR_MESSAGE);
-                return false;
-            }
-            try {
                 invoice.setInvoice_total(Integer.parseInt(InvoiceTotal.getText()));
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(this, "Enter a Total", "Date Error", JOptionPane.ERROR_MESSAGE);
