@@ -456,7 +456,8 @@ public class Tab {
     //  INVOICE TAB
     //  ========================================================================================================================
     private class invoiceTab extends JPanel implements ActionListener {
-        private final JButton button_search = new JButton("Search");
+        private final JButton button_search = new JButton("Search"), buttonadd = new JButton("+");
+        private int rowSelected;
         //  Top panel to put search functionality into
         private final JPanel searchPanel = new JPanel();
         //  ScrollPane to be used by JTable
@@ -469,8 +470,9 @@ public class Tab {
             }
         };
         private DefaultTableModel invoice_tableModel;
-        //  ArrayList for customers
+        //  ArrayList for invoices
         private ArrayList<DB_Invoice> invoices;
+        private final JMenuItem menuedit = new JMenuItem("Edit");
         //Search Box with comboBox attribute selector
         JTextField search_box = new JTextField(10);
 
@@ -494,6 +496,8 @@ public class Tab {
             // CONSTRUCT SEARCH
             constructSearch();
             buildSearchBox();
+            tableListener();
+            menuedit.addActionListener(this);
         }
 
         //  Builds the table headers (columns)
@@ -518,6 +522,21 @@ public class Tab {
             for (DB_Invoice invoice : invoices) {
                 invoice_tableModel.addRow(invoice.getRowData());
             }
+        }
+        private void tableListener() {
+            invoice_table.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    super.mouseClicked(e);
+                    if (e.getButton() == MouseEvent.BUTTON3) {
+                         rowSelected = invoice_table.rowAtPoint(e.getPoint());
+                        invoice_table.setRowSelectionInterval(rowSelected, rowSelected);
+                        JPopupMenu pop = new JPopupMenu();
+                        pop.add(menuedit);
+                        pop.show(invoice_tablePane, e.getX()+1, e.getY()+16);
+                    }
+                }
+            });
         }
 
         private void buildSearchBox(){
@@ -567,19 +586,29 @@ public class Tab {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            //  If search button is pressed
             if (e.getSource() == button_search) {
                 try {
-                    //  Get new data (no search criteria for now)
                     invoices = constructSearch();
-                    //  Update table
                     updateTableModel();
                 } catch (DAOExceptionHandler exception) {
                     exception.printStackTrace();
                 }
+            }else if (e.getSource() == menuedit) {
+                int id = Integer.parseInt((String) invoice_table.getValueAt(rowSelected, 0));
+                try {
+                    parent = (JFrame) SwingUtilities.windowForComponent(this);
+                    JDialog memory = new Editor(dao).invoice(dao.getInvoice(id), parent);
+                    System.out.println();
+                } catch (DAOExceptionHandler exc) {
+                    exc.printStackTrace();
+                }
+            }else if (e.getSource() == buttonadd) {
+                parent = (JFrame) SwingUtilities.windowForComponent(this);
+                new Editor(dao).invoice(new DB_Invoice(), parent);
+                }
             }
         }
-    }
+
 
 
     //  ========================================================================================================================
