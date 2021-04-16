@@ -64,7 +64,7 @@ public class DAOTestDelivery extends TestCase {
      * Test 016
      * Test for DAO getDelivery method unsuccessful
      * ==========
-     * Inputs: Delivery object of id=6
+     * Inputs: Delivery object of id=16
      * ==========
      * Expected Outputs: "No delivery with 'delivery_id = " + ID + " found."
      */
